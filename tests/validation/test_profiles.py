@@ -10,7 +10,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 
-from scripts.validation.validate_profiles import imported_modules, layer_for_path
+from scripts.validation.validate_profiles import check_dependency_edge, imported_modules, layer_for_path
 
 
 class ProfileContractTests(unittest.TestCase):
@@ -58,6 +58,20 @@ class ProfileContractTests(unittest.TestCase):
             path.write_text("import json\nfrom domains.llm import environment\n", encoding="utf-8")
             self.assertIn("json", imported_modules(path))
             self.assertIn("domains.llm", imported_modules(path))
+
+    def test_strict_dependency_edge_contract(self) -> None:
+        allowed = {("validation", "domain")}
+        forbidden = {("domain", "infrastructure")}
+        self.assertEqual(check_dependency_edge("validation", "domain", allowed, forbidden), "allowed")
+        self.assertEqual(check_dependency_edge("domain", "infrastructure", allowed, forbidden), "forbidden")
+        self.assertEqual(check_dependency_edge("interface", "domain", allowed, forbidden), "undeclared")
+        self.assertEqual(check_dependency_edge("domain", "domain", allowed, forbidden), "undeclared")
+
+    def test_stdlib_import_is_not_local_dependency(self) -> None:
+        from scripts.validation.validate_profiles import local_module_exists, resolve_local_module
+
+        self.assertFalse(local_module_exists("platform"))
+        self.assertIsNone(resolve_local_module("platform"))
 
     def test_validator_passes(self) -> None:
         proc = subprocess.run(

@@ -138,7 +138,10 @@ def check_sensitive_text(path: Path) -> None:
 
 def layer_for_path(path: Path, path_roots: dict[str, list[str]]) -> str | None:
     relative = path.relative_to(ROOT).as_posix()
-    matches = [layer for layer, roots in path_roots.items() if any(relative == root or relative.startswith(root + "/") for root in roots)]
+    matches = [
+        layer for layer, roots in path_roots.items()
+        if any(relative == root or relative.startswith(root + "/") for root in roots)
+    ]
     if len(matches) > 1:
         fail(f"path belongs to multiple architecture layers: {relative}")
     return matches[0] if matches else None
@@ -148,11 +151,7 @@ def local_module_exists(module: str) -> bool:
     if not module:
         return False
     base = ROOT / Path(module.replace(".", "/"))
-    return (
-        base.with_suffix(".py").is_file()
-        or (base / "__init__.py").is_file()
-        or base.is_dir()
-    )
+    return base.with_suffix(".py").is_file() or (base / "__init__.py").is_file() or base.is_dir()
 
 
 def resolve_local_module(module: str) -> Path | None:
@@ -196,6 +195,7 @@ def imported_modules(path: Path) -> list[str]:
 
 def check_repository_dependencies(architecture: dict) -> None:
     path_roots = architecture["path_roots"]
+    allowed = {tuple(edge.split(" -> ", 1)) for edge in architecture["dependency_direction"]}
     forbidden = {tuple(edge.split(" -> ", 1)) for edge in architecture["forbidden_dependencies"]}
     scanned = 0
     for path in sorted(ROOT.rglob("*.py")):
@@ -212,10 +212,17 @@ def check_repository_dependencies(architecture: dict) -> None:
             target_layer = layer_for_path(target, path_roots)
             if target_layer is None or source_layer == target_layer:
                 continue
-            if (source_layer, target_layer) in forbidden:
+            edge = (source_layer, target_layer)
+            if edge in forbidden:
                 fail(
                     f"forbidden architecture dependency: {source_layer} -> {target_layer} "
                     f"({path.relative_to(ROOT)} imports {module})"
+                )
+            if edge not in allowed:
+                fail(
+                    f"undeclared architecture dependency: {source_layer} -> {target_layer} "
+                    f"({path.relative_to(ROOT)} imports {module}); add the edge to dependency_direction "
+                    "only if the dependency is architecturally intentional"
                 )
     print(f"repository dependency validation passed ({scanned} Python files scanned)")
 

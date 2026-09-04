@@ -9,6 +9,13 @@
     "domain": {"responsibility": "standards, contracts and reusable engineering rules"},
     "infrastructure": {"responsibility": "CI runners, platform adapters and external tooling"}
   },
+  "path_roots": {
+    "interface": ["scripts/installers"],
+    "policy": [],
+    "validation": ["scripts/validation", "tests/validation", "tests/integration"],
+    "domain": ["domains"],
+    "infrastructure": ["platform"]
+  },
   "dependency_direction": [
     "interface -> policy",
     "interface -> domain",

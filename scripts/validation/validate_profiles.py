@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import ast
 import json
 import re
 import sys
@@ -12,7 +13,7 @@ REQUIRED_PROJECT_KEYS = {
     "policy_profile", "runtime", "delivery", "scalability",
 }
 REQUIRED_ARCH_KEYS = {
-    "id", "profile_version", "project_type", "layers",
+    "id", "profile_version", "project_type", "layers", "path_roots",
     "dependency_direction", "forbidden_dependencies", "boundaries",
     "scalability_profile",
 }
@@ -79,6 +80,17 @@ def check_architecture(path: Path, value: dict) -> None:
     if not isinstance(layers, dict) or not layers:
         fail(f"architecture layers must be a non-empty object in {path}")
     allowed = set(layers)
+    path_roots = value["path_roots"]
+    if not isinstance(path_roots, dict) or set(path_roots) != allowed:
+        fail(f"architecture path_roots must declare every layer exactly once in {path}")
+    seen_roots: set[str] = set()
+    for layer, roots in path_roots.items():
+        if not isinstance(roots, list) or not all(isinstance(root, str) and root for root in roots):
+            fail(f"architecture path_roots must contain non-empty string arrays in {path}: {layer}")
+        for root in roots:
+            if root in seen_roots:
+                fail(f"architecture path root is assigned to multiple layers in {path}: {root}")
+            seen_roots.add(root)
     directions = value["dependency_direction"]
     forbidden = value["forbidden_dependencies"]
     if not isinstance(directions, list) or not isinstance(forbidden, list):
@@ -124,6 +136,90 @@ def check_sensitive_text(path: Path) -> None:
             fail(f"potential secret or machine-specific reference in {path}: {pattern.pattern}")
 
 
+def layer_for_path(path: Path, path_roots: dict[str, list[str]]) -> str | None:
+    relative = path.relative_to(ROOT).as_posix()
+    matches = [layer for layer, roots in path_roots.items() if any(relative == root or relative.startswith(root + "/") for root in roots)]
+    if len(matches) > 1:
+        fail(f"path belongs to multiple architecture layers: {relative}")
+    return matches[0] if matches else None
+
+
+def local_module_exists(module: str) -> bool:
+    if not module:
+        return False
+    base = ROOT / Path(module.replace(".", "/"))
+    return (
+        base.with_suffix(".py").is_file()
+        or (base / "__init__.py").is_file()
+        or base.is_dir()
+    )
+
+
+def resolve_local_module(module: str) -> Path | None:
+    base = ROOT / Path(module.replace(".", "/"))
+    if base.with_suffix(".py").is_file():
+        return base.with_suffix(".py")
+    init = base / "__init__.py"
+    if init.is_file():
+        return init
+    if base.is_dir():
+        return base
+    return None
+
+
+def resolve_relative_module(source: Path, level: int, module: str | None) -> str:
+    package_parts = list(source.relative_to(ROOT).with_suffix("").parts[:-1])
+    if level > len(package_parts) + 1:
+        return ""
+    base = package_parts[: len(package_parts) - level + 1]
+    if module:
+        base.extend(module.split("."))
+    return ".".join(base)
+
+
+def imported_modules(path: Path) -> list[str]:
+    try:
+        tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+    except SyntaxError as exc:
+        fail(f"Python syntax error in {path}: {exc}")
+    modules: list[str] = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            modules.extend(alias.name for alias in node.names)
+        elif isinstance(node, ast.ImportFrom):
+            if node.level:
+                modules.append(resolve_relative_module(path, node.level, node.module))
+            elif node.module:
+                modules.append(node.module)
+    return modules
+
+
+def check_repository_dependencies(architecture: dict) -> None:
+    path_roots = architecture["path_roots"]
+    forbidden = {tuple(edge.split(" -> ", 1)) for edge in architecture["forbidden_dependencies"]}
+    scanned = 0
+    for path in sorted(ROOT.rglob("*.py")):
+        if ".git" in path.parts or path.is_symlink():
+            continue
+        source_layer = layer_for_path(path, path_roots)
+        if source_layer is None:
+            continue
+        scanned += 1
+        for module in imported_modules(path):
+            target = resolve_local_module(module) if local_module_exists(module) else None
+            if target is None:
+                continue
+            target_layer = layer_for_path(target, path_roots)
+            if target_layer is None or source_layer == target_layer:
+                continue
+            if (source_layer, target_layer) in forbidden:
+                fail(
+                    f"forbidden architecture dependency: {source_layer} -> {target_layer} "
+                    f"({path.relative_to(ROOT)} imports {module})"
+                )
+    print(f"repository dependency validation passed ({scanned} Python files scanned)")
+
+
 def main() -> None:
     if not PROFILES.is_dir():
         fail("profiles directory is missing")
@@ -140,10 +236,12 @@ def main() -> None:
         fail("no project profiles found")
 
     architecture_ids: set[str] = set()
+    architecture_values: list[dict] = []
     for path in architecture_paths:
         value = load(path)
         check_architecture(path, value)
         architecture_ids.add(value["id"])
+        architecture_values.append(value)
         check_sensitive_text(path)
 
     policy_ids: set[str] = set()
@@ -157,6 +255,9 @@ def main() -> None:
         value = load(path)
         check_project(path, value, architecture_ids, policy_ids)
         check_sensitive_text(path)
+
+    for architecture in architecture_values:
+        check_repository_dependencies(architecture)
 
     print(
         f"architecture profile validation passed "

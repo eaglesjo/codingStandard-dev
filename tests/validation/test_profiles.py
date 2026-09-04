@@ -3,10 +3,14 @@ from __future__ import annotations
 import json
 import subprocess
 import sys
+import tempfile
 import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
+
+from scripts.validation.validate_profiles import imported_modules, layer_for_path
 
 
 class ProfileContractTests(unittest.TestCase):
@@ -25,6 +29,8 @@ class ProfileContractTests(unittest.TestCase):
         self.assertIn("interface -> domain", value["dependency_direction"])
         self.assertIn("domain -> interface", value["forbidden_dependencies"])
         self.assertNotIn("domain -> interface", value["dependency_direction"])
+        self.assertEqual(value["path_roots"]["domain"], ["domains"])
+        self.assertEqual(value["path_roots"]["infrastructure"], ["platform"])
 
     def test_repository_policy_prevents_weakening(self) -> None:
         value = json.loads(
@@ -33,6 +39,25 @@ class ProfileContractTests(unittest.TestCase):
         self.assertEqual(value["scope"], "repository")
         self.assertTrue(value["inheritance"]["child_scopes_may_not_weaken_parent"])
         self.assertEqual(value["inheritance"]["conflict_resolution"], "stricter-wins")
+
+    def test_layer_mapping_uses_declared_roots(self) -> None:
+        roots = {
+            "interface": ["scripts/installers"],
+            "policy": [],
+            "validation": ["scripts/validation", "tests/validation"],
+            "domain": ["domains"],
+            "infrastructure": ["platform"],
+        }
+        self.assertEqual(layer_for_path(ROOT / "domains" / "llm" / "environment.py", roots), "domain")
+        self.assertEqual(layer_for_path(ROOT / "platform" / "colab" / "validate_runtime.py", roots), "infrastructure")
+        self.assertEqual(layer_for_path(ROOT / "scripts" / "validation" / "validate_profiles.py", roots), "validation")
+
+    def test_import_parser_reads_python_imports(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "sample.py"
+            path.write_text("import json\nfrom domains.llm import environment\n", encoding="utf-8")
+            self.assertIn("json", imported_modules(path))
+            self.assertIn("domains.llm", imported_modules(path))
 
     def test_validator_passes(self) -> None:
         proc = subprocess.run(
@@ -43,6 +68,7 @@ class ProfileContractTests(unittest.TestCase):
             check=False,
         )
         self.assertEqual(proc.returncode, 0, proc.stderr)
+        self.assertIn("repository dependency validation passed", proc.stdout)
         self.assertIn("validation passed", proc.stdout)
 
 

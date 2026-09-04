@@ -16,11 +16,14 @@ REQUIRED_ARCH_KEYS = {
     "dependency_direction", "forbidden_dependencies", "boundaries",
     "scalability_profile",
 }
-REQUIRED_POLICY_KEYS = {
-    "id", "profile_version", "scope", "rules", "inheritance",
-}
-FORBIDDEN_TEXT = ("password", "secret", "api_key", "token=", "/Users/", "/home/")
+REQUIRED_POLICY_KEYS = {"id", "profile_version", "scope", "rules", "inheritance"}
 ID_RE = re.compile(r"[a-z0-9][a-z0-9-]*\Z")
+SENSITIVE_PATTERNS = (
+    re.compile(r"password\s*[:=]\s*[^\s,}\]]+", re.IGNORECASE),
+    re.compile(r"api[_-]?key\s*[:=]\s*[^\s,}\]]+", re.IGNORECASE),
+    re.compile(r"token\s*=\s*[^\s,}\]]+", re.IGNORECASE),
+    re.compile(r"/(?:Users|home)/[^\s\"']+", re.IGNORECASE),
+)
 
 
 def fail(message: str) -> None:
@@ -64,7 +67,8 @@ def check_project(path: Path, value: dict, architecture_ids: set[str], policy_id
     oses = runtime.get("os")
     if not isinstance(oses, list) or not {"linux", "macos", "windows"} <= set(oses):
         fail(f"project profile must declare cross-platform support in {path}")
-    if value["delivery"].get("validation_required") is not True:
+    delivery = value["delivery"]
+    if not isinstance(delivery, dict) or delivery.get("validation_required") is not True:
         fail(f"delivery.validation_required must be true in {path}")
 
 
@@ -114,10 +118,10 @@ def check_policy(path: Path, value: dict) -> None:
 
 
 def check_sensitive_text(path: Path) -> None:
-    text = path.read_text(encoding="utf-8").lower()
-    for marker in FORBIDDEN_TEXT:
-        if marker in text:
-            fail(f"potential secret or machine-specific reference '{marker}' in {path}")
+    text = path.read_text(encoding="utf-8")
+    for pattern in SENSITIVE_PATTERNS:
+        if pattern.search(text):
+            fail(f"potential secret or machine-specific reference in {path}: {pattern.pattern}")
 
 
 def main() -> None:

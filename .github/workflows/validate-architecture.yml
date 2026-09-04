@@ -1,0 +1,31 @@
+name: Validate architecture profiles
+
+on:
+  push:
+    branches:
+      - main
+      - feat/v1.14-architecture-contract
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: Validate architecture contract
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Set up Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.11"
+
+      - name: Validate profiles
+        run: python3 scripts/validation/validate_profiles.py
+
+      - name: Test profile contract
+        run: python3 -m unittest tests.validation.test_profiles

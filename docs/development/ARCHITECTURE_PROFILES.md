@@ -14,6 +14,8 @@ The profile separates the repository into five layers:
 - `domain`: standards, contracts, and reusable engineering rules.
 - `infrastructure`: CI runners, platform adapters, and external tooling.
 
+`path_roots` binds these architectural layers to repository paths. The profile validator parses Python imports from those paths and resolves local modules, including namespace-package directories. Forbidden edges therefore become executable CI checks rather than documentation-only rules.
+
 Dependencies must follow the declared direction in `profiles/architecture/repository-standard.json`. Forbidden edges are explicit architectural boundaries.
 
 ## AI implementation rule

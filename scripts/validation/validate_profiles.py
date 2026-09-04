@@ -8,15 +8,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 PROFILES = ROOT / "profiles"
-REQUIRED_PROJECT_KEYS = {
-    "id", "profile_version", "project_type", "architecture_profile",
-    "policy_profile", "runtime", "delivery", "scalability",
-}
-REQUIRED_ARCH_KEYS = {
-    "id", "profile_version", "project_type", "layers", "path_roots",
-    "dependency_direction", "forbidden_dependencies", "boundaries",
-    "scalability_profile",
-}
+REQUIRED_PROJECT_KEYS = {"id", "profile_version", "project_type", "architecture_profile", "policy_profile", "runtime", "delivery", "scalability"}
+REQUIRED_ARCH_KEYS = {"id", "profile_version", "project_type", "layers", "path_roots", "dependency_direction", "forbidden_dependencies", "boundaries", "scalability_profile"}
 REQUIRED_POLICY_KEYS = {"id", "profile_version", "scope", "rules", "inheritance"}
 ID_RE = re.compile(r"[a-z0-9][a-z0-9-]*\Z")
 SENSITIVE_PATTERNS = (
@@ -116,11 +109,7 @@ def check_policy(path: Path, value: dict) -> None:
     if not isinstance(value["rules"], dict) or not value["rules"]:
         fail(f"policy rules must be a non-empty object in {path}")
     inheritance = value["inheritance"]
-    required_inheritance = {
-        "child_scopes_may_add_restrictions",
-        "child_scopes_may_not_weaken_parent",
-        "conflict_resolution",
-    }
+    required_inheritance = {"child_scopes_may_add_restrictions", "child_scopes_may_not_weaken_parent", "conflict_resolution"}
     if not isinstance(inheritance, dict) or not required_inheritance <= inheritance.keys():
         fail(f"policy inheritance contract incomplete in {path}")
     if inheritance["child_scopes_may_not_weaken_parent"] is not True:
@@ -192,6 +181,15 @@ def imported_modules(path: Path) -> list[str]:
     return modules
 
 
+def check_dependency_edge(source_layer: str, target_layer: str, allowed: set[tuple[str, str]], forbidden: set[tuple[str, str]]) -> str:
+    edge = (source_layer, target_layer)
+    if edge in forbidden:
+        return "forbidden"
+    if edge not in allowed:
+        return "undeclared"
+    return "allowed"
+
+
 def check_repository_dependencies(architecture: dict) -> None:
     path_roots = architecture["path_roots"]
     allowed = {tuple(edge.split(" -> ", 1)) for edge in architecture["dependency_direction"]}
@@ -211,18 +209,11 @@ def check_repository_dependencies(architecture: dict) -> None:
             target_layer = layer_for_path(target, path_roots)
             if target_layer is None or source_layer == target_layer:
                 continue
-            edge = (source_layer, target_layer)
-            if edge in forbidden:
-                fail(
-                    f"forbidden architecture dependency: {source_layer} -> {target_layer} "
-                    f"({path.relative_to(ROOT)} imports {module})"
-                )
-            if edge not in allowed:
-                fail(
-                    f"undeclared architecture dependency: {source_layer} -> {target_layer} "
-                    f"({path.relative_to(ROOT)} imports {module}); add the edge to dependency_direction "
-                    "only if the dependency is architecturally intentional"
-                )
+            decision = check_dependency_edge(source_layer, target_layer, allowed, forbidden)
+            if decision == "forbidden":
+                fail(f"forbidden architecture dependency: {source_layer} -> {target_layer} ({path.relative_to(ROOT)} imports {module})")
+            if decision == "undeclared":
+                fail(f"undeclared architecture dependency: {source_layer} -> {target_layer} ({path.relative_to(ROOT)} imports {module}); add the edge to dependency_direction only if the dependency is architecturally intentional")
     print(f"repository dependency validation passed ({scanned} Python files scanned)")
 
 
@@ -240,7 +231,6 @@ def main() -> None:
         fail("no policy profiles found")
     if not project_paths:
         fail("no project profiles found")
-
     architecture_ids: set[str] = set()
     architecture_values: list[dict] = []
     for path in architecture_paths:
@@ -249,26 +239,19 @@ def main() -> None:
         architecture_ids.add(value["id"])
         architecture_values.append(value)
         check_sensitive_text(path)
-
     policy_ids: set[str] = set()
     for path in policy_paths:
         value = load(path)
         check_policy(path, value)
         policy_ids.add(value["id"])
         check_sensitive_text(path)
-
     for path in project_paths:
         value = load(path)
         check_project(path, value, architecture_ids, policy_ids)
         check_sensitive_text(path)
-
     for architecture in architecture_values:
         check_repository_dependencies(architecture)
-
-    print(
-        f"architecture profile validation passed "
-        f"({len(architecture_paths)} architecture, {len(policy_paths)} policy, {len(project_paths)} project)"
-    )
+    print(f"architecture profile validation passed ({len(architecture_paths)} architecture, {len(policy_paths)} policy, {len(project_paths)} project)")
 
 
 if __name__ == "__main__":

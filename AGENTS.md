@@ -6,13 +6,25 @@ This file is the top-level entrypoint for AI coding agents.
 
 ## Instruction Order
 
-1. Apply `COMMON/AGENT.md`, `COMMON/SKILL.md`, and `COMMON/ENVIRONMENT.md`.
-2. Detect which domain resources are installed and relevant:
+1. Inspect the active machine-readable project, architecture, and policy profiles under `profiles/` before implementation changes.
+2. Apply `COMMON/AGENT.md`, `COMMON/SKILL.md`, and `COMMON/ENVIRONMENT.md`.
+3. Detect which domain resources are installed and relevant:
    - `LLM/` for language-model, NLP, RAG, fine-tuning, and text-model work.
    - `VISION/` for image, video, OCR, detection, segmentation, generation, and VLM work.
-3. Apply the matching domain `AGENT.md`, `SKILL.md`, and `ENVIRONMENT.md`.
-4. Apply task-specific Skills under the selected domain.
-5. Read the project's existing README, dependency files, lock files, tests, and security constraints.
+4. Apply the matching domain `AGENT.md`, `SKILL.md`, and `ENVIRONMENT.md`.
+5. Apply task-specific Skills under the selected domain.
+6. Read the project's existing README, dependency files, lock files, tests, and security constraints.
+
+## Architecture Profile Contract
+
+The machine-readable profiles under `profiles/` are the canonical architecture and policy contract for repository changes.
+
+- Resolve `profiles/project.json` first to determine the active project, runtime, delivery, and scalability profile.
+- Resolve the referenced architecture profile under `profiles/architecture/` and policy profile under `profiles/policies/` before changing implementation structure or repository-wide rules.
+- Child or task-specific policies may add restrictions but must not weaken repository-level policy; conflicts resolve by `stricter-wins`.
+- Keep implementation dependencies aligned with the declared architecture dependency direction and forbidden dependency list.
+- When architecture or policy changes are proposed, update the machine-readable profile and its validation/tests together with the human-facing documentation.
+- Validate the profiles with `python3 scripts/validation/validate_profiles.py` before considering architecture work complete.
 
 ## Environment Contract
 
@@ -33,6 +45,8 @@ This file is the top-level entrypoint for AI coding agents.
 
 ```text
 Discover
+  ↓
+Inspect active profiles
   ↓
 Detect installed domains
   ↓

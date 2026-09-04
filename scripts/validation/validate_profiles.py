@@ -138,23 +138,22 @@ def check_sensitive_text(path: Path) -> None:
 
 def layer_for_path(path: Path, path_roots: dict[str, list[str]]) -> str | None:
     relative = path.relative_to(ROOT).as_posix()
-    matches = [
-        layer for layer, roots in path_roots.items()
-        if any(relative == root or relative.startswith(root + "/") for root in roots)
-    ]
+    matches = [layer for layer, roots in path_roots.items() if any(relative == root or relative.startswith(root + "/") for root in roots)]
     if len(matches) > 1:
         fail(f"path belongs to multiple architecture layers: {relative}")
     return matches[0] if matches else None
 
 
 def local_module_exists(module: str) -> bool:
-    if not module:
+    if not module or module.split(".", 1)[0] in sys.stdlib_module_names:
         return False
     base = ROOT / Path(module.replace(".", "/"))
     return base.with_suffix(".py").is_file() or (base / "__init__.py").is_file() or base.is_dir()
 
 
 def resolve_local_module(module: str) -> Path | None:
+    if not module or module.split(".", 1)[0] in sys.stdlib_module_names:
+        return None
     base = ROOT / Path(module.replace(".", "/"))
     if base.with_suffix(".py").is_file():
         return base.with_suffix(".py")

@@ -4,6 +4,8 @@
 
 > v1.16 focuses on multilingual quality: resource completeness, semantic policy parity, and runtime/documentation consistency across 20 runtime locales.
 
+**English** is the canonical documentation language, and `en` is one of the 20 validated runtime locales.
+
 ## 🎯 Goal
 
 codingStandard is a repository-level engineering standard designed to make AI development **portable, reproducible, hardware-neutral, and validation-driven**.

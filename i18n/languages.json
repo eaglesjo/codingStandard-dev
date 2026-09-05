@@ -34,6 +34,14 @@
     {"locale": "es", "name": "Español", "path": "i18n/es", "fallback": "en"},
     {"locale": "pt", "name": "Português", "path": "i18n/pt", "fallback": "en"},
     {"locale": "tr", "name": "Türkçe", "path": "i18n/tr", "fallback": "en"},
-    {"locale": "ar", "name": "العربية", "path": "i18n/ar", "fallback": "en"}
+    {"locale": "ar", "name": "العربية", "path": "i18n/ar", "fallback": "en"},
+    {"locale": "hi", "name": "हिन्दी", "path": "i18n/hi", "fallback": "en"},
+    {"locale": "id", "name": "Bahasa Indonesia", "path": "i18n/id", "fallback": "en"},
+    {"locale": "vi", "name": "Tiếng Việt", "path": "i18n/vi", "fallback": "en"},
+    {"locale": "th", "name": "ไทย", "path": "i18n/th", "fallback": "en"},
+    {"locale": "nl", "name": "Nederlands", "path": "i18n/nl", "fallback": "en"},
+    {"locale": "pl", "name": "Polski", "path": "i18n/pl", "fallback": "en"},
+    {"locale": "sv", "name": "Svenska", "path": "i18n/sv", "fallback": "en"},
+    {"locale": "uk", "name": "Українська", "path": "i18n/uk", "fallback": "en"}
   ]
 }

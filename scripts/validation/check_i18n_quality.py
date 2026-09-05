@@ -27,7 +27,7 @@ def load_json(path: Path) -> dict:
     return data
 
 
-def contains_any(text: str, alternatives: tuple[str, ...]) -> bool:
+def contains_any(text: str, alternatives: tuple[str, ...] | list[str]) -> bool:
     lowered = text.casefold()
     return any(term.casefold() in lowered for term in alternatives)
 
@@ -60,26 +60,37 @@ def semantic_parity(locale: str, entry: dict, vocabulary: dict) -> list[str]:
     if locale == "en":
         return []
     root = ROOT / entry["path"]
-    concepts = vocabulary.get("concepts", {})
     failures: list[str] = []
-    for intent_id, spec in concepts.items():
+    for intent_id, spec in vocabulary.get("concepts", {}).items():
         if not isinstance(spec, dict) or not spec.get("required"):
             continue
         source_concepts = spec.get("source_concepts", [])
-        for source_concept in source_concepts:
-            alternatives = check_i18n.CONCEPT_ALTERNATIVES.get(source_concept)
-            if not alternatives or locale not in alternatives:
-                failures.append(f"{intent_id}: missing concept catalog for locale '{locale}'")
-                continue
-            for rel in REQUIRED_COMMON:
-                canonical_path = ROOT / rel
-                localized_path = root / rel
-                if not canonical_path.is_file() or not localized_path.is_file():
+        if source_concepts:
+            mappings = []
+            for source_concept in source_concepts:
+                alternatives = check_i18n.CONCEPT_ALTERNATIVES.get(source_concept)
+                if not alternatives or locale not in alternatives:
+                    failures.append(f"{intent_id}: missing concept catalog for locale '{locale}'")
                     continue
-                canonical_text = canonical_path.read_text(encoding="utf-8")
-                localized_text = localized_path.read_text(encoding="utf-8")
-                if contains_any(canonical_text, alternatives["en"]) and not contains_any(localized_text, alternatives[locale]):
-                    failures.append(f"{rel}: intent '{intent_id}' missing localized concept '{source_concept}'")
+                mappings.append(alternatives)
+        else:
+            canonical = spec.get("canonical", [])
+            localized = spec.get("locales", {}).get(locale, []) if isinstance(spec.get("locales"), dict) else []
+            mappings = [{"en": tuple(canonical), locale: tuple(localized)}] if canonical and localized else []
+            if not mappings:
+                failures.append(f"{intent_id}: no localized concept mapping for locale '{locale}'")
+                continue
+
+        for rel in REQUIRED_COMMON:
+            canonical_path = ROOT / rel
+            localized_path = root / rel
+            if not canonical_path.is_file() or not localized_path.is_file():
+                continue
+            canonical_text = canonical_path.read_text(encoding="utf-8")
+            localized_text = localized_path.read_text(encoding="utf-8")
+            for mapping in mappings:
+                if contains_any(canonical_text, mapping["en"]) and not contains_any(localized_text, mapping[locale]):
+                    failures.append(f"{rel}: intent '{intent_id}' missing localized concept")
     return sorted(set(failures))
 
 

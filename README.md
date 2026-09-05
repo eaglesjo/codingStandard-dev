@@ -32,35 +32,6 @@ It provides:
 - validation and installer test suites;
 - reproducible training and experiment guidance.
 
-## 🌍 Language support
-
-The v1.15 runtime resource set contains 20 locales:
-
-| Locale | Language | Runtime |
-|---|---|---|
-| `en` | English | ✅ |
-| `ko` | 한국어 | ✅ |
-| `fr` | Français | ✅ |
-| `es` | Español | ✅ |
-| `zh-CN` | 简体中文 | ✅ |
-| `ja` | 日本語 | ✅ |
-| `ru` | Русский | ✅ |
-| `tr` | Türkçe | ✅ |
-| `de` | Deutsch | ✅ |
-| `it` | Italiano | ✅ |
-| `pt` | Português | ✅ |
-| `ar` | العربية | ✅ |
-| `hi` | हिन्दी | ✅ |
-| `id` | Bahasa Indonesia | ✅ |
-| `vi` | Tiếng Việt | ✅ |
-| `th` | ไทย | ✅ |
-| `nl` | Nederlands | ✅ |
-| `pl` | Polski | ✅ |
-| `sv` | Svenska | ✅ |
-| `uk` | Українська | ✅ |
-
-The canonical locale registry is [`i18n/languages.json`](i18n/languages.json). Runtime resources are checked by the i18n parity validator before release.
-
 ## 🤖 Supported AI Development Tools
 
 The repository provides project-level adapters, instruction files, Skills, or documented integration paths for a broad set of AI development tools.
@@ -116,7 +87,7 @@ Explicit language installation:
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\codingStandard\scripts\installers\install-domains.ps1 -Target . -Language de -Domain all
 powershell -ExecutionPolicy Bypass -File .\codingStandard\scripts\installers\install-domains.ps1 -Target . -Language ko -Domain ml
-powershell -ExecutionPolicy Bypass -File .\codingStandard\scripts\installers\install-domains.ps1 -Target . -Language ja -Domain llm
+powershell -ExecutionPolicy Bypass -File .\codingStandard\scripts\install-domains.ps1 -Target . -Language ja -Domain llm
 ```
 
 ### Linux / macOS
@@ -158,56 +129,6 @@ common | ml | llm | vision | colab | all
 | `all` | Common + ML + LLM + Vision + Colab |
 
 Every successful install records ownership and hashes in `.codingstandard/installation.json`. See [`docs/development/INSTALLER_LIFECYCLE.md`](docs/development/INSTALLER_LIFECYCLE.md) for manifest and lifecycle behavior.
-
-## 🧭 Repository Structure
-
-```text
-.
-├── core/
-│   └── common/
-├── domains/
-│   ├── ml/
-│   ├── llm/
-│   └── vision/
-├── platform/
-│   └── colab/
-├── examples/
-│   └── colab/
-├── docs/
-│   ├── development/
-│   └── releases/
-├── i18n/
-│   ├── en/
-│   ├── ko/
-│   ├── fr/
-│   ├── es/
-│   ├── zh-CN/
-│   ├── ja/
-│   ├── ru/
-│   ├── tr/
-│   ├── de/
-│   ├── it/
-│   ├── pt/
-│   ├── ar/
-│   ├── hi/
-│   ├── id/
-│   ├── vi/
-│   ├── th/
-│   ├── nl/
-│   ├── pl/
-│   ├── sv/
-│   └── uk/
-├── scripts/
-│   ├── development/
-│   ├── installers/
-│   └── validation/
-├── tests/
-│   └── colab/
-├── .github/
-└── VERSION
-```
-
-Tool-specific entrypoints are adapters; shared ML lifecycle policy lives in `domains/ml/`, LLM/Vision add domain-specific behavior, and `platform/colab/` adds ephemeral-runtime policy.
 
 ## 🧠 Environment, ML, and Colab Policy
 

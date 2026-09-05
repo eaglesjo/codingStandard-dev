@@ -37,6 +37,39 @@ def entries(catalog: dict, key: str) -> dict[str, dict]:
     return result
 
 
+def validate_documentation_claim(locale: str, entry: dict, required_count: int) -> list[str]:
+    errors: list[str] = []
+    doc_path = entry.get("path")
+    display_name = entry.get("name")
+    if not isinstance(doc_path, str):
+        return [f"{locale}: documentation path is missing"]
+    if not isinstance(display_name, str) or not display_name.strip():
+        errors.append(f"{locale}: documentation display name is missing")
+    path = ROOT / doc_path
+    if not path.is_file():
+        errors.append(f"{locale}: documentation file does not exist: {doc_path}")
+        return errors
+
+    try:
+        text = path.read_text(encoding="utf-8")
+    except OSError as exc:
+        errors.append(f"{locale}: documentation file cannot be read: {doc_path}: {exc}")
+        return errors
+
+    if isinstance(display_name, str) and display_name.strip() and display_name not in text:
+        errors.append(f"{locale}: documentation does not identify locale as {display_name}")
+
+    if "runtime" not in text.casefold():
+        errors.append(f"{locale}: documentation does not describe runtime support")
+
+    # Every runtime locale README must expose the current contract size so stale
+    # "docs-only" or partial-runtime claims cannot silently survive a release.
+    if str(required_count) not in text:
+        errors.append(f"{locale}: documentation does not state the current runtime locale count ({required_count})")
+
+    return errors
+
+
 def validate() -> int:
     try:
         catalog = load_json(CATALOG)
@@ -82,11 +115,7 @@ def validate() -> int:
         if doc is None:
             errors.append(f"{locale}: missing documentation catalog entry")
             continue
-        doc_path = doc.get("path")
-        if not isinstance(doc_path, str):
-            errors.append(f"{locale}: documentation path is missing")
-        elif not (ROOT / doc_path).is_file():
-            errors.append(f"{locale}: documentation file does not exist: {doc_path}")
+        errors.extend(validate_documentation_claim(locale, doc, len(required)))
 
     doc_locales = set(docs)
     if not required_locales.issubset(doc_locales):

@@ -29,6 +29,9 @@
     {"locale": "ja", "name": "日本語", "path": "i18n/ja", "fallback": "en"},
     {"locale": "ru", "name": "Русский", "path": "i18n/ru", "fallback": "en"},
     {"locale": "de", "name": "Deutsch", "path": "i18n/de", "fallback": "en"},
-    {"locale": "it", "name": "Italiano", "path": "i18n/it", "fallback": "en"}
+    {"locale": "it", "name": "Italiano", "path": "i18n/it", "fallback": "en"},
+    {"locale": "fr", "name": "Français", "path": "i18n/fr", "fallback": "en"},
+    {"locale": "es", "name": "Español", "path": "i18n/es", "fallback": "en"},
+    {"locale": "pt", "name": "Português", "path": "i18n/pt", "fallback": "en"}
   ]
 }

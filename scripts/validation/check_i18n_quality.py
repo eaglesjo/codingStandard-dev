@@ -2,7 +2,6 @@
 """Validate v1.16 i18n quality through stable policy intents."""
 from __future__ import annotations
 
-import importlib
 import json
 import sys
 from pathlib import Path
@@ -12,9 +11,6 @@ QUALITY = ROOT / "i18n" / "quality.json"
 VOCABULARY = ROOT / "i18n" / "concepts" / "policy-vocabulary.json"
 CATALOG = ROOT / "i18n" / "languages.json"
 REQUIRED_COMMON = ("core/common/AGENT.md", "core/common/SKILL.md", "core/common/ENVIRONMENT.md")
-
-sys.path.insert(0, str(ROOT / "scripts" / "validation"))
-check_i18n = importlib.import_module("check_i18n")
 
 
 def load_json(path: Path) -> dict:
@@ -27,7 +23,7 @@ def load_json(path: Path) -> dict:
     return data
 
 
-def contains_any(text: str, alternatives: tuple[str, ...] | list[str]) -> bool:
+def contains_any(text: str, alternatives: list[str] | tuple[str, ...]) -> bool:
     lowered = text.casefold()
     return any(term.casefold() in lowered for term in alternatives)
 
@@ -61,26 +57,25 @@ def semantic_parity(locale: str, entry: dict, vocabulary: dict) -> list[str]:
         return []
     root = ROOT / entry["path"]
     failures: list[str] = []
-    for intent_id, spec in vocabulary.get("concepts", {}).items():
+    concepts = vocabulary.get("concepts", {})
+    if not isinstance(concepts, dict):
+        return ["policy-vocabulary.json concepts must be an object"]
+
+    for intent_id, spec in concepts.items():
         if not isinstance(spec, dict) or not spec.get("required"):
             continue
-        source_concepts = spec.get("source_concepts", [])
-        if source_concepts:
-            mappings = []
-            for source_concept in source_concepts:
-                alternatives = check_i18n.CONCEPT_ALTERNATIVES.get(source_concept)
-                if not alternatives or locale not in alternatives:
-                    failures.append(f"{intent_id}: missing concept catalog for locale '{locale}'")
-                    continue
-                mappings.append(alternatives)
-        else:
-            canonical = spec.get("canonical", [])
-            localized = spec.get("locales", {}).get(locale, []) if isinstance(spec.get("locales"), dict) else []
-            mappings = [{"en": tuple(canonical), locale: tuple(localized)}] if canonical and localized else []
-            if not mappings:
-                failures.append(f"{intent_id}: no localized concept mapping for locale '{locale}'")
-                continue
+        canonical = spec.get("canonical", [])
+        locales = spec.get("locales", {})
+        localized = locales.get(locale, []) if isinstance(locales, dict) else []
+        if not isinstance(canonical, list) or not canonical:
+            failures.append(f"{intent_id}: missing canonical vocabulary")
+            continue
+        if not isinstance(localized, list) or not localized:
+            failures.append(f"{intent_id}: missing localized vocabulary for locale '{locale}'")
+            continue
 
+        canonical_found = False
+        localized_found = False
         for rel in REQUIRED_COMMON:
             canonical_path = ROOT / rel
             localized_path = root / rel
@@ -88,9 +83,13 @@ def semantic_parity(locale: str, entry: dict, vocabulary: dict) -> list[str]:
                 continue
             canonical_text = canonical_path.read_text(encoding="utf-8")
             localized_text = localized_path.read_text(encoding="utf-8")
-            for mapping in mappings:
-                if contains_any(canonical_text, mapping["en"]) and not contains_any(localized_text, mapping[locale]):
-                    failures.append(f"{rel}: intent '{intent_id}' missing localized concept")
+            canonical_found = canonical_found or contains_any(canonical_text, canonical)
+            localized_found = localized_found or contains_any(localized_text, localized)
+
+        if canonical_found and not localized_found:
+            failures.append(f"{intent_id}: localized vocabulary not found in common policy resources for locale '{locale}'")
+        elif not canonical_found:
+            failures.append(f"{intent_id}: canonical vocabulary not found in common policy resources")
     return sorted(set(failures))
 
 

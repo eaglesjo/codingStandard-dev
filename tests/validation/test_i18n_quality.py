@@ -32,7 +32,7 @@ def test_quality_contract_is_20_locale_contract() -> None:
     assert quality["quality_levels"]["runtime_minimum"] == "A"
 
 
-def test_semantic_vocabulary_declares_required_concepts() -> None:
+def test_semantic_vocabulary_declares_required_policy_intents() -> None:
     vocabulary = json.loads((ROOT / "i18n" / "concepts" / "policy-vocabulary.json").read_text(encoding="utf-8"))
     concepts = vocabulary["concepts"]
     expected = {
@@ -44,9 +44,10 @@ def test_semantic_vocabulary_declares_required_concepts() -> None:
     }
     assert expected <= concepts.keys()
     assert all(concepts[name]["required"] for name in expected)
+    assert concepts["environment.validate"]["source_concepts"] == ["environment"]
 
 
-def test_semantic_parity_uses_locale_vocabulary() -> None:
+def test_semantic_parity_uses_canonical_concept_catalog() -> None:
     with tempfile.TemporaryDirectory() as temp:
         root = Path(temp)
         canonical = root / "core/common/AGENT.md"
@@ -61,15 +62,7 @@ def test_semantic_parity_uses_locale_vocabulary() -> None:
             failures = module.semantic_parity(
                 "ko",
                 {"path": "i18n/ko"},
-                {
-                    "concepts": {
-                        "environment.validate": {
-                            "required": True,
-                            "canonical": ["environment", "runtime"],
-                            "locales": {"ko": ["환경", "런타임"]},
-                        }
-                    }
-                },
+                {"concepts": {"environment.validate": {"required": True, "source_concepts": ["environment"]}}},
             )
         finally:
             module.ROOT = old_root
@@ -79,6 +72,6 @@ def test_semantic_parity_uses_locale_vocabulary() -> None:
 if __name__ == "__main__":
     test_grade_order()
     test_quality_contract_is_20_locale_contract()
-    test_semantic_vocabulary_declares_required_concepts()
-    test_semantic_parity_uses_locale_vocabulary()
+    test_semantic_vocabulary_declares_required_policy_intents()
+    test_semantic_parity_uses_canonical_concept_catalog()
     print("i18n quality tests passed")

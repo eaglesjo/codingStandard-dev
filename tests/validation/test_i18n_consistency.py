@@ -29,11 +29,23 @@ def test_catalog_entries_reject_duplicates() -> None:
         raise AssertionError("duplicate locale was accepted")
 
 
+def test_current_documentation_claims_match_runtime_contract() -> None:
+    catalog = module.load_json(module.CATALOG)
+    docs = module.entries(catalog, "documentation")
+    quality = module.load_json(module.QUALITY)
+    required = quality["required_runtime_locales"]
+
+    for locale in required:
+        errors = module.validate_documentation_claim(locale, docs[locale], len(required))
+        assert errors == [], f"{locale}: {errors}"
+
+
 def test_current_catalog_matches_runtime_contract() -> None:
     assert module.validate() == 0
 
 
 if __name__ == "__main__":
     test_catalog_entries_reject_duplicates()
+    test_current_documentation_claims_match_runtime_contract()
     test_current_catalog_matches_runtime_contract()
     print("i18n consistency tests passed")

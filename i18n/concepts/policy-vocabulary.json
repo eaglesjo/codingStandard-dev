@@ -1,0 +1,30 @@
+{
+  "profile_version": 1,
+  "concepts": {
+    "environment.validate": {
+      "required": true,
+      "alternatives": ["environment", "runtime", "execution environment"],
+      "intent": "The execution environment and runtime conditions must be validated."
+    },
+    "resources.memory.measure": {
+      "required": true,
+      "alternatives": ["memory", "RAM", "resource usage"],
+      "intent": "Memory and resource costs must be measured or made visible."
+    },
+    "tasks.early_stopping": {
+      "required": true,
+      "alternatives": ["early stopping", "early termination", "stop early"],
+      "intent": "Long-running work may stop early as an explicit control."
+    },
+    "recovery.checkpoint": {
+      "required": true,
+      "alternatives": ["checkpoint", "checkpointing", "recovery point", "restore point"],
+      "intent": "Recoverable state may be saved so work can resume after interruption."
+    },
+    "behavior_change.tests": {
+      "required": true,
+      "alternatives": ["test", "tests", "testing"],
+      "intent": "Behavior changes require meaningful tests."
+    }
+  }
+}

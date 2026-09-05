@@ -24,7 +24,11 @@
     },
     "behavior_change.tests": {
       "required": true,
-      "source_concepts": ["tests"],
+      "source_concepts": [],
+      "canonical": ["test", "tests", "testing"],
+      "locales": {
+        "en": ["test", "tests", "testing"], "ko": ["테스트", "시험", "test"], "fr": ["test", "tests", "tester"], "es": ["prueba", "pruebas", "test"], "zh-CN": ["测试", "test"], "ja": ["テスト", "試験", "test"], "ru": ["тест", "тесты", "провер"], "tr": ["test", "testler", "deneme"], "de": ["test", "tests", "prüfung"], "it": ["test", "testare", "verifica"], "pt": ["teste", "testes", "testar"], "ar": ["اختبار", "اختبارات", "test"], "hi": ["परीक्षण", "टेस्ट", "test"], "id": ["pengujian", "tes", "test"], "vi": ["kiểm thử", "kiểm tra", "test"], "th": ["การทดสอบ", "ทดสอบ", "test"], "nl": ["test", "testen", "tests"], "pl": ["test", "testy", "testowanie"], "sv": ["test", "tester", "testning"], "uk": ["тест", "тести", "перевір"]
+      },
       "intent": "Validate behavior changes with meaningful tests, starting with the smallest meaningful test before broader validation."
     }
   }

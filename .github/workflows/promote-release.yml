@@ -1,0 +1,100 @@
+name: Promote release to public
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag to promote (for example v1.14.0)
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  promote:
+    runs-on: ubuntu-24.04
+    env:
+      PUBLIC_REPO: eaglesjo/codingStandard
+      PUBLIC_REPO_TOKEN: ${{ secrets.PUBLIC_REPO_TOKEN }}
+
+    steps:
+      - name: Checkout dev source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate release tag
+        shell: bash
+        run: |
+          set -euo pipefail
+          TAG="${{ inputs.tag }}"
+          [[ "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || {
+            echo "Invalid release tag: $TAG"
+            exit 1
+          }
+          VERSION="$(cat VERSION)"
+          [[ "$TAG" == "v$VERSION" ]] || {
+            echo "Tag $TAG does not match VERSION $VERSION"
+            exit 1
+          }
+
+      - name: Re-run release gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 -m pip install --upgrade pip psutil
+          python3 scripts/validation/validate.py
+          python3 scripts/installers/test_installers.py
+
+      - name: Export public source
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf /tmp/codingStandard-public
+          mkdir -p /tmp/codingStandard-public
+          rsync -a --delete \
+            --exclude='.git/' \
+            --exclude='.github/workflows/' \
+            --exclude='.agents/' \
+            --exclude='AGENTS.md' \
+            --exclude='docs/development/' \
+            ./ /tmp/codingStandard-public/
+
+          mkdir -p /tmp/codingStandard-public/docs/development
+          for file in ARCHITECTURE_PROFILES.md POLICY_INHERITANCE.md PROJECT_PROFILES.md SCALABILITY_ARCHITECTURE.md; do
+            if [[ -f "docs/development/$file" ]]; then
+              cp "docs/development/$file" "/tmp/codingStandard-public/docs/development/$file"
+            fi
+          done
+
+      - name: Publish to public repository
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -n "$PUBLIC_REPO_TOKEN" || {
+            echo "PUBLIC_REPO_TOKEN secret is required in codingStandard-dev"
+            exit 1
+          }
+
+          git clone "https://x-access-token:${PUBLIC_REPO_TOKEN}@github.com/${PUBLIC_REPO}.git" /tmp/public-repo
+          rsync -a --delete --exclude='.git/' /tmp/codingStandard-public/ /tmp/public-repo/
+          cd /tmp/public-repo
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Public repository already matches the promoted source."
+          else
+            git commit -m "release: promote ${{ inputs.tag }} from codingStandard-dev"
+            git push origin main
+          fi
+
+          if git ls-remote --exit-code --tags origin "refs/tags/${{ inputs.tag }}" >/dev/null 2>&1; then
+            echo "Tag ${{ inputs.tag }} already exists on public repository."
+          else
+            git tag -a "${{ inputs.tag }}" -m "codingStandard ${{ inputs.tag }}"
+            git push origin "${{ inputs.tag }}"
+          fi

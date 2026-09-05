@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: Release tag to promote (for example v1.14.0)
+        description: Release tag to promote (for example v1.15.0)
         required: true
         type: string
 
@@ -97,4 +97,20 @@ jobs:
           else
             git tag -a "${{ inputs.tag }}" -m "codingStandard ${{ inputs.tag }}"
             git push origin "${{ inputs.tag }}"
+          fi
+
+      - name: Create public GitHub release
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.PUBLIC_REPO_TOKEN }}
+        run: |
+          set -euo pipefail
+          TAG="${{ inputs.tag }}"
+          if gh release view "$TAG" --repo "$PUBLIC_REPO" >/dev/null 2>&1; then
+            echo "GitHub release $TAG already exists on public repository."
+          else
+            gh release create "$TAG" \
+              --repo "$PUBLIC_REPO" \
+              --title "codingStandard ${TAG#v}" \
+              --generate-notes
           fi

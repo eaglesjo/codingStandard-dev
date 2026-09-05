@@ -1,5 +1,6 @@
 name: Validate codingStandard
 
+# Full repository validation gate for every main push, pull request, or manual dispatch.
 on:
   push:
     branches: [main]

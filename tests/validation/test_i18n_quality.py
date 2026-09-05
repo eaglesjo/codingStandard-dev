@@ -15,6 +15,18 @@ assert spec and spec.loader
 module = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(module)
 
+EXPECTED_LOCALES = [
+    "en", "ko", "fr", "es", "zh-CN", "ja", "ru", "tr", "de", "it",
+    "pt", "ar", "hi", "id", "vi", "th", "nl", "pl", "sv", "uk",
+]
+EXPECTED_INTENTS = {
+    "environment.validate",
+    "resources.memory.measure",
+    "tasks.early_stopping",
+    "recovery.checkpoint",
+    "behavior_change.tests",
+}
+
 
 def test_grade_order() -> None:
     assert module.grade(True, True, True) == "A"
@@ -28,26 +40,23 @@ def test_quality_contract_is_20_locale_contract() -> None:
     quality = json.loads((ROOT / "i18n" / "quality.json").read_text(encoding="utf-8"))
     assert quality["contract_version"] == "1.16"
     assert quality["canonical_locale"] == "en"
-    assert len(quality["required_runtime_locales"]) == 20
+    assert quality["required_runtime_locales"] == EXPECTED_LOCALES
     assert quality["quality_levels"]["runtime_minimum"] == "A"
 
 
-def test_semantic_vocabulary_declares_required_policy_intents() -> None:
+def test_policy_intents_have_complete_20_locale_vocabulary() -> None:
     vocabulary = json.loads((ROOT / "i18n" / "concepts" / "policy-vocabulary.json").read_text(encoding="utf-8"))
     concepts = vocabulary["concepts"]
-    expected = {
-        "environment.validate",
-        "resources.memory.measure",
-        "tasks.early_stopping",
-        "recovery.checkpoint",
-        "behavior_change.tests",
-    }
-    assert expected <= concepts.keys()
-    assert all(concepts[name]["required"] for name in expected)
-    assert concepts["environment.validate"]["source_concepts"] == ["environment"]
+    assert EXPECTED_INTENTS <= concepts.keys()
+    for intent_id in EXPECTED_INTENTS:
+        intent = concepts[intent_id]
+        assert intent["required"] is True
+        assert intent["canonical"]
+        assert set(intent["locales"]) == set(EXPECTED_LOCALES)
+        assert all(intent["locales"][locale] for locale in EXPECTED_LOCALES)
 
 
-def test_semantic_parity_uses_canonical_concept_catalog() -> None:
+def test_semantic_parity_uses_policy_intent_vocabulary() -> None:
     with tempfile.TemporaryDirectory() as temp:
         root = Path(temp)
         canonical = root / "core/common/AGENT.md"
@@ -62,7 +71,15 @@ def test_semantic_parity_uses_canonical_concept_catalog() -> None:
             failures = module.semantic_parity(
                 "ko",
                 {"path": "i18n/ko"},
-                {"concepts": {"environment.validate": {"required": True, "source_concepts": ["environment"]}}},
+                {
+                    "concepts": {
+                        "environment.validate": {
+                            "required": True,
+                            "canonical": ["environment", "runtime"],
+                            "locales": {"ko": ["환경", "런타임"]},
+                        }
+                    }
+                },
             )
         finally:
             module.ROOT = old_root
@@ -72,6 +89,6 @@ def test_semantic_parity_uses_canonical_concept_catalog() -> None:
 if __name__ == "__main__":
     test_grade_order()
     test_quality_contract_is_20_locale_contract()
-    test_semantic_vocabulary_declares_required_policy_intents()
-    test_semantic_parity_uses_canonical_concept_catalog()
+    test_policy_intents_have_complete_20_locale_vocabulary()
+    test_semantic_parity_uses_policy_intent_vocabulary()
     print("i18n quality tests passed")

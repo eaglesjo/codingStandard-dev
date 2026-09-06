@@ -15,7 +15,7 @@ jobs:
   promote:
     runs-on: ubuntu-24.04
     env:
-      PUBLIC_REPO: eaglesjo/codingStandard
+      PUBLIC_REPO: eaglesjo/AIEngineeringStandard
       PUBLIC_REPO_TOKEN: ${{ secrets.PUBLIC_REPO_TOKEN }}
 
     steps:

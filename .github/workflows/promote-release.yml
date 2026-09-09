@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: Release tag to promote (for example v1.15.0)
+        description: Release tag to promote (for example v1.17.1)
         required: true
         type: string
 
@@ -95,7 +95,7 @@ jobs:
           if git ls-remote --exit-code --tags origin "refs/tags/${{ inputs.tag }}" >/dev/null 2>&1; then
             echo "Tag ${{ inputs.tag }} already exists on public repository."
           else
-            git tag -a "${{ inputs.tag }}" -m "codingStandard ${{ inputs.tag }}"
+            git tag -a "${{ inputs.tag }}" -m "AIEngineeringStandard ${{ inputs.tag }}"
             git push origin "${{ inputs.tag }}"
           fi
 
@@ -111,6 +111,6 @@ jobs:
           else
             gh release create "$TAG" \
               --repo "$PUBLIC_REPO" \
-              --title "codingStandard ${TAG#v}" \
+              --title "AIEngineeringStandard ${TAG#v}" \
               --generate-notes
           fi

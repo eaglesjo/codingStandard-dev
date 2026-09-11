@@ -35,7 +35,7 @@ REQUIRED_FILES = [
     "domains/vision/AGENT.md", "domains/vision/SKILL.md", "domains/vision/ENVIRONMENT.md", "domains/vision/memory_smoke_test.py", "domains/vision/README.md",
     "platform/colab/AGENT.md", "platform/colab/SKILL.md", "platform/colab/validate_runtime.py",
     "examples/colab/clean_runtime_validation.ipynb", "examples/colab/llm_qlora_validation.ipynb", "docs/development/ML_RUNTIME_VALIDATION.md",
-    "tests/integration/ml_classification_smoke.py", "tests/integration/llm_qlora_strategy_smoke.py",
+    "tests/integration/ml_classification_smoke.py", "tests/integration/llm_qlora_strategy_smoke.py", "tests/integration/test_dependency_resolver_pip.py",
     ".github/instructions/ml.instructions.md", ".github/instructions/colab.instructions.md",
     "scripts/installers/install-domains.ps1", "scripts/installers/install-domains.sh",
     "scripts/validation/check_i18n.py", "scripts/validation/check_i18n_quality.py", "scripts/validation/check_i18n_consistency.py", "scripts/validation/check_structure.py", "scripts/validation/validate-domains.py", "scripts/validation/validate_agent_routing.py", "scripts/validation/validate_profiles.py", "scripts/validation/resolve_dependency_alignment.py", "scripts/installers/test_installers.py", "scripts/development/test_environment.py", "scripts/development/test_dependencies.py",
@@ -74,6 +74,7 @@ def run_environment_tests() -> None:
     run_checker(ROOT / "scripts" / "development" / "test_dependencies.py", "Dependency contract tests")
     run_checker(ROOT / "tests" / "validation" / "test_dependency_compatibility_policy.py", "Dependency compatibility policy tests")
     run_checker(ROOT / "tests" / "validation" / "test_dependency_alignment.py", "Dependency alignment tests")
+    run_checker(ROOT / "tests" / "integration" / "test_dependency_resolver_pip.py", "Real pip dependency resolver tests")
     run_checker(ROOT / "scripts" / "validation" / "validate-domains.py", "Domain resource validation")
     run_checker(ROOT / "scripts" / "validation" / "validate_agent_routing.py", "Agent routing validation")
 

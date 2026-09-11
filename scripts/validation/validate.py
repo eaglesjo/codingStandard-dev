@@ -24,7 +24,7 @@ LEGACY_EXECUTION_REFS = ("COMMON/AGENT.md", "COMMON/SKILL.md", "COMMON/ENVIRONME
 REQUIRED_FILES = [
     "VERSION", "AGENTS.md", "CLAUDE.md", "GEMINI.md", "INSTALL.md",
     "core/common/AGENT.md", "core/common/SKILL.md", "core/common/ENVIRONMENT.md",
-    "core/common/environment.py", "core/common/experiment.py", "core/common/dependencies.py",
+    "core/common/environment.py", "core/common/experiment.py", "core/common/dependencies.py", "core/common/dependency-compatibility-policy.md",
     "domains/ml/AGENT.md", "domains/ml/SKILL.md", "domains/ml/ENVIRONMENT.md", "domains/ml/README.md", "domains/ml/skills/README.md",
     "domains/ml/skills/data/SKILL.md", "domains/ml/skills/evaluation/SKILL.md", "domains/ml/skills/experiment/SKILL.md",
     "domains/ml/skills/training/SKILL.md", "domains/ml/skills/distributed-training/SKILL.md", "domains/ml/skills/hyperparameter-optimization/SKILL.md",
@@ -38,9 +38,9 @@ REQUIRED_FILES = [
     "tests/integration/ml_classification_smoke.py", "tests/integration/llm_qlora_strategy_smoke.py",
     ".github/instructions/ml.instructions.md", ".github/instructions/colab.instructions.md",
     "scripts/installers/install-domains.ps1", "scripts/installers/install-domains.sh",
-    "scripts/validation/check_i18n.py", "scripts/validation/check_i18n_quality.py", "scripts/validation/check_i18n_consistency.py", "scripts/validation/check_structure.py", "scripts/validation/validate-domains.py", "scripts/validation/validate_agent_routing.py", "scripts/validation/validate_profiles.py", "scripts/installers/test_installers.py", "scripts/development/test_environment.py", "scripts/development/test_dependencies.py",
+    "scripts/validation/check_i18n.py", "scripts/validation/check_i18n_quality.py", "scripts/validation/check_i18n_consistency.py", "scripts/validation/check_structure.py", "scripts/validation/validate-domains.py", "scripts/validation/validate_agent_routing.py", "scripts/validation/validate_profiles.py", "scripts/validation/resolve_dependency_alignment.py", "scripts/installers/test_installers.py", "scripts/development/test_environment.py", "scripts/development/test_dependencies.py",
     "scripts/installers/test_installers_windows.ps1", ".github/workflows/windows-install-test.yml",
-    "tests/validation/test_i18n_consistency.py", "tests/colab/README.md", "tests/colab/codingstandard_colab_test.ipynb", "LICENSE",
+    "tests/validation/test_i18n_consistency.py", "tests/validation/test_dependency_alignment.py", "tests/validation/test_dependency_compatibility_policy.py", "tests/validation/fixtures/dependency-alignment-selected-library.json", "tests/colab/README.md", "tests/colab/codingstandard_colab_test.ipynb", "LICENSE",
 ]
 
 
@@ -72,6 +72,8 @@ def check_python() -> None:
 def run_environment_tests() -> None:
     run_checker(ROOT / "scripts" / "development" / "test_environment.py", "Environment detection tests")
     run_checker(ROOT / "scripts" / "development" / "test_dependencies.py", "Dependency contract tests")
+    run_checker(ROOT / "tests" / "validation" / "test_dependency_compatibility_policy.py", "Dependency compatibility policy tests")
+    run_checker(ROOT / "tests" / "validation" / "test_dependency_alignment.py", "Dependency alignment tests")
     run_checker(ROOT / "scripts" / "validation" / "validate-domains.py", "Domain resource validation")
     run_checker(ROOT / "scripts" / "validation" / "validate_agent_routing.py", "Agent routing validation")
 

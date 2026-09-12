@@ -1,0 +1,20 @@
+{
+  "schema_version": "2.0.0",
+  "standard_version": "2.0",
+  "agent": "codex",
+  "expected_static_checks": {
+    "instruction-discovery": "PASS",
+    "skill-discovery": "PASS",
+    "skill-loading": "PASS",
+    "plugin-capability": "UNTESTED",
+    "mcp-capability": "UNTESTED",
+    "permission-check": "UNTESTED",
+    "task-execution": "UNTESTED",
+    "validation": "PASS",
+    "failure-recovery": "UNTESTED",
+    "evidence-reporting": "PASS"
+  },
+  "expected_overall": "UNTESTED",
+  "runtime_invocation": false,
+  "notes": "Deterministic expectation for the repository's Codex static conformance fixture. Runtime evidence must be produced separately and must not be inferred from this fixture."
+}

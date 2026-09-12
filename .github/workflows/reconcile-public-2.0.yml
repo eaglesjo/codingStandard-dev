@@ -1,6 +1,8 @@
 name: Reconcile validated public 2.0 scope
 
 on:
+  push:
+    branches: [release/2.0.0-preparation]
   workflow_dispatch:
 
 permissions:
@@ -8,6 +10,7 @@ permissions:
 
 jobs:
   reconcile:
+    if: "!startsWith(github.event.head_commit.message, 'chore(sync): reconcile validated public 2.0 scope into dev')"
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout dev preparation branch
@@ -19,7 +22,7 @@ jobs:
       - name: Preserve release-preparation metadata
         run: |
           set -euo pipefail
-          mkdir -p /tmp/release-prep/docs/releases /tmp/release-prep/core/common
+          mkdir -p /tmp/release-prep/docs/releases
           cp VERSION /tmp/release-prep/VERSION
           cp README.md /tmp/release-prep/README.md
           cp core/common/environment.py /tmp/release-prep/environment.py

@@ -1,0 +1,69 @@
+name: Reconcile validated public 2.0 scope
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout dev preparation branch
+        uses: actions/checkout@v5
+        with:
+          ref: release/2.0.0-preparation
+          fetch-depth: 1
+
+      - name: Preserve release-preparation metadata
+        run: |
+          set -euo pipefail
+          mkdir -p /tmp/release-prep/docs/releases /tmp/release-prep/core/common
+          cp VERSION /tmp/release-prep/VERSION
+          cp README.md /tmp/release-prep/README.md
+          cp core/common/environment.py /tmp/release-prep/environment.py
+          cp docs/releases/RELEASE.md /tmp/release-prep/docs/releases/RELEASE.md
+          cp docs/releases/RELEASE_CANDIDATE.md /tmp/release-prep/docs/releases/RELEASE_CANDIDATE.md
+          cp docs/releases/RELEASE_NOTES.md /tmp/release-prep/docs/releases/RELEASE_NOTES.md
+          cp docs/releases/RELEASE_STATUS.md /tmp/release-prep/docs/releases/RELEASE_STATUS.md
+
+      - name: Import public 2.0 tree
+        run: |
+          set -euo pipefail
+          git clone --depth 1 --branch main https://github.com/eaglesjo/AIEngineeringStandard.git /tmp/public
+          find . -mindepth 1 -maxdepth 1 ! -name .git ! -name .github -exec rm -rf {} +
+          rsync -a --delete --exclude='.git/' /tmp/public/ ./
+          cp /tmp/release-prep/VERSION VERSION
+          cp /tmp/release-prep/README.md README.md
+          cp /tmp/release-prep/environment.py core/common/environment.py
+          cp /tmp/release-prep/docs/releases/RELEASE.md docs/releases/RELEASE.md
+          cp /tmp/release-prep/docs/releases/RELEASE_CANDIDATE.md docs/releases/RELEASE_CANDIDATE.md
+          cp /tmp/release-prep/docs/releases/RELEASE_NOTES.md docs/releases/RELEASE_NOTES.md
+          cp /tmp/release-prep/docs/releases/RELEASE_STATUS.md docs/releases/RELEASE_STATUS.md
+
+      - name: Record synchronization provenance
+        run: |
+          set -euo pipefail
+          cat > docs/releases/PUBLIC_2_0_RECONCILIATION.md <<'EOF'
+          # Public 2.0 Scope Reconciliation
+
+          This file records the one-time reconciliation of the validated `AIEngineeringStandard` 2.0 public tree into `codingStandard-dev`.
+
+          - Source: `eaglesjo/AIEngineeringStandard` `main`
+          - Purpose: restore the validated public 2.0 implementation scope to the development/validation repository before the final release preparation.
+          - This is not a release authorization and does not create or move any public tag.
+          - Subsequent release work must again flow through `codingStandard-dev` validation before promotion.
+          EOF
+
+      - name: Remove one-time reconciliation workflow
+        run: rm .github/workflows/reconcile-public-2.0.yml
+
+      - name: Commit and push reconciliation
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "chore(sync): reconcile validated public 2.0 scope into dev"
+          git push origin HEAD:release/2.0.0-preparation

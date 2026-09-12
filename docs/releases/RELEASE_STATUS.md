@@ -2,7 +2,7 @@
 
 Release development target: `2.0.0`.
 
-Status: **pre-release preparation**. This branch is a release-candidate preparation surface in `codingStandard-dev`. A validated result may be promoted to `eaglesjo/AIEngineeringStandard`; no public release tag is created by this branch alone.
+Status: **pre-release preparation**. `codingStandard-dev` main is the implementation and validation surface for the release candidate. A validated result may be promoted to `eaglesjo/AIEngineeringStandard`; no public release tag is created by this repository state alone.
 
 ## Validation focus
 
@@ -32,4 +32,4 @@ Status: **pre-release preparation**. This branch is a release-candidate preparat
 
 `v2.0.0` tag/release: **NOT AUTHORIZED YET**.
 
-Required sequence: preparation → development CI → promotion → final public full audit → release authorization → tag/release.
+Required sequence: preparation → development CI → pre-promotion audit → promotion → final public full audit → release authorization → tag/release.

@@ -1,0 +1,91 @@
+#!/usr/bin/env python3
+"""Focused edge-case tests for the bounded Codex JSONL parser."""
+from __future__ import annotations
+
+import json
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT / "scripts" / "validation"))
+
+from run_runtime_conformance import parse_codex_jsonl  # noqa: E402
+
+
+def event(event_type: str, item: dict | None = None, **extra: object) -> str:
+    payload: dict[str, object] = {"type": event_type, **extra}
+    if item is not None:
+        payload["item"] = item
+    return json.dumps(payload)
+
+
+def results(observations: list[dict]) -> dict[str, list[str]]:
+    grouped: dict[str, list[str]] = {}
+    for observation in observations:
+        grouped.setdefault(observation["id"], []).append(observation["result"])
+    return grouped
+
+
+def main() -> int:
+    valid = "\n".join(
+        [
+            event("thread.started"),
+            event("item.completed", {"type": "command_execution", "command": "cat .agents/skills/portable-skill/SKILL.md"}),
+            event("item.completed", {"type": "mcp_tool_call"}),
+            event("item.completed", {"type": "file_change"}),
+            event("turn.completed"),
+        ]
+    )
+    observations, warnings, permission_denial = parse_codex_jsonl(valid)
+    grouped = results(observations)
+    assert not warnings, warnings
+    assert not permission_denial
+    assert grouped["codex-jsonl-event-stream"] == ["OBSERVED"]
+    assert grouped["codex-command-execution"] == ["OBSERVED"]
+    assert grouped["codex-skill-file-access"] == ["OBSERVED"]
+    assert grouped["codex-mcp-tool-call"] == ["OBSERVED"]
+    assert grouped["codex-file-change"] == ["OBSERVED"]
+
+    malformed = "{not-json}\n" + event("turn.completed")
+    observations, warnings, permission_denial = parse_codex_jsonl(malformed)
+    assert not permission_denial
+    assert any("non-JSON output ignored" in warning for warning in warnings)
+    assert results(observations)["codex-jsonl-event-stream"] == ["OBSERVED"]
+
+    unknown = event("future.event", answer="do not infer")
+    observations, warnings, permission_denial = parse_codex_jsonl(unknown)
+    assert not permission_denial
+    assert results(observations)["codex-jsonl-event-stream"] == ["OBSERVED"]
+    assert len(observations) == 1, "unknown events should not create semantic observations"
+    assert any("unknown event type" in warning for warning in warnings)
+
+    top_level_error = event("error", code="PERMISSION_DENIED", message="access denied")
+    observations, warnings, permission_denial = parse_codex_jsonl(top_level_error)
+    assert not warnings
+    assert permission_denial
+    grouped = results(observations)
+    assert grouped["codex-stream-error"] == ["OBSERVED"]
+    assert grouped["codex-permission-denial"] == ["OBSERVED"]
+    assert grouped["codex-jsonl-event-stream"] == ["OBSERVED"]
+
+    item_error = event("item.completed", {"type": "error", "message": "recoverable item error"})
+    observations, warnings, permission_denial = parse_codex_jsonl(item_error)
+    assert not warnings
+    assert not permission_denial
+    grouped = results(observations)
+    assert grouped["codex-jsonl-event-stream"] == ["OBSERVED"]
+    assert len(observations) == 1, "item-level errors must not be promoted to semantic stream errors"
+    assert "codex-stream-error" not in grouped
+
+    malformed_item = event("item.completed")
+    observations, warnings, permission_denial = parse_codex_jsonl(malformed_item)
+    assert not permission_denial
+    assert results(observations)["codex-jsonl-event-stream"] == ["OBSERVED"]
+    assert any("has no object item" in warning for warning in warnings)
+
+    print("Codex JSONL parser edge-case tests passed")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

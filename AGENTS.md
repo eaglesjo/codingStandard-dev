@@ -12,7 +12,9 @@ Apply rules in this order:
 6. Task-specific Skills under `.agents/skills/`
 7. `docs/development/DEVELOPMENT-CONTINUITY.md` when resuming work or when making material workflow/architecture decisions
 
-When substantial repository development is performed from a chat surface with a disposable or sandboxed execution environment, also read `.agents/skills/luna-chat-coder/SKILL.md`. Luna is a continuity and fallback layer; it does not replace these project instructions or the repository's engineering method.
+For substantial repository development from a chat surface with a disposable or sandboxed execution environment, also read `.agents/skills/development-continuity/SKILL.md`. Development Continuity provides continuity and fallback execution; it does not replace these project instructions or the repository's engineering method.
+
+For ordinary software development, also use `.agents/skills/ai-developer/SKILL.md` as the default AI developer persona and coordination layer. Load the specialist Skills relevant to the task rather than treating every Skill as mandatory for every change.
 
 ## 2.0 engineering rules
 

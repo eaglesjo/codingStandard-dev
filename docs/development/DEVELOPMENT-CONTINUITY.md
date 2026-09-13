@@ -8,16 +8,15 @@ When work resumes, read this document before making new changes. The goal is to 
 
 ## Canonical development surfaces
 
-- `codingStandard-dev` is the canonical development, Luna activation, and validation surface.
+- `codingStandard-dev` is the canonical development and validation surface.
 - `AIEngineeringStandard` is the public release surface. Only validated release-ready state is promoted there.
-- `luna-chat-coder` remains an independent standalone template/reference and is not a runtime prerequisite for this repository.
 - `codingStandard-private` is retired. Do not restore it as a source of truth, runtime prerequisite, or hidden dependency.
 
-## Luna role
+## AI Developer role
 
-Luna is a continuity and fallback Skill for AI-assisted development. It is not a separate product-development track that must be developed independently before ordinary work can continue.
+The default development persona is defined by `.agents/skills/ai-developer/SKILL.md`; specialist capabilities are selected per task.
 
-Use Luna to:
+Use the development system to:
 
 - preserve task state and durable handoff information;
 - prefer exact GitHub state when recovering from context or sandbox loss;
@@ -29,16 +28,54 @@ Use Luna to:
 The intended feedback loop is:
 
 ```text
-Use Luna for real development
+Use AI Developer for real development
         -> observe gaps or failure modes
-        -> improve Luna when justified
+        -> improve the smallest owning Skill/rule
         -> validate the improvement
-        -> use the improved Luna in subsequent development
+        -> use the improved system in subsequent development
 ```
+
+## AI Developer Profile v1
+
+Default persona:
+
+> Senior AI Software Engineer + Architect.
+
+Default behavior:
+
+- understand the repository before changing it;
+- respect existing architecture and project instructions;
+- prefer the smallest correct change;
+- distinguish facts, observations, assumptions, and decisions;
+- investigate uncertainty instead of guessing;
+- diagnose failures before retrying;
+- treat validation evidence as part of implementation; and
+- record material decisions for future recovery.
+
+Core specialist Skills introduced with v1:
+
+- `repository-analysis`
+- `implementation`
+- `debugging`
+- `testing-validation`
+- `code-review`
+- `git-release`
+
+Continuity/fallback capabilities are provided by `.agents/skills/development-continuity/`.
+
+These Skills are modular. Do not load every specialist Skill for every task; select the minimum relevant set.
+
+## Naming rule
+
+The development system is vendor- and model-neutral. Do not use a product, model, or personal project codename as the normative developer persona or Skill namespace.
+
+Use role/capability names such as `ai-developer` and `development-continuity` instead.
+
+Historical commits and external repositories may retain old names for traceability, but active repository behavior and documentation must use the neutral names.
 
 ## Documentation rule
 
-Any material project decision, architecture decision, workflow change, cleanup rule, or Luna operating rule that is likely to matter when work resumes must be recorded here or in the more specific normative document that owns the rule.
+Any material project decision, architecture decision, workflow change, cleanup rule, or development operating rule that is likely to matter when work resumes must be recorded here or in the more specific normative document that owns the rule.
 
 Do not rely on chat history as the sole source of truth.
 
@@ -90,10 +127,10 @@ Promotion does not itself authorize a public release.
 
 ## Current known state
 
-- `codingStandard-dev/main` currently contains the integrated Luna policy and the release-promotion boundary.
+- `codingStandard-dev/main` contains the integrated development-continuity policy and release-promotion boundary.
 - The promotion workflow uses `actions/checkout@v5`.
 - Public promotion intentionally excludes `.github/workflows/`, `.agents/`, `AGENTS.md`, and other development-only surfaces according to the workflow export rules.
-- `codingStandard-private` references and `actions/checkout@v4` references were audited and found absent from the current repositories at the time of this document update.
+- `codingStandard-private` references and `actions/checkout@v4` references were audited and found absent from the repositories at the time of the previous cleanup.
 
 ## Resume procedure
 
@@ -101,10 +138,11 @@ When starting a new session:
 
 1. Read `AGENTS.md`.
 2. Read this document.
-3. Read `.agents/skills/luna-chat-coder/SKILL.md` when the task involves substantial chat/sandbox development.
-4. Inspect the current Git revision and working tree.
-5. Check the relevant PR/branch state before continuing an interrupted task.
-6. Reconcile any difference between this document and the actual repository state before acting.
-7. Record new material decisions before ending the work session.
+3. Read `.agents/skills/development-continuity/SKILL.md` when the task involves substantial chat/sandbox development.
+4. Read `.agents/skills/ai-developer/SKILL.md` for ordinary software development.
+5. Inspect the current Git revision and working tree.
+6. Check the relevant PR/branch state before continuing an interrupted task.
+7. Reconcile any difference between this document and the actual repository state before acting.
+8. Record new material decisions before ending the work session.
 
 The repository state is authoritative when it conflicts with stale notes; update this document after resolving the discrepancy.

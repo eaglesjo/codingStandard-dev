@@ -26,33 +26,28 @@ A new AI Developer session MUST treat repository state as authoritative and use 
 - Integration PR: `#18`
 - Previous integration: PR #17 — Development State Recovery v1
 
-## Completed in the previous task
-
-- PR #17 merged into `main` as `5ee47990419419a351afd3a92a5c538320660319`.
-- Durable `CURRENT.md`, `TASKS.md`, and `HISTORY.md` are now part of the canonical development state.
-- PR #17 head `c36c6ef0694f2738868db6f97787439234017801` passed Windows installer validation, architecture profile validation, and codingStandard validation.
-- Development State Recovery v1 is complete.
-
 ## Completed in the current task
 
 - Expanded the 2.0 architecture to nine bounded specialist agents and the AI Developer orchestrator.
 - Defined the three-stage relay: Analysis & Planning, Coding & Execution, Validation & Visualization.
 - Added the normative Agent Contract and machine-readable schema.
 - Added the Skill-to-Agent mapping with conservative capability boundaries.
-- Implemented the first concrete agent surfaces: File Picker and Planner.
-- File Picker is read-only discovery and maps to `repository-analysis`.
-- Planner is read-only planning and maps to `repository-analysis` + `implementation`.
+- Implemented File Picker and Planner as read-only analysis/planning surfaces.
+- Implemented Editor as the bounded write surface.
+- Implemented Executor as the bounded execution surface.
+- Implemented Terminal Monitor as a runtime-observation and escalation surface.
+- Implemented Reviewer as an independent read-only validation surface.
+- Updated durable task state to record these completed agent surfaces.
 
-## Next actions
+## Next bounded actions
 
-1. Define concrete orchestrator state/permission enforcement.
-2. Add bounded Editor and Executor surfaces around the existing Skills.
-3. Add Terminal Monitor and Reviewer/Debugger recovery boundaries.
-4. Add Web Researcher and Browser Agent only where their capabilities are required.
-5. Add automated Agent Contract/schema and state validation.
-6. Validate representative real-development flows and fresh-session recovery.
-7. Refresh PR #18 CI after the next bounded implementation increment.
-8. Merge only after required CI evidence is successful.
+1. Implement the Debugger recovery loop using existing `debugging`, `implementation`, and `testing-validation` Skills.
+2. Implement Web Researcher and Browser Agent surfaces only where external research or browser-visible validation is required.
+3. Define concrete orchestrator state/permission enforcement around the Agent Contract.
+4. Add automated Agent Contract/schema and state validation.
+5. Validate representative real-development flows and fresh-session recovery.
+6. Refresh PR #18 CI after the next bounded implementation increment.
+7. Merge only after required CI evidence is successful.
 
 ## Rules
 

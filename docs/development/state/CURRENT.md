@@ -22,6 +22,7 @@ A new AI Developer session MUST treat repository state as authoritative and use 
 ## Current work branch
 
 - Branch: `feat/development-state-recovery-v1`
+- Integration PR: `#17`
 - Parent integration: PR #16 (`refactor: make AI developer system vendor-neutral`)
 - Parent integration commit: `f78292566c69925cbd1ac9e32853cc8c9b95a5f6`
 
@@ -32,18 +33,21 @@ A new AI Developer session MUST treat repository state as authoritative and use 
 - Defined `HISTORY.md` as the durable development record.
 - Added session recovery rules to the `ai-developer` Skill.
 - Updated the project agent entrypoint and continuity guidance to use durable state during resume.
+- Opened PR #17 for integration into `main`.
 
 ## Next actions
 
-1. Validate the recovery documents and instructions against the repository structure.
-2. Run the smallest meaningful validation for documentation/Skill changes.
-3. Update this state with validation evidence.
-4. Open and validate the integration PR for Development State Recovery v1.
+1. Wait for PR #17 CI and inspect every required check.
+2. Fix any validation failures before merge.
+3. Record final validation evidence here.
+4. Merge PR #17 only after required checks pass.
+5. Verify the resulting `main` state and mark `DSR-001` complete.
 
 ## Evidence
 
 - Parent vendor-neutral PR #16 was merged into `main` as `f78292566c69925cbd1ac9e32853cc8c9b95a5f6`.
-- This task's validation evidence must be added here before completion is claimed.
+- PR #17 head before this state update: `b98655bf9f4b86737db7d940986887a55e019c95`.
+- PR #17 CI evidence is pending and must be checked before completion is claimed.
 
 ## Rules
 

@@ -4,37 +4,36 @@ description: Keep repository development reliable from chat by using the sandbox
 license: MIT
 compatibility: Requires access to durable repository state. The fully specified ChatGPT Web path requires both the GitHub Plugin and the ChatGPT Codex Connector GitHub App for the target repository. GitHub Actions access is required only when an Actions mission is needed. Other Agent Skills hosts may use the core policy only to the extent that equivalent capabilities actually exist.
 metadata:
-  version: "0.1.2"
+  version: "0.2.0"
 ---
 
 # Luna Chat Coder
 
-Luna Chat Coder is a repository-development continuity and fallback policy for ordinary chat. Discover it early, keep it quiet on the normal path, and activate fallback mechanisms only when the normal sandbox or connected GitHub path becomes insufficient.
+Luna Chat Coder is the repository-development continuity and fallback policy for ordinary chat. In `codingStandard-dev`, Luna is a first-class development capability: discover it early, keep it quiet on the normal path, and activate fallback mechanisms only when the normal sandbox or connected GitHub path becomes insufficient.
 
-## Repository boundary: private → dev → release
+## Repository role
 
-This three-repository boundary is a **core invariant** and must not be weakened, bypassed, or silently changed:
+`codingStandard-dev` is now the canonical development and activation repository for Luna within the Coding Standard ecosystem.
 
 ```text
-codingStandard-private  →  codingStandard-dev  →  AIEngineeringStandard
-        Luna 활성화              개발/검증                 Release
+codingStandard-dev  →  AIEngineeringStandard
+   Luna + 개발/검증        공개 Release
 ```
 
-- **`codingStandard-private`** is the **Luna activation and internal policy source**. Luna-specific skills, operating rules, continuity mechanisms, experiments, and internal development guidance belong here. Work performed here must preserve the boundary and must not be treated as a public release by itself.
-- **`codingStandard-dev`** is the **development and validation repository**. Actual implementation, integration, testing, CI validation, and release-candidate preparation are developed and verified here.
-- **`AIEngineeringStandard`** is the **release repository**. Only changes that have passed the required development/validation gates are promoted here for public release. It is the canonical public distribution/release surface.
+- **`codingStandard-dev`** is the source of truth for active Luna behavior, engineering integration, implementation, testing, CI validation, and release-candidate preparation.
+- **`AIEngineeringStandard`** is the public release repository. Only changes that have passed the required development and validation gates are promoted there.
+- **`codingStandard-private` is retired from the active development flow.** Do not require it for Luna activation, development, validation, or ordinary repository work.
+- The standalone `luna-chat-coder` repository remains an independent template/reference project and is not a required dependency of `codingStandard-dev`.
 
 ### Non-negotiable flow
 
-1. Activate or refine Luna behavior in `codingStandard-private`.
-2. Develop and validate implementation in `codingStandard-dev`.
+1. Activate, refine, and validate Luna behavior in `codingStandard-dev`.
+2. Develop and validate the integrated engineering system in `codingStandard-dev`.
 3. Promote only validated release-ready state to `AIEngineeringStandard`.
-4. Never collapse these roles for convenience.
-5. Never treat a private/Luna change as a release merely because it is committed.
+4. Do not reintroduce `codingStandard-private` as a hidden source of truth or runtime prerequisite.
+5. Never treat a development commit as a public release merely because it is committed.
 6. Never use the release repository as the place to discover or develop unvalidated behavior.
-7. When work crosses a repository boundary, preserve exact source identity, validation evidence, and provenance.
-
-If a task appears to require crossing or collapsing these boundaries, stop and explicitly resolve the intended promotion path before making consequential changes.
+7. When work crosses the dev/release boundary, preserve exact source identity, validation evidence, and provenance.
 
 ## Core invariants
 

@@ -14,7 +14,7 @@ This document maps the current reusable Skills to the executable multi-agent sur
 | Terminal Monitor | `debugging` + runtime procedures | observe/escalate | implemented |
 | Reviewer | `code-review`, `testing-validation` | read-only validation | implemented |
 | Browser Agent | future browser-validation Skill | browser validation | planned |
-| Debugger | `debugging`, `implementation`, `testing-validation` | bounded corrective changes | planned |
+| Debugger | `debugging`, `implementation`, `testing-validation` | bounded corrective changes | implemented |
 | AI Developer / Orchestrator | `ai-developer`, `development-continuity` | orchestration/state transition | orchestrator surface planned |
 
 ## Boundary rule
@@ -33,7 +33,20 @@ File Picker
   -> AI Developer decision
 ```
 
-File Picker and Planner establish deterministic discovery-to-plan handoff. Editor adds bounded source writes, Executor adds bounded runtime verification, Terminal Monitor observes long-running or interactive execution, and Reviewer independently validates the candidate without modifying it.
+## Failure recovery loop
+
+```text
+Executor / Terminal Monitor
+  -> failure evidence
+  -> Debugger
+  -> bounded corrective change
+  -> Executor
+  -> Terminal Monitor [when needed]
+  -> Reviewer
+  -> AI Developer decision
+```
+
+Debugger owns diagnosis and the smallest corrective source change. It does not install dependencies, execute arbitrary commands, or self-certify runtime success.
 
 ## Missing Skills
 

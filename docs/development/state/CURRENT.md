@@ -23,16 +23,14 @@ A new AI Developer session MUST treat repository state as authoritative and use 
 
 - Branch: `feat/multi-agent-ai-developer-v2`
 - Base commit: `5ee47990419419a351afd3a92a5c538320660319`
+- Integration PR: `#18`
 - Previous integration: PR #17 — Development State Recovery v1
 
 ## Completed in the previous task
 
 - PR #17 merged into `main` as `5ee47990419419a351afd3a92a5c538320660319`.
 - Durable `CURRENT.md`, `TASKS.md`, and `HISTORY.md` are now part of the canonical development state.
-- PR #17 head `c36c6ef0694f2738868db6f97787439234017801` passed required CI validation:
-  - Windows installer validation
-  - Validate architecture profiles
-  - Validate codingStandard
+- PR #17 head `c36c6ef0694f2738868db6f97787439234017801` passed Windows installer validation, architecture profile validation, and codingStandard validation.
 - Development State Recovery v1 is complete.
 
 ## Current work
@@ -42,15 +40,17 @@ A new AI Developer session MUST treat repository state as authoritative and use 
 - Defined File Picker, Planner, Editor, Validator, Reviewer, and Research & Browser agent boundaries.
 - Defined the common Agent Contract, lifecycle, permission model, orchestration protocol, evidence model, and failure handling.
 - Added `docs/development/MULTI-AGENT-AI-DEVELOPER-2.0.md`.
+- Opened PR #18 for architecture integration.
 
 ## Next actions
 
-1. Define the concrete Agent Contract schema and artifact format.
-2. Define the orchestrator state machine and permission enforcement rules.
-3. Map existing Skills to each agent without duplicating instructions.
-4. Implement the core agent surfaces in bounded increments.
-5. Validate multi-agent flows and fresh-session recovery.
-6. Open an integration PR after the architecture and implementation evidence are ready.
+1. Wait for PR #18 CI and inspect every required check.
+2. Define the concrete Agent Contract schema and artifact format.
+3. Define the orchestrator state machine and permission enforcement rules.
+4. Map existing Skills to each agent without duplicating instructions.
+5. Implement the core agent surfaces in bounded increments.
+6. Implement Research & Browser after the core flow is stable.
+7. Validate multi-agent flows and fresh-session recovery.
 
 ## Rules
 

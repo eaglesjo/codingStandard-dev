@@ -34,3 +34,6 @@ jobs:
 
       - name: Validate multi-agent fixtures
         run: python3 scripts/validation/validate_agent_contract_fixtures.py
+
+      - name: Validate multi-agent E2E simulation
+        run: python3 scripts/validation/validate_multi_agent_e2e.py

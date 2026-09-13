@@ -17,6 +17,9 @@ This file records durable development tasks so a fresh AI Developer session can 
   - [x] Add machine-readable `agent-contract.schema.json`
   - [x] Map existing Skills to agents
   - [x] Implement core agent surfaces: File Picker and Planner
+  - [x] Implement bounded coding/execution surfaces: Editor and Executor
+  - [ ] Implement Terminal Monitor and Reviewer
+  - [ ] Implement Debugger recovery loop
   - [ ] Implement Research & Browser surface
   - [ ] Validate end-to-end multi-agent flows
   - [ ] Validate fresh-session recovery with multi-agent state

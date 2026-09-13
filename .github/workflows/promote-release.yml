@@ -1,10 +1,10 @@
-name: Promote release to public
+name: Promote validated release candidate to public
 
 on:
   workflow_dispatch:
     inputs:
-      tag:
-        description: Release tag to promote (for example v1.17.1)
+      source_sha:
+        description: Exact validated codingStandard-dev commit SHA to promote
         required: true
         type: string
 
@@ -19,23 +19,29 @@ jobs:
       PUBLIC_REPO_TOKEN: ${{ secrets.PUBLIC_REPO_TOKEN }}
 
     steps:
-      - name: Checkout dev source
+      - name: Checkout exact validated source
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          ref: ${{ inputs.source_sha }}
 
-      - name: Validate release tag
+      - name: Validate source revision
         shell: bash
         run: |
           set -euo pipefail
-          TAG="${{ inputs.tag }}"
-          [[ "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || {
-            echo "Invalid release tag: $TAG"
+          SOURCE_SHA="${{ inputs.source_sha }}"
+          [[ "$SOURCE_SHA" =~ ^[0-9a-f]{40}$ ]] || {
+            echo "source_sha must be a full 40-character commit SHA"
             exit 1
           }
-          VERSION="$(cat VERSION)"
-          [[ "$TAG" == "v$VERSION" ]] || {
-            echo "Tag $TAG does not match VERSION $VERSION"
+          ACTUAL_SHA="$(git rev-parse HEAD)"
+          [[ "$ACTUAL_SHA" == "$SOURCE_SHA" ]] || {
+            echo "Checked out SHA $ACTUAL_SHA does not match requested source_sha $SOURCE_SHA"
+            exit 1
+          }
+          git fetch origin main --depth=1
+          git merge-base --is-ancestor "$SOURCE_SHA" origin/main || {
+            echo "Source SHA is not an ancestor of codingStandard-dev main"
             exit 1
           }
 
@@ -68,7 +74,7 @@ jobs:
             fi
           done
 
-      - name: Publish to public repository
+      - name: Publish validated source to public main
         shell: bash
         run: |
           set -euo pipefail
@@ -88,29 +94,13 @@ jobs:
           if git diff --cached --quiet; then
             echo "Public repository already matches the promoted source."
           else
-            git commit -m "release: promote ${{ inputs.tag }} from codingStandard-dev"
+            git commit -m "promote: validated codingStandard-dev ${{ inputs.source_sha }}"
             git push origin main
           fi
 
-          if git ls-remote --exit-code --tags origin "refs/tags/${{ inputs.tag }}" >/dev/null 2>&1; then
-            echo "Tag ${{ inputs.tag }} already exists on public repository."
-          else
-            git tag -a "${{ inputs.tag }}" -m "AIEngineeringStandard ${{ inputs.tag }}"
-            git push origin "${{ inputs.tag }}"
-          fi
-
-      - name: Create public GitHub release
+      - name: Report promotion boundary
         shell: bash
-        env:
-          GH_TOKEN: ${{ secrets.PUBLIC_REPO_TOKEN }}
         run: |
-          set -euo pipefail
-          TAG="${{ inputs.tag }}"
-          if gh release view "$TAG" --repo "$PUBLIC_REPO" >/dev/null 2>&1; then
-            echo "GitHub release $TAG already exists on public repository."
-          else
-            gh release create "$TAG" \
-              --repo "$PUBLIC_REPO" \
-              --title "AIEngineeringStandard ${TAG#v}" \
-              --generate-notes
-          fi
+          echo "Promotion completed for validated source ${{ inputs.source_sha }}."
+          echo "No public tag or GitHub Release is created by this workflow."
+          echo "Release authorization remains a separate post-promotion audit gate." 

@@ -20,7 +20,7 @@ jobs:
 
     steps:
       - name: Checkout exact validated source
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
           ref: ${{ inputs.source_sha }}
@@ -103,4 +103,4 @@ jobs:
         run: |
           echo "Promotion completed for validated source ${{ inputs.source_sha }}."
           echo "No public tag or GitHub Release is created by this workflow."
-          echo "Release authorization remains a separate post-promotion audit gate." 
+          echo "Release authorization remains a separate post-promotion audit gate."

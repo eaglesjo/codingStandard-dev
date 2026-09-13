@@ -73,6 +73,22 @@ Use role/capability names such as `ai-developer` and `development-continuity` in
 
 Historical commits and external repositories may retain old names for traceability, but active repository behavior and documentation must use the neutral names.
 
+## Durable development state
+
+Development continuity is state recovery, not chat transcript recovery.
+
+The canonical state surfaces are:
+
+- `docs/development/state/CURRENT.md` — immediate active task, repository/branch references, blockers, evidence, and next action.
+- `docs/development/state/TASKS.md` — active and queued tasks.
+- `docs/development/state/HISTORY.md` — durable record of material state transitions.
+
+A fresh session should load these files after the project instructions and continuity Skill, then reconcile them with actual Git/PR state. Git state is authoritative when a state file is stale.
+
+Persist decisions, task status, repository revisions, PR references, validation evidence, blockers, and next actions. Do not persist conversational transcripts merely for continuity.
+
+Before ending a development session, update the state when material progress occurred. A task is not complete until its validation evidence is recorded.
+
 ## Documentation rule
 
 Any material project decision, architecture decision, workflow change, cleanup rule, or development operating rule that is likely to matter when work resumes must be recorded here or in the more specific normative document that owns the rule.
@@ -100,16 +116,6 @@ Before deleting a branch, determine:
 
 Delete only branches with no remaining development or recovery value.
 
-Current audit decisions:
-
-- `AIEngineeringStandard/release/2.0.0-rc.1`: deletion candidate; it is fully behind `main` with no unique commits.
-- `AIEngineeringStandard/promote/2.0-dependency-compatibility`: preserve; it contains unique dependency-compatibility work.
-- `AIEngineeringStandard/audit/ai-engineering-standard-2.0-gap`: preserve; it contains unique conformance/audit work.
-- `codingStandard-dev/chore/luna-runtime-cleanup`: merged cleanup branch; deletion candidate.
-- `codingStandard-dev/fix/2.0-release-promotion-boundary`: merged cleanup branch with no unique commits; deletion candidate.
-
-These are decisions as of the current development revision. Re-audit before deleting if the repository state has changed.
-
 ## Promotion boundary
 
 The intended flow is:
@@ -125,24 +131,19 @@ codingStandard-dev
 
 Promotion does not itself authorize a public release.
 
-## Current known state
-
-- `codingStandard-dev/main` contains the integrated development-continuity policy and release-promotion boundary.
-- The promotion workflow uses `actions/checkout@v5`.
-- Public promotion intentionally excludes `.github/workflows/`, `.agents/`, `AGENTS.md`, and other development-only surfaces according to the workflow export rules.
-- `codingStandard-private` references and `actions/checkout@v4` references were audited and found absent from the repositories at the time of the previous cleanup.
-
 ## Resume procedure
 
 When starting a new session:
 
-1. Read `AGENTS.md`.
-2. Read this document.
-3. Read `.agents/skills/development-continuity/SKILL.md` when the task involves substantial chat/sandbox development.
-4. Read `.agents/skills/ai-developer/SKILL.md` for ordinary software development.
-5. Inspect the current Git revision and working tree.
-6. Check the relevant PR/branch state before continuing an interrupted task.
-7. Reconcile any difference between this document and the actual repository state before acting.
-8. Record new material decisions before ending the work session.
+1. Identify the repository and current revision.
+2. Read `AGENTS.md`.
+3. Read this document.
+4. Read `.agents/skills/development-continuity/SKILL.md` when the task involves substantial chat/sandbox development.
+5. Read `.agents/skills/ai-developer/SKILL.md` for ordinary software development.
+6. Read `docs/development/state/CURRENT.md` and `TASKS.md` when present.
+7. Inspect the current Git revision, working tree, branch, and relevant PR state.
+8. Reconcile any difference between durable notes and actual repository state before acting.
+9. Resume from the first incomplete bounded action.
+10. Record new material decisions and validation evidence before ending the session.
 
-The repository state is authoritative when it conflicts with stale notes; update this document after resolving the discrepancy.
+The repository state is authoritative when it conflicts with stale notes; update the durable state after resolving the discrepancy.

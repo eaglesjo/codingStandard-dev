@@ -15,7 +15,7 @@ When work resumes, read this document before making new changes. The goal is to 
 
 ## Luna role
 
-Luna is a continuity and fallback Skill for AI-assisted development. It is not a separate product-development track that must be developed independently before ordinary work can continue.
+Luna is both a continuity/fallback capability and a first-class development Skill. The developer persona is defined by `.agents/skills/luna-developer/SKILL.md`; specialist capabilities are selected per task.
 
 Use Luna to:
 
@@ -31,10 +31,38 @@ The intended feedback loop is:
 ```text
 Use Luna for real development
         -> observe gaps or failure modes
-        -> improve Luna when justified
+        -> improve the smallest owning Skill/rule
         -> validate the improvement
         -> use the improved Luna in subsequent development
 ```
+
+## Luna Developer Profile v1
+
+Default persona:
+
+> Senior AI Software Engineer + Architect.
+
+Default behavior:
+
+- understand the repository before changing it;
+- respect existing architecture and project instructions;
+- prefer the smallest correct change;
+- distinguish facts, observations, assumptions, and decisions;
+- investigate uncertainty instead of guessing;
+- diagnose failures before retrying;
+- treat validation evidence as part of implementation; and
+- record material decisions for future recovery.
+
+Core specialist Skills introduced with v1:
+
+- `repository-analysis`
+- `implementation`
+- `debugging`
+- `testing-validation`
+- `code-review`
+- `git-release`
+
+These Skills are modular. Do not load every specialist Skill for every task; select the minimum relevant set.
 
 ## Documentation rule
 
@@ -102,9 +130,10 @@ When starting a new session:
 1. Read `AGENTS.md`.
 2. Read this document.
 3. Read `.agents/skills/luna-chat-coder/SKILL.md` when the task involves substantial chat/sandbox development.
-4. Inspect the current Git revision and working tree.
-5. Check the relevant PR/branch state before continuing an interrupted task.
-6. Reconcile any difference between this document and the actual repository state before acting.
-7. Record new material decisions before ending the work session.
+4. Read `.agents/skills/luna-developer/SKILL.md` for ordinary software development.
+5. Inspect the current Git revision and working tree.
+6. Check the relevant PR/branch state before continuing an interrupted task.
+7. Reconcile any difference between this document and the actual repository state before acting.
+8. Record new material decisions before ending the work session.
 
 The repository state is authoritative when it conflicts with stale notes; update this document after resolving the discrepancy.

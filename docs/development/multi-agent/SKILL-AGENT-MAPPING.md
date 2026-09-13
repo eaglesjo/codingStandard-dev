@@ -11,8 +11,8 @@ This document maps the current reusable Skills to the executable multi-agent sur
 | Web Researcher | future research/browser Skill | web research only | planned |
 | Editor | `implementation`, `debugging`, `testing-validation` | bounded source writes | implemented |
 | Executor | `testing-validation` + runtime/environment procedures | bounded execution | implemented |
-| Terminal Monitor | `debugging` + runtime procedures | observe/escalate | planned |
-| Reviewer | `code-review`, `testing-validation` | read-only validation | planned |
+| Terminal Monitor | `debugging` + runtime procedures | observe/escalate | implemented |
+| Reviewer | `code-review`, `testing-validation` | read-only validation | implemented |
 | Browser Agent | future browser-validation Skill | browser validation | planned |
 | Debugger | `debugging`, `implementation`, `testing-validation` | bounded corrective changes | planned |
 | AI Developer / Orchestrator | `ai-developer`, `development-continuity` | orchestration/state transition | orchestrator surface planned |
@@ -28,11 +28,12 @@ File Picker
   -> Planner
   -> Editor
   -> Executor
+  -> Terminal Monitor [when runtime monitoring is needed]
   -> Reviewer
   -> AI Developer decision
 ```
 
-File Picker and Planner establish deterministic discovery-to-plan handoff. Editor adds bounded source writes, and Executor adds bounded runtime verification. Together they form the first executable development loop without introducing uncontrolled write concurrency.
+File Picker and Planner establish deterministic discovery-to-plan handoff. Editor adds bounded source writes, Executor adds bounded runtime verification, Terminal Monitor observes long-running or interactive execution, and Reviewer independently validates the candidate without modifying it.
 
 ## Missing Skills
 

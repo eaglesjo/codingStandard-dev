@@ -15,8 +15,8 @@ This file records durable development tasks so a fresh AI Developer session can 
   - [x] Define efficient real-development relay, parallelization, and context-economy rules
   - [x] Add architecture document
   - [x] Add machine-readable `agent-contract.schema.json`
-  - [ ] Map existing Skills to agents
-  - [ ] Implement core agent surfaces
+  - [x] Map existing Skills to agents
+  - [x] Implement core agent surfaces: File Picker and Planner
   - [ ] Implement Research & Browser surface
   - [ ] Validate end-to-end multi-agent flows
   - [ ] Validate fresh-session recovery with multi-agent state

@@ -20,7 +20,7 @@ This file records durable development tasks so a fresh AI Developer session can 
   - [x] Implement bounded coding/execution surfaces: Editor and Executor
   - [x] Implement Terminal Monitor and Reviewer
   - [x] Implement Debugger recovery loop
-  - [ ] Implement Research & Browser surface
+  - [x] Implement Research & Browser surface
   - [ ] Validate end-to-end multi-agent flows
   - [ ] Validate fresh-session recovery with multi-agent state
   - [ ] Open integration PR / merge architecture after required CI evidence

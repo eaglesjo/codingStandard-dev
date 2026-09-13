@@ -32,22 +32,18 @@ A new AI Developer session MUST treat repository state as authoritative and use 
 - Defined the three-stage relay: Analysis & Planning, Coding & Execution, Validation & Visualization.
 - Added the normative Agent Contract and machine-readable schema.
 - Added the Skill-to-Agent mapping with conservative capability boundaries.
-- Implemented File Picker and Planner as read-only analysis/planning surfaces.
-- Implemented Editor as the bounded write surface.
-- Implemented Executor as the bounded execution surface.
-- Implemented Terminal Monitor as a runtime-observation and escalation surface.
-- Implemented Reviewer as an independent read-only validation surface.
-- Implemented Debugger as the bounded failure-diagnosis and corrective-change surface.
-- Implemented Web Researcher as the bounded external technical research surface.
-- Implemented Browser Agent as the bounded browser-visible validation surface.
-- Updated durable task state to record all nine specialist surfaces.
+- Implemented all nine bounded specialist agent surfaces.
+- Defined the concrete Orchestrator control surface.
+- Defined role permission ceilings, dispatch/acceptance gates, retry discipline, and lifecycle state authority.
+- Added `scripts/validation/validate_agent_contract.py` for automated contract/orchestrator policy validation.
+- Updated durable task state with the completed control-plane increment.
 
 ## Next bounded actions
 
-1. Define concrete orchestrator state/permission enforcement around the Agent Contract.
-2. Add automated Agent Contract/schema and state validation.
-3. Validate representative real-development flows and fresh-session recovery.
-4. Refresh PR #18 CI after the next bounded implementation increment.
+1. Run automated Agent Contract/schema validation against the actual branch.
+2. Validate representative end-to-end multi-agent flows.
+3. Validate fresh-session recovery with multi-agent state.
+4. Refresh PR #18 CI after the next bounded validation increment.
 5. Merge only after required CI evidence is successful.
 
 ## Rules

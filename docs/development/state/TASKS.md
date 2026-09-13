@@ -21,6 +21,9 @@ This file records durable development tasks so a fresh AI Developer session can 
   - [x] Implement Terminal Monitor and Reviewer
   - [x] Implement Debugger recovery loop
   - [x] Implement Research & Browser surface
+  - [x] Define concrete Orchestrator control surface
+  - [x] Define permission ceilings and lifecycle transition enforcement
+  - [x] Add automated Agent Contract enforcement validation
   - [ ] Validate end-to-end multi-agent flows
   - [ ] Validate fresh-session recovery with multi-agent state
   - [ ] Open integration PR / merge architecture after required CI evidence
@@ -28,7 +31,6 @@ This file records durable development tasks so a fresh AI Developer session can 
 ## Backlog
 
 - [ ] Add automated checks for required recovery state fields.
-- [ ] Add schema validation tests for agent contract artifacts.
 - [ ] Add bounded stale-state detection for `CURRENT.md`.
 - [ ] Evaluate controlled parallel execution only after sequential orchestration is proven.
 - [ ] Evaluate whether Researcher and Browser should remain separate or share infrastructure after V2 integration evidence exists.

@@ -8,25 +8,27 @@ This file records durable development tasks so a fresh AI Developer session can 
   - [x] Define agent roles and boundaries
   - [x] Define AI Developer as orchestrator
   - [x] Define Agent Contract concept
+  - [x] Define concrete Agent Contract schema and artifact format
   - [x] Define permission model
-  - [x] Define lifecycle and orchestration protocol
+  - [x] Define lifecycle/state machine and orchestration protocol
   - [x] Define evidence and failure handling
+  - [x] Define efficient real-development relay, parallelization, and context-economy rules
   - [x] Add architecture document
-  - [ ] Define concrete Agent Contract schema
-  - [ ] Define orchestrator state machine
+  - [x] Add machine-readable `agent-contract.schema.json`
   - [ ] Map existing Skills to agents
   - [ ] Implement core agent surfaces
   - [ ] Implement Research & Browser surface
   - [ ] Validate end-to-end multi-agent flows
   - [ ] Validate fresh-session recovery with multi-agent state
-  - [ ] Open integration PR
+  - [ ] Open integration PR / merge architecture after required CI evidence
 
 ## Backlog
 
 - [ ] Add automated checks for required recovery state fields.
+- [ ] Add schema validation tests for agent contract artifacts.
 - [ ] Add bounded stale-state detection for `CURRENT.md`.
-- [ ] Evaluate whether Research and Browser should split into separate agents after V2 integration evidence exists.
 - [ ] Evaluate controlled parallel execution only after sequential orchestration is proven.
+- [ ] Evaluate whether Researcher and Browser should remain separate or share infrastructure after V2 integration evidence exists.
 
 ## Completed reference
 

@@ -4,9 +4,24 @@
 
 AI Engineering Standard 2.0 extends the vendor-neutral AI Developer into a role-based multi-agent development system.
 
-The goal is not to maximize the number of agents. The goal is to make development work auditable, bounded, recoverable, and independently verifiable.
+The goal is not to maximize the number of agents. The goal is to make development work auditable, bounded, recoverable, efficient, and independently verifiable.
 
-The AI Developer remains the orchestrator. Specialist agents perform bounded work under explicit contracts and permissions.
+The AI Developer remains the orchestrator. Nine specialist agents perform bounded work under explicit contracts and permissions.
+
+The nine agents are organized into three relay stages:
+
+```text
+Stage 1 — Analysis & Planning
+  File Picker -> Planner -> Web Researcher (when required)
+
+Stage 2 — Coding & Execution
+  Editor -> Executor -> Terminal Monitor
+
+Stage 3 — Validation & Visualization
+  Reviewer -> Browser Agent -> Debugger (when required)
+```
+
+The arrows describe the default relay order, not a mandatory serial execution of every agent. The orchestrator may parallelize independent work, skip unnecessary agents, or loop back to the smallest owning agent when evidence requires it.
 
 ## 2. Architecture
 
@@ -14,58 +29,49 @@ The AI Developer remains the orchestrator. Specialist agents perform bounded wor
                          AI Developer
                          Orchestrator
                               |
-        +----------+----------+----------+-----------+
-        |          |          |          |           |
-        v          v          v          v           v
-   File Picker  Planner    Editor    Validator   Reviewer
-                                                
-                         +-----------------------+
-                         |
-                         v
-                  Research & Browser
+             +----------------+----------------+
+             |                |                |
+             v                v                v
+       Stage 1            Stage 2          Stage 3
+       Analysis           Coding           Validation
+       & Planning         & Execution      & Visualization
+             |                |                |
+   +---------+--------+   +---+------+---+   +---+------+------+
+   |         |        |   |          |   |   |          |      |
+   v         v        v   v          v   v   v          v      v
+ File      Planner  Web  Editor   Executor TM  Reviewer Browser Debugger
+ Picker            Researcher          Monitor            Agent
 ```
 
-The orchestrator owns task routing, dependency ordering, state transitions, retry decisions, approval boundaries, and durable recording.
+The orchestrator owns task routing, dependency ordering, parallelization decisions, state transitions, retry decisions, approval boundaries, and durable recording.
 
 Specialist agents MUST NOT arbitrarily invoke one another. Agent-to-agent coordination is mediated by the orchestrator.
 
-## 3. Agents
+## 3. Nine Specialist Agents
 
-### 3.1 AI Developer / Orchestrator
+### 3.1 Stage 1 — Analysis & Planning
 
-Responsibilities:
-
-- interpret the user objective
-- establish task scope and acceptance criteria
-- select and sequence specialist agents
-- enforce permission boundaries
-- reconcile agent output with repository state
-- decide whether work proceeds, loops back, or becomes blocked
-- require evidence before completion claims
-- record durable state and decisions
-
-The orchestrator does not replace specialist expertise; it coordinates it.
-
-### 3.2 File Picker Agent
+#### File Picker Agent
 
 Responsibilities:
 
 - discover relevant files, directories, tests, configuration, and documentation
 - trace direct and relevant indirect dependencies
-- identify authoritative sources
+- identify authoritative repository sources
 - minimize unnecessary context loading
 - return a bounded evidence set for the task
 
 It MUST NOT modify repository content.
 
-### 3.3 Planner Agent
+#### Planner Agent
 
 Responsibilities:
 
-- analyze requirements and current state
+- analyze the user objective and current state
 - decompose work into bounded actions
-- identify dependencies, risks, and affected surfaces
+- identify dependencies, risks, affected surfaces, and rollback considerations
 - define implementation order
+- identify work that can safely run in parallel
 - define verification strategy and done criteria
 
 It MUST NOT modify repository content.
@@ -74,13 +80,29 @@ Minimum plan output:
 
 - objective
 - targets
-- method
+- assumptions
 - dependencies
+- execution graph
 - risks
 - verification
 - done criteria
+- rollback/recovery strategy
 
-### 3.4 Editor Agent
+#### Web Researcher Agent
+
+Responsibilities:
+
+- research current external technical information
+- discover authoritative documentation, API specifications, standards, and release information
+- compare sources and detect conflicting claims
+- provide source-backed implementation constraints
+- separate external evidence from repository evidence
+
+It SHOULD run in parallel with repository analysis when the task has independent external-information needs. It MUST NOT be invoked merely because web access is available.
+
+### 3.2 Stage 2 — Coding & Execution
+
+#### Editor Agent
 
 Responsibilities:
 
@@ -90,21 +112,36 @@ Responsibilities:
 - preserve existing architecture and project instructions
 - report exactly what changed and what remains uncertain
 
-The Editor MUST NOT self-certify final completion. Validation and review are separate responsibilities.
+The Editor MUST NOT self-certify final completion.
 
-### 3.5 Validator Agent
+#### Executor Agent
 
 Responsibilities:
 
-- execute tests, lint, type checks, builds, and smoke tests as applicable
-- inspect runtime behavior when required
-- collect reproducible validation evidence
-- distinguish implementation failures from environment failures
-- report exact failed checks and likely owning scope
+- prepare the declared development/runtime environment
+- install or restore dependencies when authorized
+- run build, test, migration, generation, packaging, or application commands
+- manage bounded local or cloud execution tasks
+- capture command, exit status, duration, and relevant artifacts
+- distinguish setup failures from application failures
 
-The Validator MUST NOT modify production source merely to make validation pass.
+Execution MUST be reproducible and task-scoped. Installing arbitrary global software or changing persistent host configuration is prohibited unless explicitly authorized.
 
-### 3.6 Reviewer Agent
+#### Terminal Monitor Agent
+
+Responsibilities:
+
+- observe long-running or interactive execution output
+- detect crashes, hangs, repeated errors, warnings, resource exhaustion, and abnormal termination
+- correlate runtime symptoms with the executing command and task
+- trigger a bounded escalation to the orchestrator when intervention is required
+- preserve relevant terminal evidence
+
+Terminal Monitor is primarily observational. It MUST NOT silently edit source code or restart a failing workload indefinitely.
+
+### 3.3 Stage 3 — Validation & Visualization
+
+#### Reviewer Agent
 
 Responsibilities:
 
@@ -124,24 +161,35 @@ Review results:
 - `REQUEST_CHANGES`
 - `BLOCKED`
 
-A `REQUEST_CHANGES` result returns the task to the orchestrator for replanning or editor execution.
+A `REQUEST_CHANGES` result returns the task to the orchestrator for a bounded replan/edit cycle.
 
-### 3.7 Research & Browser Agent
+#### Browser Agent
 
 Responsibilities:
 
-- research external technical information
-- discover and compare authoritative sources
-- verify source claims
-- navigate websites when browser interaction is required
-- perform bounded browser validation or website interaction
-- return source-backed evidence separately from repository evidence
+- launch or connect to an approved browser environment
+- validate web application navigation and critical user flows
+- inspect rendered UI, layout, interaction, console errors, and network failures when relevant
+- verify forms, buttons, links, and visible states
+- capture reproducible browser evidence
 
-Research and browser capabilities are initially one agent boundary. They may be split later if independent scaling, permissions, or lifecycle requirements justify it.
+Browser validation is required only for tasks whose acceptance criteria include browser-visible behavior. It MUST NOT be treated as a substitute for deterministic tests.
+
+#### Debugger Agent
+
+Responsibilities:
+
+- analyze failures reported by Validator, Executor, Terminal Monitor, Reviewer, or Browser Agent
+- isolate root cause and owning surface
+- produce the smallest corrective change
+- apply code/config/test fixes when authorized
+- hand the result back to Executor/Validator for independent verification
+
+Debugger is an exception-handling specialist, not a permanent final-stage editor. It MUST NOT declare success based only on symptom disappearance.
 
 ## 4. Agent Contract
 
-Every agent invocation uses a common conceptual contract.
+Every agent invocation uses a common conceptual contract. The normative schema is defined in `docs/development/multi-agent/AGENT-CONTRACT.md`.
 
 ### Input
 
@@ -150,10 +198,13 @@ Task ID
 Objective
 Repository / workspace
 Current durable state
+Agent role and version
 Allowed scope
-Available context
+Permissions
+Available context / evidence references
 Constraints
 Required evidence
+Attempt number
 ```
 
 ### Output
@@ -166,63 +217,170 @@ Evidence
 Risks
 Blockers
 Next action
+Artifacts
 ```
 
 Agent output MUST be machine-readable enough for the orchestrator to reason about state transitions, while remaining useful to a human reviewer.
 
 ## 5. Permission Model
 
-| Agent | Read | Write | Execute | Web |
-| --- | --- | --- | --- | --- |
-| File Picker | yes | no | no | no |
-| Planner | yes | no | no | no |
-| Editor | yes | yes | bounded | no |
-| Validator | yes | no | yes | no |
-| Reviewer | yes | no | bounded | no |
-| Research & Browser | bounded | no | bounded | yes |
-| AI Developer | bounded | bounded | bounded | bounded |
+| Agent | Read | Write | Execute | Web | Runtime Observe |
+| --- | --- | --- | --- | --- | --- |
+| File Picker | yes | no | no | no | no |
+| Planner | yes | no | no | no | no |
+| Web Researcher | bounded | no | bounded | yes | no |
+| Editor | yes | yes | bounded | no | no |
+| Executor | yes | bounded | yes | bounded | yes |
+| Terminal Monitor | bounded | no | bounded | no | yes |
+| Reviewer | yes | no | bounded | no | no |
+| Browser Agent | bounded | no | bounded | yes | yes |
+| Debugger | yes | yes | bounded | no | no |
+| AI Developer | bounded | bounded | bounded | bounded | bounded |
 
 Permissions are task-scoped, not global. A capability being available to an agent does not imply unrestricted access.
 
-## 6. Lifecycle
+## 6. Relay Model and Efficient Real-Development Strategy
 
-```text
-READY
-  -> IN_PROGRESS
-  -> PASS
-  -> PASS_WITH_CONCERNS
-  -> REQUEST_CHANGES
-  -> BLOCKED
-  -> FAILED
-```
+The relay is optimized around **handoff quality, parallel work, and early failure detection**, not around making every request pass through all nine agents.
 
-`REQUEST_CHANGES` is a controlled loop, not an implicit retry.
-
-Retries MUST identify the cause of failure or uncertainty before re-execution. Blind repetition is prohibited.
-
-## 7. Orchestration Protocol
-
-Default development flow:
+### 6.1 Default relay
 
 ```text
 User Request
     -> AI Developer
     -> File Picker
     -> Planner
-    -> [Research & Browser when needed]
+    -> Web Researcher [if external facts are needed]
     -> Editor
-    -> Validator
+    -> Executor
+    -> Terminal Monitor [for long-running/interactive execution]
     -> Reviewer
+    -> Browser Agent [for browser-visible acceptance criteria]
     -> AI Developer decision
          |-> PASS -> Record
-         |-> PASS_WITH_CONCERNS -> Record + explicit acceptance
-         |-> REQUEST_CHANGES -> Planner/Editor loop
+         |-> PASS_WITH_CONCERNS -> explicit acceptance -> Record
+         |-> REQUEST_CHANGES -> Planner -> Editor/Debugger -> Executor -> validation
          |-> BLOCKED -> Record blocker and stop
 ```
 
-The orchestrator may skip an agent when its responsibility is demonstrably unnecessary. Skipping MUST NOT bypass a required verification or review boundary.
+### 6.2 Dynamic routing
 
-## 8. State and Recovery
+The orchestrator SHOULD select the smallest workflow that satisfies the task's evidence requirements.
+
+Examples:
+
+- documentation-only change: File Picker -> Planner -> Editor -> Reviewer
+- isolated bug fix with tests: File Picker -> Planner -> Editor -> Executor -> Reviewer
+- dependency/API change: File Picker + Web Researcher (parallel) -> Planner -> Editor -> Executor -> Reviewer
+- web UI feature: File Picker + Web Researcher -> Planner -> Editor -> Executor -> Terminal Monitor -> Reviewer + Browser Agent
+- runtime crash: File Picker -> Planner -> Executor/Terminal Monitor -> Debugger -> Executor -> Reviewer
+- long-running job: Planner -> Editor -> Executor -> Terminal Monitor -> execution evidence -> Reviewer
+
+A stage or agent MAY be skipped only when its responsibility is demonstrably unnecessary. Skipping an agent MUST NOT bypass a required acceptance criterion.
+
+### 6.3 Parallelization rules
+
+Parallel execution is allowed only when work units have no unresolved write dependency or when their outputs are read-only evidence.
+
+Safe examples:
+
+- File Picker repository scan || Web Researcher external research
+- independent test suites || independent static checks
+- Reviewer inspection || Browser Agent validation after the same immutable candidate state exists
+
+Unsafe examples:
+
+- two Editors modifying overlapping files
+- Editor changing code while Reviewer reviews the same mutable worktree
+- Debugger editing before failure evidence is captured
+
+When parallel outputs conflict, the orchestrator reconciles them before the next write-capable step.
+
+### 6.4 Context economy
+
+To keep real development fast and reliable:
+
+1. File Picker returns targeted file/evidence references rather than the entire repository.
+2. Planner receives the minimum sufficient context plus durable state.
+3. Agents pass artifacts and evidence references instead of repeating full outputs.
+4. Executor records command-level evidence rather than dumping unlimited logs into agent context.
+5. Terminal Monitor escalates only actionable anomalies.
+6. Reviewer receives the final diff plus relevant plan, tests, and evidence—not every intermediate transcript.
+7. Debugger receives the smallest reproducible failure package.
+
+### 6.5 Quality gates
+
+The orchestrator MUST enforce gates at stage boundaries:
+
+```text
+Stage 1 Gate:
+  scope + targets + plan + required external evidence known
+
+Stage 2 Gate:
+  intended changes applied + execution evidence captured
+
+Stage 3 Gate:
+  acceptance criteria independently verified
+
+Final Gate:
+  no unresolved blocker + evidence sufficient for completion claim + durable state recorded
+```
+
+A failed gate sends the task to the smallest responsible corrective step instead of restarting the entire pipeline.
+
+## 7. Lifecycle and State Machine
+
+```text
+READY
+  -> ANALYZING
+  -> PLANNING
+  -> EDITING
+  -> EXECUTING
+  -> VALIDATING
+  -> REVIEWING
+  -> PASS
+
+VALIDATING/REVIEWING
+  -> REQUEST_CHANGES
+  -> PLANNING
+
+Any active state
+  -> BLOCKED
+  -> FAILED
+
+FAILED/BLOCKED
+  -> PLANNING only after a bounded recovery action is identified
+```
+
+`REQUEST_CHANGES` is a controlled loop, not an implicit retry.
+
+Retries MUST identify the cause of failure or uncertainty before re-execution. Blind repetition is prohibited.
+
+## 8. Orchestration Protocol
+
+The orchestrator creates a task envelope, selects agents, enforces permissions, and records every material handoff.
+
+Each handoff SHOULD contain:
+
+```text
+Task ID
+Parent task / dependency
+Current state
+Objective
+Input evidence references
+Expected output
+Allowed scope
+Permissions
+Attempt number
+Timeout / stop condition
+Success criteria
+```
+
+The receiving agent MUST return a contract-compliant result. The orchestrator validates that result before advancing the state.
+
+Specialists MUST NOT create hidden side effects outside their declared scope.
+
+## 9. State and Recovery
 
 Development State Recovery is the persistence layer for multi-agent execution.
 
@@ -238,16 +396,19 @@ Future multi-agent state MAY include:
 
 - active agent
 - agent status
+- stage
 - task dependencies
 - approval state
-- validation evidence
+- validation evidence references
 - review findings
 - retry count
 - blocker reason
+- last successful handoff
+- pending next action
 
 A fresh session MUST reconstruct execution from repository state, Git state, and durable evidence rather than conversation history.
 
-## 9. Evidence Model
+## 10. Evidence Model
 
 Completion requires evidence appropriate to the task.
 
@@ -256,15 +417,17 @@ Evidence categories include:
 - repository inspection
 - deterministic tests
 - build output
+- execution output
 - runtime smoke tests
 - CI results
 - review findings
 - source-backed research evidence
 - browser validation evidence
+- screenshots or other visual artifacts where required
 
 Agent claims are observations or recommendations until corroborated by the appropriate evidence source.
 
-## 10. Failure Handling
+## 11. Failure Handling
 
 When an agent fails:
 
@@ -275,41 +438,82 @@ When an agent fails:
 5. replan if assumptions changed
 6. retry only when a bounded corrective action exists
 
+Failure routing SHOULD prefer the smallest responsible loop:
+
+```text
+Research conflict -> Web Researcher
+Wrong file/scope -> File Picker / Planner
+Implementation defect -> Editor or Debugger
+Environment/command failure -> Executor
+Runtime symptom -> Terminal Monitor -> Debugger
+Requirement/quality issue -> Reviewer -> Planner/Editor
+UI issue -> Browser Agent -> Debugger
+```
+
 Environment failures MUST NOT be disguised as implementation success.
 
-## 11. Design Principles
+## 12. Skills and Agent Boundaries
 
-1. **Orchestration over agent proliferation** — add agents only when a clear responsibility or permission boundary exists.
-2. **Skills over duplicated instructions** — agents reuse specialist Skills instead of copying procedures.
-3. **Independent verification** — the agent that changes a surface does not provide the only completion judgment.
-4. **Least privilege** — each agent receives only the capabilities required for its bounded task.
-5. **Durable state** — material decisions and execution state survive chat/session interruption.
-6. **Evidence before completion** — no completion claim without appropriate evidence.
-7. **Vendor neutrality** — architecture is not coupled to a model provider or named AI persona.
-8. **Bounded execution** — every invocation has an explicit scope and expected result.
+Agents are execution roles; Skills are reusable methods. Skills MUST NOT be copied into every agent definition.
 
-## 12. V2 Implementation Order
+Initial mapping:
+
+| Agent | Existing / planned Skills |
+| --- | --- |
+| File Picker | `repository-analysis` |
+| Planner | `repository-analysis` + future planning skill |
+| Web Researcher | future research/browser skill |
+| Editor | `implementation`, `debugging`, `testing-validation` |
+| Executor | `testing-validation`, environment/runtime procedures |
+| Terminal Monitor | runtime/debugging procedures |
+| Reviewer | `code-review`, `testing-validation` |
+| Browser Agent | future browser-validation skill |
+| Debugger | `debugging`, `implementation`, `testing-validation` |
+| AI Developer | `ai-developer`, `development-continuity` |
+
+An agent may use multiple Skills. A Skill should be extended only when a recurring gap cannot be solved by task-specific orchestration.
+
+## 13. Design Principles
+
+1. **Orchestration over agent proliferation** — nine roles are justified by distinct responsibility or permission boundaries.
+2. **Relay with dynamic routing** — the three stages provide a predictable default while allowing safe skips and loops.
+3. **Skills over duplicated instructions** — agents reuse specialist Skills instead of copying procedures.
+4. **Independent verification** — the agent that changes a surface does not provide the only completion judgment.
+5. **Least privilege** — each agent receives only the capabilities required for its bounded task.
+6. **Durable state** — material decisions and execution state survive chat/session interruption.
+7. **Evidence before completion** — no completion claim without appropriate evidence.
+8. **Vendor neutrality** — architecture is not coupled to a model provider or named AI persona.
+9. **Bounded execution** — every invocation has explicit scope, stop conditions, and expected result.
+10. **Failure-local recovery** — fix the smallest responsible boundary instead of restarting the full pipeline.
+11. **Context economy** — pass references and artifacts, not unnecessary transcripts or whole repositories.
+12. **Human approval for consequential actions** — destructive, external, or release-impacting operations require explicit authorization boundaries.
+
+## 14. V2 Implementation Order
 
 Phase 1 — Contracts and orchestration:
 
-- agent contract
+- agent contract schema and artifact format
 - lifecycle/state model
 - permission model
 - orchestrator protocol
 - durable state integration
+- relay and routing rules
 
 Phase 2 — Core agents:
 
 - File Picker
 - Planner
 - Editor
-- Validator
+- Executor
+- Terminal Monitor
 - Reviewer
+- Debugger
 
-Phase 3 — Research & Browser:
+Phase 3 — External and visual capabilities:
 
+- Web Researcher
+- Browser Agent
 - research/source verification
-- browser navigation
 - browser validation
 - evidence integration
 
@@ -319,11 +523,14 @@ Phase 4 — Integration validation:
 - bug-fix task
 - feature task
 - research-backed task
+- browser UI task
 - validation failure and replan loop
 - reviewer change-request loop
+- debugger recovery loop
 - fresh-session recovery
+- parallel execution safety
 
-## 13. Non-Goals
+## 15. Non-Goals
 
 2.0 does not require:
 
@@ -332,5 +539,6 @@ Phase 4 — Integration validation:
 - permanent parallel execution
 - a separate agent for every Skill
 - automatic public release
+- all nine agents running for every request
 
 The architecture should remain useful even when all agents are backed by the same underlying model runtime.

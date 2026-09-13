@@ -1,0 +1,145 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/eaglesjo/codingStandard-dev/blob/main/docs/development/multi-agent/agent-contract.schema.json",
+  "title": "AI Developer Agent Contract",
+  "description": "Machine-readable contract for bounded multi-agent development invocations.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_version",
+    "invocation_id",
+    "task_id",
+    "agent",
+    "stage",
+    "state",
+    "attempt",
+    "objective",
+    "workspace",
+    "allowed_scope",
+    "permissions",
+    "context",
+    "constraints",
+    "required_evidence",
+    "stop_conditions",
+    "result"
+  ],
+  "properties": {
+    "contract_version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+$" },
+    "invocation_id": { "type": "string", "minLength": 1 },
+    "task_id": { "type": "string", "minLength": 1 },
+    "parent_invocation_id": { "type": ["string", "null"] },
+    "agent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "version"],
+      "properties": {
+        "role": {
+          "type": "string",
+          "enum": [
+            "file_picker",
+            "planner",
+            "web_researcher",
+            "editor",
+            "executor",
+            "terminal_monitor",
+            "reviewer",
+            "browser_agent",
+            "debugger",
+            "orchestrator"
+          ]
+        },
+        "version": { "type": "string", "minLength": 1 }
+      }
+    },
+    "stage": {
+      "type": "string",
+      "enum": ["analysis_planning", "coding_execution", "validation_visualization"]
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "READY",
+        "ANALYZING",
+        "PLANNING",
+        "EDITING",
+        "EXECUTING",
+        "VALIDATING",
+        "REVIEWING",
+        "REQUEST_CHANGES",
+        "PASS",
+        "BLOCKED",
+        "FAILED"
+      ]
+    },
+    "attempt": { "type": "integer", "minimum": 1 },
+    "objective": { "type": "string", "minLength": 1 },
+    "workspace": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository"],
+      "properties": {
+        "repository": { "type": "string", "minLength": 1 },
+        "ref": { "type": ["string", "null"] },
+        "worktree": { "type": ["string", "null"] }
+      }
+    },
+    "allowed_scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["paths", "operations"],
+      "properties": {
+        "paths": { "type": "array", "items": { "type": "string" } },
+        "operations": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["read", "write", "execute", "observe", "web"]
+          }
+        }
+      }
+    },
+    "permissions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["read", "write", "execute", "web", "runtime_observe"],
+      "properties": {
+        "read": { "type": "boolean" },
+        "write": { "type": "boolean" },
+        "execute": { "type": "boolean" },
+        "web": { "type": "boolean" },
+        "runtime_observe": { "type": "boolean" }
+      }
+    },
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["durable_state_refs", "evidence_refs", "input_artifact_refs"],
+      "properties": {
+        "durable_state_refs": { "type": "array", "items": { "type": "string" } },
+        "evidence_refs": { "type": "array", "items": { "type": "string" } },
+        "input_artifact_refs": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "constraints": { "type": "array", "items": { "type": "string" } },
+    "required_evidence": { "type": "array", "items": { "type": "string" } },
+    "stop_conditions": { "type": "array", "items": { "type": "string" } },
+    "result": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "findings", "changes", "evidence", "risks", "blockers", "artifacts", "next_action"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["PASS", "PASS_WITH_CONCERNS", "REQUEST_CHANGES", "BLOCKED", "FAILED"]
+        },
+        "findings": { "type": "array", "items": { "type": "string" } },
+        "changes": { "type": "array", "items": { "type": "object" } },
+        "evidence": { "type": "array", "items": { "type": "object" } },
+        "risks": { "type": "array", "items": { "type": "string" } },
+        "blockers": { "type": "array", "items": { "type": "string" } },
+        "artifacts": { "type": "array", "items": { "type": "string" } },
+        "next_action": { "type": ["string", "null"] }
+      }
+    }
+  }
+}

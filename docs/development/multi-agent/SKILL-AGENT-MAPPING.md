@@ -8,12 +8,12 @@ This document maps the current reusable Skills to the executable multi-agent sur
 | --- | --- | --- | --- |
 | File Picker | `repository-analysis` | read-only discovery | implemented |
 | Planner | `repository-analysis`, `implementation` | read-only planning | implemented |
-| Web Researcher | future research/browser Skill | web research only | planned |
+| Web Researcher | external research procedures | web research only | implemented |
 | Editor | `implementation`, `debugging`, `testing-validation` | bounded source writes | implemented |
 | Executor | `testing-validation` + runtime/environment procedures | bounded execution | implemented |
 | Terminal Monitor | `debugging` + runtime procedures | observe/escalate | implemented |
 | Reviewer | `code-review`, `testing-validation` | read-only validation | implemented |
-| Browser Agent | future browser-validation Skill | browser validation | planned |
+| Browser Agent | browser validation procedures | browser validation | implemented |
 | Debugger | `debugging`, `implementation`, `testing-validation` | bounded corrective changes | implemented |
 | AI Developer / Orchestrator | `ai-developer`, `development-continuity` | orchestration/state transition | orchestrator surface planned |
 
@@ -46,14 +46,24 @@ Executor / Terminal Monitor
   -> AI Developer decision
 ```
 
-Debugger owns diagnosis and the smallest corrective source change. It does not install dependencies, execute arbitrary commands, or self-certify runtime success.
+## External research / browser loop
+
+```text
+File Picker + Web Researcher [parallel when independent]
+          ↓
+       Planner
+          ↓
+       Editor
+          ↓
+       Executor
+          ↓
+ Reviewer + Browser Agent [parallel when independent]
+          ↓
+ AI Developer decision
+```
+
+Web Researcher and Browser Agent are both read-only with respect to repository source. They do not inherit Editor, Executor, or publication permissions.
 
 ## Missing Skills
 
-Only create a new Skill when an existing Skill cannot express a recurring responsibility. Current candidates are:
-
-1. research/browser procedures for Web Researcher
-2. browser validation procedures for Browser Agent
-3. a dedicated planning Skill only if Planner behavior becomes materially larger than repository-analysis + implementation guidance
-
-Do not create Skills solely to mirror the agent count.
+Do not create Skills solely to mirror the agent count. The current agent surfaces use existing procedural guidance where sufficient; dedicated reusable Skills should be introduced only after repeated workflows demonstrate a real gap.

@@ -11,6 +11,8 @@ Apply rules in this order:
 5. Relevant domain/platform resources under `domains/` and `platform/`
 6. Task-specific Skills under `.agents/skills/`
 
+When substantial repository development is performed from a chat surface with a disposable or sandboxed execution environment, also read `.agents/skills/luna-chat-coder/SKILL.md`. Luna is a continuity and fallback layer; it does not replace these project instructions or the repository's engineering method.
+
 ## 2.0 engineering rules
 
 - Treat the portable core as the source of truth; keep vendor adapters thin.

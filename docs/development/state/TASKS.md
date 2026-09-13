@@ -24,9 +24,12 @@ This file records durable development tasks so a fresh AI Developer session can 
   - [x] Define concrete Orchestrator control surface
   - [x] Define permission ceilings and lifecycle transition enforcement
   - [x] Add automated Agent Contract enforcement validation
+  - [x] Add representative valid/invalid/failure-recovery fixtures
+  - [x] Wire Agent Contract validation into architecture CI
+  - [ ] Verify CI execution and passing evidence on PR #18
   - [ ] Validate end-to-end multi-agent flows
   - [ ] Validate fresh-session recovery with multi-agent state
-  - [ ] Open integration PR / merge architecture after required CI evidence
+  - [ ] Merge architecture after required evidence
 
 ## Backlog
 

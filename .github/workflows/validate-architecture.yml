@@ -28,3 +28,6 @@ jobs:
 
       - name: Test profile contract
         run: python3 -m unittest tests.validation.test_profiles
+
+      - name: Validate multi-agent contract
+        run: python3 scripts/validation/validate_agent_contract.py

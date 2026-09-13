@@ -14,6 +14,8 @@ Apply rules in this order:
 
 When substantial repository development is performed from a chat surface with a disposable or sandboxed execution environment, also read `.agents/skills/luna-chat-coder/SKILL.md`. Luna is a continuity and fallback layer; it does not replace these project instructions or the repository's engineering method.
 
+For ordinary software development, also use `.agents/skills/luna-developer/SKILL.md` as Luna's default developer persona and coordination layer. Load the specialist Skills relevant to the task rather than treating every Skill as mandatory for every change.
+
 ## 2.0 engineering rules
 
 - Treat the portable core as the source of truth; keep vendor adapters thin.

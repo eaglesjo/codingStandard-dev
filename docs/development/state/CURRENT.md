@@ -35,22 +35,25 @@ A new AI Developer session MUST treat repository state as authoritative and use 
 
 ## Current work
 
-- Defined the initial Multi-Agent AI Developer 2.0 architecture.
-- Established AI Developer as the orchestrator.
-- Defined File Picker, Planner, Editor, Validator, Reviewer, and Research & Browser agent boundaries.
-- Defined the common Agent Contract, lifecycle, permission model, orchestration protocol, evidence model, and failure handling.
-- Added `docs/development/MULTI-AGENT-AI-DEVELOPER-2.0.md`.
-- Opened PR #18 for architecture integration.
+- Expanded the 2.0 architecture from the initial specialist set to nine bounded specialist agents.
+- Defined the three-stage relay: Analysis & Planning, Coding & Execution, Validation & Visualization.
+- Added Web Researcher, Executor, Terminal Monitor, Browser Agent, and Debugger as explicit roles.
+- Defined dynamic routing, safe parallelization, context economy, stage quality gates, and failure-local recovery for real development efficiency.
+- Defined the common Agent Contract concept in the architecture document.
+- Added the normative `docs/development/multi-agent/AGENT-CONTRACT.md` with canonical envelope, result statuses, evidence, retry, authorization, and handoff rules.
+- Updated `docs/development/MULTI-AGENT-AI-DEVELOPER-2.0.md`.
+- PR #18 remains the integration boundary for this work.
 
 ## Next actions
 
-1. Wait for PR #18 CI and inspect every required check.
-2. Define the concrete Agent Contract schema and artifact format.
-3. Define the orchestrator state machine and permission enforcement rules.
-4. Map existing Skills to each agent without duplicating instructions.
-5. Implement the core agent surfaces in bounded increments.
-6. Implement Research & Browser after the core flow is stable.
-7. Validate multi-agent flows and fresh-session recovery.
+1. Validate the updated branch with the required CI checks.
+2. Define the concrete orchestrator state/permission enforcement implementation.
+3. Map existing Skills to the nine agents and identify only the genuinely missing Skills.
+4. Implement the first bounded agent surfaces, starting with File Picker and Planner.
+5. Add Executor and Terminal Monitor with bounded runtime evidence.
+6. Add Reviewer and Debugger recovery loops.
+7. Add Web Researcher and Browser Agent after the core flow is stable.
+8. Validate representative real-development flows, parallel safety, and fresh-session recovery.
 
 ## Rules
 
@@ -59,3 +62,7 @@ A new AI Developer session MUST treat repository state as authoritative and use 
 - Do not overwrite historical decisions to make the current state look cleaner; record corrections explicitly.
 - Keep agent boundaries role-based and vendor-neutral.
 - Do not add agents merely to increase agent count; each agent needs a clear responsibility or permission boundary.
+- Do not force all nine agents into every task; route only the agents required by acceptance criteria.
+- Prefer parallel read-only work and single-owner overlapping writes.
+- Freeze the candidate revision before independent parallel validation.
+- On failure, preserve evidence and repair the smallest responsible boundary instead of restarting the full pipeline.

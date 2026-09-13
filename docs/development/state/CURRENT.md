@@ -37,17 +37,17 @@ A new AI Developer session MUST treat repository state as authoritative and use 
 - Implemented Executor as the bounded execution surface.
 - Implemented Terminal Monitor as a runtime-observation and escalation surface.
 - Implemented Reviewer as an independent read-only validation surface.
+- Implemented Debugger as the bounded failure-diagnosis and corrective-change surface.
 - Updated durable task state to record these completed agent surfaces.
 
 ## Next bounded actions
 
-1. Implement the Debugger recovery loop using existing `debugging`, `implementation`, and `testing-validation` Skills.
-2. Implement Web Researcher and Browser Agent surfaces only where external research or browser-visible validation is required.
-3. Define concrete orchestrator state/permission enforcement around the Agent Contract.
-4. Add automated Agent Contract/schema and state validation.
-5. Validate representative real-development flows and fresh-session recovery.
-6. Refresh PR #18 CI after the next bounded implementation increment.
-7. Merge only after required CI evidence is successful.
+1. Implement Web Researcher and Browser Agent surfaces only where external research or browser-visible validation is required.
+2. Define concrete orchestrator state/permission enforcement around the Agent Contract.
+3. Add automated Agent Contract/schema and state validation.
+4. Validate representative real-development flows and fresh-session recovery.
+5. Refresh PR #18 CI after the next bounded implementation increment.
+6. Merge only after required CI evidence is successful.
 
 ## Rules
 

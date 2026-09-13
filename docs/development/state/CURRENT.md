@@ -33,27 +33,26 @@ A new AI Developer session MUST treat repository state as authoritative and use 
 - PR #17 head `c36c6ef0694f2738868db6f97787439234017801` passed Windows installer validation, architecture profile validation, and codingStandard validation.
 - Development State Recovery v1 is complete.
 
-## Current work
+## Completed in the current task
 
-- Expanded the 2.0 architecture from the initial specialist set to nine bounded specialist agents.
+- Expanded the 2.0 architecture to nine bounded specialist agents and the AI Developer orchestrator.
 - Defined the three-stage relay: Analysis & Planning, Coding & Execution, Validation & Visualization.
-- Added Web Researcher, Executor, Terminal Monitor, Browser Agent, and Debugger as explicit roles.
-- Defined dynamic routing, safe parallelization, context economy, stage quality gates, and failure-local recovery for real development efficiency.
-- Defined the common Agent Contract concept in the architecture document.
-- Added the normative `docs/development/multi-agent/AGENT-CONTRACT.md` with canonical envelope, result statuses, evidence, retry, authorization, and handoff rules.
-- Updated `docs/development/MULTI-AGENT-AI-DEVELOPER-2.0.md`.
-- PR #18 remains the integration boundary for this work.
+- Added the normative Agent Contract and machine-readable schema.
+- Added the Skill-to-Agent mapping with conservative capability boundaries.
+- Implemented the first concrete agent surfaces: File Picker and Planner.
+- File Picker is read-only discovery and maps to `repository-analysis`.
+- Planner is read-only planning and maps to `repository-analysis` + `implementation`.
 
 ## Next actions
 
-1. Validate the updated branch with the required CI checks.
-2. Define the concrete orchestrator state/permission enforcement implementation.
-3. Map existing Skills to the nine agents and identify only the genuinely missing Skills.
-4. Implement the first bounded agent surfaces, starting with File Picker and Planner.
-5. Add Executor and Terminal Monitor with bounded runtime evidence.
-6. Add Reviewer and Debugger recovery loops.
-7. Add Web Researcher and Browser Agent after the core flow is stable.
-8. Validate representative real-development flows, parallel safety, and fresh-session recovery.
+1. Define concrete orchestrator state/permission enforcement.
+2. Add bounded Editor and Executor surfaces around the existing Skills.
+3. Add Terminal Monitor and Reviewer/Debugger recovery boundaries.
+4. Add Web Researcher and Browser Agent only where their capabilities are required.
+5. Add automated Agent Contract/schema and state validation.
+6. Validate representative real-development flows and fresh-session recovery.
+7. Refresh PR #18 CI after the next bounded implementation increment.
+8. Merge only after required CI evidence is successful.
 
 ## Rules
 

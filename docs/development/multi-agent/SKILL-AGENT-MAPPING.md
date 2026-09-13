@@ -15,7 +15,7 @@ This document maps the current reusable Skills to the executable multi-agent sur
 | Reviewer | `code-review`, `testing-validation` | read-only validation | implemented |
 | Browser Agent | browser validation procedures | browser validation | implemented |
 | Debugger | `debugging`, `implementation`, `testing-validation` | bounded corrective changes | implemented |
-| AI Developer / Orchestrator | `ai-developer`, `development-continuity` | orchestration/state transition | orchestrator surface planned |
+| AI Developer / Orchestrator | `ai-developer`, `development-continuity` | orchestration/state transition | implemented |
 
 ## Boundary rule
 
@@ -61,6 +61,24 @@ File Picker + Web Researcher [parallel when independent]
           ↓
  AI Developer decision
 ```
+
+## Orchestrator control loop
+
+```text
+Agent Contract
+      ↓
+Dispatch Gate
+      ↓
+Specialist Invocation
+      ↓
+Acceptance Gate
+      ↓
+Evidence + Git reconciliation
+      ↓
+Global State Transition
+```
+
+The Orchestrator owns global state. Specialists return bounded results and cannot grant themselves additional permissions.
 
 Web Researcher and Browser Agent are both read-only with respect to repository source. They do not inherit Editor, Executor, or publication permissions.
 

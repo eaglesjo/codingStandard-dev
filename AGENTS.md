@@ -10,6 +10,7 @@ Apply rules in this order:
 4. Relevant 2.0 contracts under `core/agent/`, `core/skill/`, `core/plugin/`, `core/mcp/`, and `core/validation/`
 5. Relevant domain/platform resources under `domains/` and `platform/`
 6. Task-specific Skills under `.agents/skills/`
+7. `docs/development/DEVELOPMENT-CONTINUITY.md` when resuming work or when making material workflow/architecture decisions
 
 When substantial repository development is performed from a chat surface with a disposable or sandboxed execution environment, also read `.agents/skills/luna-chat-coder/SKILL.md`. Luna is a continuity and fallback layer; it does not replace these project instructions or the repository's engineering method.
 

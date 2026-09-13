@@ -1,0 +1,45 @@
+# Skill-to-Agent Mapping
+
+This document maps the current reusable Skills to the first executable multi-agent surfaces. It is intentionally conservative: an agent may apply a Skill without inheriting capabilities that belong to another role.
+
+## Current mapping
+
+| Agent | Primary Skills | Capability boundary | Status |
+| --- | --- | --- | --- |
+| File Picker | `repository-analysis` | read-only discovery | implemented |
+| Planner | `repository-analysis`, `implementation` | read-only planning | implemented |
+| Web Researcher | future research/browser Skill | web research only | planned |
+| Editor | `implementation`, `debugging`, `testing-validation` | bounded source writes | existing Skills; surface planned |
+| Executor | `testing-validation` + runtime/environment procedures | bounded execution | planned |
+| Terminal Monitor | `debugging` + runtime procedures | observe/escalate | planned |
+| Reviewer | `code-review`, `testing-validation` | read-only validation | planned |
+| Browser Agent | future browser-validation Skill | browser validation | planned |
+| Debugger | `debugging`, `implementation`, `testing-validation` | bounded corrective changes | planned |
+| AI Developer / Orchestrator | `ai-developer`, `development-continuity` | orchestration/state transition | orchestrator surface planned |
+
+## Boundary rule
+
+Skill reuse is procedural reuse, not permission inheritance. The Agent Contract remains authoritative for effective capabilities, scope, evidence, and state transitions.
+
+## First executable loop
+
+```text
+File Picker
+  -> Planner
+  -> Editor
+  -> Executor
+  -> Reviewer
+  -> AI Developer decision
+```
+
+File Picker and Planner are the first concrete agent surfaces because they establish a deterministic discovery-to-plan handoff without introducing execution or write concurrency.
+
+## Missing Skills
+
+Only create a new Skill when an existing Skill cannot express a recurring responsibility. Current candidates are:
+
+1. research/browser procedures for Web Researcher
+2. browser validation procedures for Browser Agent
+3. a dedicated planning Skill only if Planner behavior becomes materially larger than repository-analysis + implementation guidance
+
+Do not create Skills solely to mirror the agent count.

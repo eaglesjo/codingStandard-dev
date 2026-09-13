@@ -25,15 +25,15 @@ PERMISSION_CEILINGS = {
 TRANSITIONS = {
     "READY": {"ANALYZING", "BLOCKED", "FAILED"},
     "ANALYZING": {"PLANNING", "BLOCKED", "FAILED"},
-    "PLANNING": {"EDITING", "EXECUTING", "BLOCKED", "FAILED"},
+    "PLANNING": {"EDITING", "EXECUTING", "VALIDATING", "BLOCKED", "FAILED"},
     "EDITING": {"EXECUTING", "BLOCKED", "FAILED"},
     "EXECUTING": {"VALIDATING", "BLOCKED", "FAILED"},
     "VALIDATING": {"REVIEWING", "REQUEST_CHANGES", "BLOCKED", "FAILED"},
     "REVIEWING": {"PASS", "REQUEST_CHANGES", "BLOCKED", "FAILED"},
     "REQUEST_CHANGES": {"PLANNING", "BLOCKED", "FAILED"},
     "PASS": set(),
-    "BLOCKED": set(),
-    "FAILED": set(),
+    "BLOCKED": {"PLANNING"},
+    "FAILED": {"PLANNING"},
 }
 
 
@@ -98,6 +98,8 @@ def failure_recovery() -> None:
     state = "READY"
     for new_state in ("ANALYZING", "PLANNING", "EDITING", "EXECUTING", "FAILED"):
         state = transition(state, new_state)
+    failed = Invocation("executor", {"read", "execute"})
+    dispatch(failed)
     debugger = Invocation("debugger", {"read", "write"}, attempt=2, parent_invocation_id="exec-1")
     dispatch(debugger)
     state = transition(state, "PLANNING")

@@ -1,6 +1,6 @@
 # Skill-to-Agent Mapping
 
-This document maps the current reusable Skills to the first executable multi-agent surfaces. It is intentionally conservative: an agent may apply a Skill without inheriting capabilities that belong to another role.
+This document maps the current reusable Skills to the executable multi-agent surfaces. It is intentionally conservative: an agent may apply a Skill without inheriting capabilities that belong to another role.
 
 ## Current mapping
 
@@ -9,8 +9,8 @@ This document maps the current reusable Skills to the first executable multi-age
 | File Picker | `repository-analysis` | read-only discovery | implemented |
 | Planner | `repository-analysis`, `implementation` | read-only planning | implemented |
 | Web Researcher | future research/browser Skill | web research only | planned |
-| Editor | `implementation`, `debugging`, `testing-validation` | bounded source writes | existing Skills; surface planned |
-| Executor | `testing-validation` + runtime/environment procedures | bounded execution | planned |
+| Editor | `implementation`, `debugging`, `testing-validation` | bounded source writes | implemented |
+| Executor | `testing-validation` + runtime/environment procedures | bounded execution | implemented |
 | Terminal Monitor | `debugging` + runtime procedures | observe/escalate | planned |
 | Reviewer | `code-review`, `testing-validation` | read-only validation | planned |
 | Browser Agent | future browser-validation Skill | browser validation | planned |
@@ -32,7 +32,7 @@ File Picker
   -> AI Developer decision
 ```
 
-File Picker and Planner are the first concrete agent surfaces because they establish a deterministic discovery-to-plan handoff without introducing execution or write concurrency.
+File Picker and Planner establish deterministic discovery-to-plan handoff. Editor adds bounded source writes, and Executor adds bounded runtime verification. Together they form the first executable development loop without introducing uncontrolled write concurrency.
 
 ## Missing Skills
 

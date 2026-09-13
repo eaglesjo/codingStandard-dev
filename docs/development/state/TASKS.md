@@ -19,7 +19,7 @@ This file records durable development tasks so a fresh AI Developer session can 
   - [x] Implement core agent surfaces: File Picker and Planner
   - [x] Implement bounded coding/execution surfaces: Editor and Executor
   - [x] Implement Terminal Monitor and Reviewer
-  - [ ] Implement Debugger recovery loop
+  - [x] Implement Debugger recovery loop
   - [ ] Implement Research & Browser surface
   - [ ] Validate end-to-end multi-agent flows
   - [ ] Validate fresh-session recovery with multi-agent state

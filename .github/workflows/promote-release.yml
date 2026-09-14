@@ -39,7 +39,10 @@ jobs:
             echo "Checked out SHA $ACTUAL_SHA does not match requested source_sha $SOURCE_SHA"
             exit 1
           }
-          git fetch origin main --depth=1
+          # Keep the full repository history available for the ancestry check.
+          # A depth-1 fetch makes origin/main shallow and can cause a valid
+          # ancestor check to fail even when SOURCE_SHA is genuinely on main.
+          git fetch origin main --no-tags --prune
           git merge-base --is-ancestor "$SOURCE_SHA" origin/main || {
             echo "Source SHA is not an ancestor of codingStandard-dev main"
             exit 1

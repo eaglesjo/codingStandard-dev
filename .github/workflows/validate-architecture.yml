@@ -55,3 +55,9 @@ jobs:
 
       - name: Test reproducibility contract
         run: python3 tests/validation/test_reproducibility.py
+
+      - name: Validate cross-area 2.0 acceptance
+        run: python3 scripts/validation/validate_2_0_acceptance.py
+
+      - name: Test cross-area 2.0 acceptance
+        run: python3 tests/validation/test_2_0_acceptance.py

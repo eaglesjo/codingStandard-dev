@@ -19,39 +19,27 @@ A new AI Developer session MUST treat repository state as authoritative and use 
 - Status: `IN_PROGRESS`
 - Goal: complete the 2.0 quality, evaluation, observability/provenance, and data/model reproducibility foundations without coupling agents to specific AI providers or models.
 
-## Main integration
+## Current implementation
 
-- Multi-Agent AI Developer 2.0 architecture was merged into `main` as PR #18, commit `df654a8fc73dfbd1c100c06b359c6086bc3d7e42`.
-- Pre-merge architecture CI evidence: run `34790623343`, job `103814028876`, all validation steps passed including multi-agent contract, fixtures, and E2E simulation.
-- Public promotion workflow run `34806455593` successfully promoted the then-validated candidate to `eaglesjo/AIEngineeringStandard`.
-- Release-candidate audit found and corrected obsolete `Luna` terminology and generated Python cache artifacts on the public surface.
-- Durable decision: actual AI provider/model mapping for individual agents is deferred to the next version; 2.0 remains vendor- and model-neutral.
+- Repository-backed gap analysis completed and recorded in `docs/development/2.0-FINAL-GAP-MATRIX.md`.
+- AI Code Quality & Verification first implementation added:
+  - `core/validation/ai-code-quality.schema.json`
+  - `scripts/validation/validate_ai_code_quality.py`
+  - architecture CI now executes the AI code quality contract validator.
+- The quality contract requires evidence for scope, focused test, quality check, broader validation, and review before acceptance; accepted candidates must be clean revisions.
+- This is intentionally a minimal vendor-neutral acceptance contract, not a new language-specific static-analysis framework.
 
-## Completed foundation
+## Evidence notes
 
-- Nine bounded specialist agents and the AI Developer orchestrator.
-- Three-stage relay: Analysis & Planning, Coding & Execution, Validation & Visualization.
-- Normative Agent Contract and machine-readable schema.
-- Skill-to-Agent mapping with conservative capability boundaries.
-- Concrete Orchestrator control surface, permission ceilings, dispatch/acceptance gates, retry discipline, and lifecycle state authority.
-- Automated Agent Contract validation, representative fixtures, contract-driven E2E simulation, and architecture CI integration.
-- Development continuity and durable state recovery.
-- Environment detection, reproducibility, dependency, training, LLM/Vision, installer, validation, and release-provenance foundations already present in the 2.0 architecture.
-
-## Gap analysis result
-
-The repository-backed analysis is recorded in `docs/development/2.0-FINAL-GAP-MATRIX.md`.
-
-- AI Code Quality & Verification: **PARTIAL** — executable validation and review/testing procedures exist, but no dedicated AI-code quality/acceptance contract exists.
-- AI/LLM Evaluation: **MISSING / PARTIAL FOUNDATION** — conformance validation exists, but no dedicated vendor-neutral LLM evaluation contract/scoring gate exists.
-- Observability & Provenance: **IMPLEMENTED FOUNDATION / PARTIAL** — runtime evidence schema and provenance policy exist; cross-action observability/acceptance hardening remains.
-- Data/Model Reproducibility: **PARTIAL** — experiment metadata captures seed, config hash, model revision, dataset revision, environment and Git state; enforceable artifact identity/reproducibility acceptance remains.
+- Existing `core/validation/conformance-evidence.schema.json` already provides runtime conformance evidence with repository/runtime identity, observations, checks, and evidence levels.
+- Existing `core/common/experiment.py` already records experiment seed, config hash, model revision, dataset revision, environment profile, runtime config, and Git state.
+- These existing foundations will be hardened rather than duplicated.
 
 ## Next bounded actions
 
-1. Implement the smallest AI Code Quality & Verification contract and deterministic validation path.
-2. Implement the minimal vendor-neutral AI/LLM Evaluation contract, fixtures, and scoring/acceptance validation.
-3. Harden existing observability/provenance rather than creating a duplicate provenance system.
+1. Add focused positive/negative fixtures or tests for the AI Code Quality contract and run the validator.
+2. Implement the minimal vendor-neutral AI/LLM Evaluation contract, fixtures, and deterministic scorer/acceptance validation.
+3. Harden existing observability/provenance around cross-action traceability and acceptance.
 4. Harden data/model reproducibility from metadata capture into enforceable integrity and acceptance checks.
 5. Integrate accepted validation into CI and run the full 2.0 gate.
 6. Freeze the validated candidate, independently audit the public candidate, and promote the exact validated source.

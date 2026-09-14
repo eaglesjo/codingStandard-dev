@@ -21,8 +21,11 @@ def run_validator(document: dict) -> subprocess.CompletedProcess[str]:
         path = handle.name
     try:
         return subprocess.run(
-            [sys.executable, "-c", f"exec(open({str(VALIDATOR)!r}, encoding='utf-8').read()); validate_schema(); validate_contract(json.load(open({path!r}, encoding='utf-8')))"]
-        , cwd=ROOT, text=True, capture_output=True)
+            [sys.executable, "-c", f"exec(compile(open({str(VALIDATOR)!r}, encoding='utf-8').read(), {str(VALIDATOR)!r}, 'exec'), {{'__file__': {str(VALIDATOR)!r}}}); validate_schema(); validate_contract(json.load(open({path!r}, encoding='utf-8')))"],
+            cwd=ROOT,
+            text=True,
+            capture_output=True,
+        )
     finally:
         Path(path).unlink(missing_ok=True)
 

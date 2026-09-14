@@ -35,19 +35,19 @@ Each documentation locale has its own README entrypoint and is tracked in [`lang
 
 All 20 catalogued locales are currently declared as runtime-resource languages. Non-English locales explicitly fall back to `en` for resources that are not localized at a domain-specific level.
 
-The runtime contract requires the common policy layer (`AGENT.md`, `SKILL.md`, `ENVIRONMENT.md`) and locale README entrypoint to exist. Runtime promotion is also subject to the v1.16 quality contract.
+The runtime contract requires the common policy layer (`AGENT.md`, `SKILL.md`, `ENVIRONMENT.md`) and locale README entrypoint to exist. Runtime promotion is subject to the current 2.0 localization quality contract.
 
 ## Runtime i18n quality
 
 CI validates every locale declared under `runtime_resources` in [`languages.json`](languages.json).
 
-The v1.16 quality contract requires three gates:
+The 2.0 quality contract requires three gates:
 
 1. **Resource completeness** — required runtime resources exist.
-2. **Semantic parity** — required engineering-policy intents are expressed in the locale.
+2. **Semantic policy parity** — required engineering-policy intents are expressed consistently in the locale.
 3. **Runtime/documentation consistency** — runtime and documentation entries remain aligned.
 
-Every runtime locale must reach quality grade **A**.
+Every runtime locale must reach quality grade **A** before release promotion.
 
 ## Colab documentation
 

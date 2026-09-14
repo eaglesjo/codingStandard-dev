@@ -37,3 +37,6 @@ jobs:
 
       - name: Validate multi-agent E2E simulation
         run: python3 scripts/validation/validate_multi_agent_e2e.py
+
+      - name: Validate AI code quality contract
+        run: python3 scripts/validation/validate_ai_code_quality.py

@@ -113,7 +113,17 @@ Rationale: keep the 2.0 release focused on the development system, agent contrac
 
 ## Branch hygiene rule
 
-Do not delete branches merely because they are old.
+Temporary task branches are disposable working resources, not permanent project assets.
+
+When a task requires a new branch:
+
+1. create it from the appropriate base revision;
+2. use it only for the bounded task;
+3. merge or otherwise incorporate any work that is intentionally retained;
+4. after the task is complete, determine whether the branch has any remaining development, recovery, or review value; and
+5. delete the task branch when it is no longer needed.
+
+After each completed task, proactively review branches created for that task. Do not leave temporary branches behind merely because they were once useful.
 
 Before deleting a branch, determine:
 
@@ -122,7 +132,20 @@ Before deleting a branch, determine:
 3. whether an open PR or follow-up task depends on it; and
 4. whether deletion would make recovery or historical tracing harder.
 
-Delete only branches with no remaining development or recovery value.
+Delete only branches with no remaining development or recovery value. Preserve long-lived branches only when their purpose is explicit and documented.
+
+The default operating rule is therefore:
+
+```text
+Task branch created
+      -> task completed
+      -> retained work merged/recorded
+      -> dependency/recovery check
+      -> branch no longer needed
+      -> delete branch
+```
+
+Do not delete `main` or any branch that is still required by an active PR, release process, recovery path, or explicitly retained work.
 
 ## Promotion boundary
 
@@ -153,5 +176,6 @@ When starting a new session:
 8. Reconcile any difference between durable notes and actual repository state.
 9. Resume from the first incomplete bounded action.
 10. Record new material decisions and validation evidence before ending the session.
+11. Review task-created branches and delete those that are no longer needed.
 
 The repository state is authoritative when it conflicts with stale notes; update the durable state after resolving the discrepancy.

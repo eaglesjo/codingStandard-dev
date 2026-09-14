@@ -22,40 +22,37 @@ A new AI Developer session MUST treat repository state as authoritative and use 
 ## Current implementation
 
 - Repository-backed gap analysis completed and recorded in `docs/development/2.0-FINAL-GAP-MATRIX.md`.
-- AI Code Quality & Verification implementation added:
-  - `core/validation/ai-code-quality.schema.json`
-  - `scripts/validation/validate_ai_code_quality.py`
-  - positive/negative fixtures and focused tests
-  - architecture CI executes the validator and focused tests.
-- AI/LLM Evaluation minimal implementation added:
-  - `core/validation/ai-evaluation.schema.json`
-  - `scripts/validation/validate_ai_evaluation.py`
-  - positive/negative fixtures and focused tests
-  - architecture CI executes the validator and focused tests.
-- The evaluation contract is deterministic and vendor-neutral: each case records input, expected criteria, criterion evidence, a derived 0..1 case score, and an acceptance threshold. The validator rejects score/evidence mismatches and acceptance below threshold.
+- AI Code Quality & Verification implementation added with contract, positive/negative fixtures, focused tests, and CI validation.
+- AI/LLM Evaluation implementation added with deterministic vendor-neutral contract, positive/negative fixtures, focused tests, and CI validation.
 - Observability/Provenance hardening added:
-  - `core/validation/conformance-evidence.schema.json` now requires trace identity (`action_id`) and supports `parent_action_id` plus unique `evidence_id`.
-  - `core/validation/evidence-provenance-policy.md` now defines cross-action traceability and forbids silent reuse of unrelated action/revision evidence.
-- Data/Model Reproducibility minimal implementation added:
+  - conformance evidence requires trace identity (`action_id`) and supports `parent_action_id` plus unique `evidence_id`.
+  - provenance policy defines cross-action traceability and forbids silent reuse of unrelated action/revision evidence.
+- Data/Model Reproducibility implementation added:
   - `core/validation/reproducibility.schema.json`
   - `scripts/validation/validate_reproducibility.py`
   - positive/negative fixtures and focused tests
-  - architecture CI executes the reproducibility validator and focused tests.
-- Reproducibility acceptance now requires experiment identity (experiment/variant/seed/config hash/Git revision/clean state) plus immutable SHA-256 identities for recorded artifacts. A `REPRODUCIBLE` result cannot be accepted from a dirty revision.
+  - architecture CI validation.
+- Reproducibility acceptance requires experiment identity (experiment/variant/seed/config hash/Git revision/clean state) plus immutable SHA-256 identities for recorded artifacts. A `REPRODUCIBLE` result cannot be accepted from a dirty revision.
+- Cross-area 2.0 acceptance implementation added:
+  - `core/validation/2.0-acceptance.schema.json`
+  - `scripts/validation/validate_2_0_acceptance.py`
+  - positive/mismatch fixtures and focused tests
+  - architecture CI now executes the final cross-area acceptance gate.
+- The cross-area gate binds code quality, deterministic evaluation, provenance, and reproducibility evidence to one clean candidate revision before overall `ACCEPTED` status is possible.
 
 ## Evidence notes
 
-- Existing `core/common/experiment.py` already records standard version, experiment ID, variant, seed, config hash/config, model revision, dataset revision, environment profile, runtime config, and Git state. fileciteturn523file0
-- The new reproducibility contract turns the existing metadata foundation into an explicit evidence/acceptance boundary rather than treating metadata emission alone as proof of reproducibility.
-- The AI evaluation contract deliberately does not introduce a provider/model-specific judge or runtime dependency.
-- CI now includes quality, evaluation, and reproducibility focused validators/tests in `.github/workflows/validate-architecture.yml`.
-- Fresh CI execution still needs independent evidence for the latest main revision; do not claim the gate passes until a workflow run proves it.
+- Existing `core/common/experiment.py` already records standard version, experiment ID, variant, seed, config hash/config, model revision, dataset revision, environment profile, runtime config, and Git state.
+- The new reproducibility contract turns that metadata foundation into an explicit evidence/acceptance boundary rather than treating metadata emission alone as proof.
+- The new AI evaluation contract deliberately does not introduce a provider/model-specific judge or runtime dependency.
+- CI now includes quality, evaluation, reproducibility, and cross-area acceptance validators/tests in `.github/workflows/validate-architecture.yml`. fileciteturn544file0
+- Fresh CI execution still needs independent evidence for the latest main revision; do not claim the 2.0 gate passes until a workflow run proves it.
 
 ## Next bounded actions
 
 1. Obtain fresh CI evidence for the latest main revision and diagnose before retrying if any job fails.
-2. Add cross-area acceptance validation tying quality, evaluation, provenance, and reproducibility evidence to one candidate/revision.
-3. Run the full 2.0 gate and freeze the validated candidate.
+2. If CI exposes contract/integration defects, repair the smallest owning validator/fixture and rerun the affected gate.
+3. Run the full 2.0 validation and freeze the validated candidate.
 4. Independently audit the public candidate and promote the exact validated source.
 5. Prepare release notes; public tag/release creation remains a separate explicit authorization boundary.
 

@@ -49,3 +49,9 @@ jobs:
 
       - name: Test AI evaluation contract
         run: python3 tests/validation/test_ai_evaluation.py
+
+      - name: Validate reproducibility contract
+        run: python3 scripts/validation/validate_reproducibility.py
+
+      - name: Test reproducibility contract
+        run: python3 tests/validation/test_reproducibility.py

@@ -1,31 +1,33 @@
-# AI Engineering Standard
+# AI Engineering Standard — Français
 
-<p align="center"><strong>Standards d’ingénierie pour le développement, l’entraînement et les agents IA</strong></p>
+<p align="center"><strong>Standards d’ingénierie pour le développement, l’entraînement et les agents d’IA</strong></p>
 
-**Language:** [English](../../README.md) · [한국어](../ko/README.md) · Français · [Español](../es/README.md) · [简体中文](../zh-CN/README.md) · [日本語](../ja/README.md) · [Русский](../ru/README.md) · [Türkçe](../tr/README.md)
+> Cette page est le point d’entrée français de la documentation de codingStandard. Le français fait partie des 20 locales d’exécution et bénéficie des mêmes contrôles de complétude des ressources, de parité sémantique et de cohérence entre l’exécution et la documentation.
 
-> Cette page est le point d’entrée français de la documentation codingStandard. Le français fait partie des 20 locales runtime et suit les mêmes contrôles de complétude, de parité sémantique et de cohérence runtime/documentation.
-
-`codingStandard` est un standard d’ingénierie réutilisable pour le développement assisté par IA, l’entraînement de modèles, les expérimentations, les workflows LLM/Vision, le ML/DL général et les agents de codage IA.
+`codingStandard` est un standard d’ingénierie réutilisable pour le développement assisté par l’IA, l’entraînement de modèles, l’expérimentation, les workflows LLM/Vision, les projets ML/DL généraux et les agents de programmation IA.
 
 ## Démarrage rapide
 
 ```bash
-git clone https://github.com/eaglesjo/codingStandard.git
-bash ./codingStandard/scripts/installers/install-domains.sh .
+git clone https://github.com/eaglesjo/AIEngineeringStandard.git
+bash ./AIEngineeringStandard/scripts/installers/install-domains.sh .
 ```
 
 Sous Windows / PowerShell :
 
 ```powershell
-git clone https://github.com/eaglesjo/codingStandard.git
-powershell -ExecutionPolicy Bypass -File .\codingStandard\scripts\installers\install-domains.ps1 -Target .
+git clone https://github.com/eaglesjo/AIEngineeringStandard.git
+powershell -ExecutionPolicy Bypass -File .\AIEngineeringStandard\scripts\installers\install-domains.ps1 -Target .
 ```
+
+Les domaines disponibles sont `common`, `ml`, `llm`, `vision`, `colab` et `all`. Vous pouvez utiliser le mode dry-run pour prévisualiser les changements et les politiques de conflit pour gérer les fichiers existants.
 
 ## Google Colab
 
-Le dépôt public fournit des notebooks Google Colab pour valider le standard complet, l’environnement propre, LLM QLoRA et RAG.
+Le dépôt public fournit des notebooks Google Colab permettant de valider le standard complet, un environnement propre, ainsi que les parcours LLM QLoRA et RAG.
 
-## Multilingue
+## Qualité multilingue
 
-Les entrées de documentation et les ressources runtime sont gérées séparément mais les 20 locales runtime sont soumises aux mêmes contrôles de qualité et de parité sémantique.
+La documentation et les ressources d’exécution sont gérées séparément, mais les 20 locales d’exécution sont soumises aux mêmes critères de qualité : complétude des ressources, parité sémantique des politiques et cohérence entre l’exécution et la documentation.
+
+Pour les procédures détaillées d’installation et de validation, consultez le [README en anglais](../../README.md) et [INSTALL.md](../../INSTALL.md).

@@ -38,14 +38,24 @@ A new AI Developer session MUST treat repository state as authoritative and use 
 - Development continuity and durable state recovery.
 - Environment detection, reproducibility, dependency, training, LLM/Vision, installer, validation, and release-provenance foundations already present in the 2.0 architecture.
 
+## Gap analysis result
+
+The repository-backed analysis is recorded in `docs/development/2.0-FINAL-GAP-MATRIX.md`.
+
+- AI Code Quality & Verification: **PARTIAL** — executable validation and review/testing procedures exist, but no dedicated AI-code quality/acceptance contract exists.
+- AI/LLM Evaluation: **MISSING / PARTIAL FOUNDATION** — conformance validation exists, but no dedicated vendor-neutral LLM evaluation contract/scoring gate exists.
+- Observability & Provenance: **IMPLEMENTED FOUNDATION / PARTIAL** — runtime evidence schema and provenance policy exist; cross-action observability/acceptance hardening remains.
+- Data/Model Reproducibility: **PARTIAL** — experiment metadata captures seed, config hash, model revision, dataset revision, environment and Git state; enforceable artifact identity/reproducibility acceptance remains.
+
 ## Next bounded actions
 
-1. Complete repository-backed gap analysis for AI Code Quality & Verification, AI/LLM Evaluation, Observability & Provenance, and Data/Model Reproducibility.
-2. Decide which gaps are release-relevant and define the smallest normative/machine-readable additions.
-3. Implement executable validation for accepted additions and integrate it into CI.
-4. Run full 2.0 validation and independent public-candidate audit.
-5. Promote the exact validated source to `eaglesjo/AIEngineeringStandard`.
-6. Prepare release notes; public tag/release creation remains a separate explicit authorization boundary.
+1. Implement the smallest AI Code Quality & Verification contract and deterministic validation path.
+2. Implement the minimal vendor-neutral AI/LLM Evaluation contract, fixtures, and scoring/acceptance validation.
+3. Harden existing observability/provenance rather than creating a duplicate provenance system.
+4. Harden data/model reproducibility from metadata capture into enforceable integrity and acceptance checks.
+5. Integrate accepted validation into CI and run the full 2.0 gate.
+6. Freeze the validated candidate, independently audit the public candidate, and promote the exact validated source.
+7. Prepare release notes; public tag/release creation remains a separate explicit authorization boundary.
 
 ## Deferred to next version
 

@@ -15,10 +15,11 @@ FIXTURES = ROOT / "tests/validation/fixtures/2.0-acceptance"
 
 def run_fixture(name: str) -> subprocess.CompletedProcess[str]:
     document = json.loads((FIXTURES / name).read_text(encoding="utf-8"))
+    payload = json.dumps(document)
     runner = (
-        "import runpy; "
+        "import json, runpy; "
         f"ns = runpy.run_path({str(VALIDATOR)!r}); "
-        f"ns['validate']({json.dumps(document)})"
+        f"ns['validate'](json.loads({payload!r}))"
     )
     return subprocess.run([sys.executable, "-c", runner], cwd=ROOT, text=True, capture_output=True)
 

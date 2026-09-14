@@ -27,8 +27,8 @@ This file records durable development tasks so a fresh AI Developer session can 
   - [x] Add representative valid/invalid/failure-recovery fixtures
   - [x] Wire Agent Contract validation into architecture CI
   - [x] Implement contract-driven multi-agent E2E simulation
-  - [ ] Verify CI execution and passing evidence on PR #18, including E2E simulation
-  - [ ] Validate fresh-session recovery with multi-agent state
+  - [x] Verify CI execution and passing evidence on PR #18, including E2E simulation
+  - [x] Validate fresh-session recovery with multi-agent state
   - [ ] Merge architecture after required evidence
 
 ## Backlog

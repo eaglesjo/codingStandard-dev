@@ -16,8 +16,6 @@
 
 **Language:** English · [한국어](i18n/ko/README.md) · [Français](i18n/fr/README.md) · [Español](i18n/es/README.md) · [简体中文](i18n/zh-CN/README.md) · [日本語](i18n/ja/README.md) · [Русский](i18n/ru/README.md) · [Türkçe](i18n/tr/README.md) · [Deutsch](i18n/de/README.md) · [Italiano](i18n/it/README.md) · [Português](i18n/pt/README.md) · [العربية](i18n/ar/README.md) · [हिन्दी](i18n/hi/README.md) · [Bahasa Indonesia](i18n/id/README.md) · [Tiếng Việt](i18n/vi/README.md) · [ไทย](i18n/th/README.md) · [Nederlands](i18n/nl/README.md) · [Polski](i18n/pl/README.md) · [Svenska](i18n/sv/README.md) · [Українська](i18n/uk/README.md)
 
-> **Repository model:** `codingStandard-dev` is the canonical development, AI Developer activation, and validation gate. Validated releases are promoted to [`eaglesjo/AIEngineeringStandard`](https://github.com/eaglesjo/AIEngineeringStandard). `codingStandard-private` is retired from the active development flow and is not a runtime prerequisite.
-
 ## What is AI Engineering Standard?
 
 AI Engineering Standard is a reusable engineering standard for AI-assisted development, model training, experimentation, LLM/Vision workflows, general ML/DL workflows, and AI coding agents.
@@ -115,10 +113,10 @@ Twenty runtime locales are validated for resource completeness, semantic policy 
 
 ## Validation
 
-Before release promotion, run the repository's applicable validation gates. The primary validation entrypoint is:
+Before release promotion, run the repository's applicable validation gates. When the public distribution has been cloned into the project root, the primary validation entrypoint is:
 
 ```bash
-python scripts/validation/validate.py
+python ./AIEngineeringStandard/scripts/validation/validate.py
 ```
 
 Additional checks cover i18n quality/consistency, installer lifecycle behavior, architecture/policy contracts, deterministic RAG regression, Colab notebooks, and LLM/Vision CPU smoke tests. GitHub Actions provides cross-platform execution evidence.
@@ -127,4 +125,4 @@ For the release process and candidate gates, see [`docs/releases/RELEASE.md`](do
 
 ## Release provenance
 
-`codingStandard-dev` is the source used for implementation and validation. Only validated commits are promoted to the public distribution repository. The public `AIEngineeringStandard` repository is the release surface; this development repository is not itself the final public distribution identity.
+Validated source is promoted to the public `AIEngineeringStandard` distribution only after the required validation gates pass. Release tags and GitHub Releases are separate authorization steps.

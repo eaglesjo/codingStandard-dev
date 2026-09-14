@@ -20,8 +20,7 @@ def run_validator(document: dict) -> subprocess.CompletedProcess[str]:
         path = handle.name
     try:
         runner = (
-            "import json, sys; "
-            f"exec(open({str(VALIDATOR)!r}, encoding='utf-8').read()); "
+            f"exec(compile(open({str(VALIDATOR)!r}, encoding='utf-8').read(), {str(VALIDATOR)!r}, 'exec'), {{'__file__': {str(VALIDATOR)!r}}}); "
             f"validate_schema(); validate_contract(json.load(open({path!r}, encoding='utf-8')))"
         )
         return subprocess.run([sys.executable, "-c", runner], cwd=ROOT, text=True, capture_output=True)

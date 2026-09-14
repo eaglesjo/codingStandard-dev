@@ -50,14 +50,17 @@ A new AI Developer session MUST treat repository state as authoritative and use 
   - `Validate codingStandard` run `34814381117` completed `success`.
   - The `validate` job completed successfully, including architecture contract, repository validation, environment contract, installer tests, and LLM/Vision CPU smoke tests.
   - Windows installer validation run `34814381091` also completed successfully for the same candidate.
-- The latest candidate therefore has fresh CI validation evidence. Do not treat this alone as public release promotion; the public candidate still requires independent audit and exact-source promotion.
+- Public candidate audit baseline:
+  - `eaglesjo/AIEngineeringStandard/main` is currently `074512f8e844590cd4b4dda724fd9f320737d094`.
+  - Public code search found no `Luna` references and no `__pycache__` references in the indexed public source.
+  - The public repository still predates the current validated 2.0 candidate and therefore requires exact-source promotion before it can represent this candidate.
+- The CI-validated candidate is preserved as an exact source SHA for the promotion workflow. The subsequent state-documentation commit on `main` does not invalidate that candidate; the promotion workflow explicitly accepts an exact ancestor SHA and re-runs its release gate.
 
 ## Next bounded actions
 
-1. Freeze candidate `60d5fb7801d10ec239a9a66b88265eaa1bb4f4d0` as the current CI-validated 2.0 candidate and preserve its evidence.
-2. Independently audit `eaglesjo/AIEngineeringStandard` against the validated development candidate, including stale/generated artifacts and release-source integrity.
-3. Promote the exact validated source through the existing development-to-public promotion workflow and verify the resulting public HEAD matches the candidate source identity.
-4. Prepare 2.0 release notes and promotion evidence; public tag/release creation remains a separate explicit authorization boundary.
+1. Promote exact validated source `60d5fb7801d10ec239a9a66b88265eaa1bb4f4d0` through `.github/workflows/promote-release.yml` using its `source_sha` input.
+2. Verify the resulting public `AIEngineeringStandard/main` content and promotion commit identify source `60d5fb7801d10ec239a9a66b88265eaa1bb4f4d0`.
+3. Record promotion evidence and prepare 2.0 release notes; public tag/release creation remains a separate explicit authorization boundary.
 
 ## Deferred to next version
 

@@ -24,6 +24,8 @@ A new AI Developer session MUST treat repository state as authoritative and use 
 - PR #18 merged into `main` as `df654a8fc73dfbd1c100c06b359c6086bc3d7e42`.
 - The merged tree contains the validated PR candidate plus the durable validation/recovery state updates.
 - Pre-merge architecture CI evidence: run `34790623343`, job `103814028876`, all validation steps passed including multi-agent contract, fixtures, and E2E simulation.
+- Public promotion workflow run `34806455593` successfully promoted the validated candidate to `eaglesjo/AIEngineeringStandard`.
+- Release-candidate audit found and corrected two public-surface issues: obsolete `Luna` terminology in README and generated Python cache artifacts in the public tree.
 
 ## Completed in MA-001
 
@@ -40,9 +42,9 @@ A new AI Developer session MUST treat repository state as authoritative and use 
 
 ## Next bounded actions
 
-1. Validate the merged `main` tree and confirm its contents match the merged PR candidate.
-2. Promote the exact validated `codingStandard-dev/main` source into `eaglesjo/AIEngineeringStandard` through an auditable promotion change.
-3. Validate the public release candidate.
+1. Validate the new `codingStandard-dev/main` commit containing the terminology correction through CI.
+2. Promote the exact newly validated development source into `eaglesjo/AIEngineeringStandard` through the auditable promotion workflow.
+3. Re-audit the public release candidate, including generated-artifact exclusion and terminology checks.
 4. Prepare release notes; public tag/release creation remains a separate explicit authorization boundary.
 
 ## Rules

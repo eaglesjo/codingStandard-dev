@@ -103,6 +103,14 @@ When a rule changes:
 4. commit the documentation and implementation changes together when practical; and
 5. use the resulting Git revision as the durable handoff reference.
 
+## Version-boundary decision: AI model mapping
+
+The multi-agent architecture in 2.0 remains vendor- and model-neutral. Individual agents MUST NOT be coupled to a specific AI provider or model in the 2.0 release scope.
+
+Actual model/provider mapping, provider adapters, routing policies, and fallback selection are deferred to the next version. 2.0 may preserve abstraction points needed for future integration, but must not introduce provider-specific runtime coupling merely to anticipate that feature.
+
+Rationale: keep the 2.0 release focused on the development system, agent contracts, validation, reproducibility, recovery, and quality foundations; add model selection/routing as a separate versioned capability after those foundations are validated.
+
 ## Branch hygiene rule
 
 Do not delete branches merely because they are old.
@@ -142,7 +150,7 @@ When starting a new session:
 5. Read `.agents/skills/ai-developer/SKILL.md` for ordinary software development.
 6. Read `docs/development/state/CURRENT.md` and `TASKS.md` when present.
 7. Inspect the current Git revision, working tree, branch, and relevant PR state.
-8. Reconcile any difference between durable notes and actual repository state before acting.
+8. Reconcile any difference between durable notes and actual repository state.
 9. Resume from the first incomplete bounded action.
 10. Record new material decisions and validation evidence before ending the session.
 

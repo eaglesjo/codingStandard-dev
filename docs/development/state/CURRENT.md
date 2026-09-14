@@ -40,27 +40,46 @@ A new AI Developer session MUST treat repository state as authoritative and use 
   - architecture CI now executes the final cross-area acceptance gate.
 - The cross-area gate binds code quality, deterministic evaluation, provenance, and reproducibility evidence to one clean candidate revision before overall `ACCEPTED` status is possible.
 
+## Locale quality re-review
+
+A full second-pass review of all 20 documentation locales was completed on the canonical `main` branch.
+
+- English canonical README was reconciled with the public release boundary; retired internal repository references were removed.
+- All 19 non-English README locales were reworked for natural-language quality, terminology, grammar, consistency, and current public repository paths.
+- All locale READMEs now point to `https://github.com/eaglesjo/AIEngineeringStandard.git` in their installation examples.
+- Installation and validation examples were normalized to the public repository layout.
+- Locale-specific wording was corrected rather than merely reported, including runtime/localization terminology in German, Italian, Portuguese, Polish, Swedish, Ukrainian, and other locales.
+- `i18n/README.md` was reconciled with the 2.0 localization quality contract; stale `v1.16` references were removed.
+- `i18n/languages.json` remains the catalog source for the 20 documentation/runtime locales.
+- Repository searches after the review found no `codingStandard-private`, `codingStandard.git`, or `v1.16` references in the canonical repository.
+- Canonical README and INSTALL validation commands now use the explicit public path `./AIEngineeringStandard/...`, matching the documented clone layout.
+
+## Public-boundary validation
+
+- `scripts/validation/validate.py` was made aware of the public export boundary in commit `394fbda51c0e71b12f294c73696a3f64770f754d` so public validation does not require development-only `AGENTS.md` or `.github/workflows/windows-install-test.yml`.
+- The validator explicitly reports that Windows workflow evidence is validated in `codingStandard-dev` CI when running against the public export.
+- This boundary fix and the locale/documentation changes require fresh CI before the next promotion.
+
 ## Evidence notes
 
 - Existing `core/common/experiment.py` already records standard version, experiment ID, variant, seed, config hash/config, model revision, dataset revision, environment profile, runtime config, and Git state.
 - The new reproducibility contract turns that metadata foundation into an explicit evidence/acceptance boundary rather than treating metadata emission alone as proof.
 - The new AI evaluation contract deliberately does not introduce a provider/model-specific judge or runtime dependency.
-- CI now includes quality, evaluation, reproducibility, and cross-area acceptance validators/tests in `.github/workflows/validate-architecture.yml`.
-- Fresh full CI evidence is now available for candidate `60d5fb7801d10ec239a9a66b88265eaa1bb4f4d0`:
+- CI includes quality, evaluation, reproducibility, and cross-area acceptance validators/tests in `.github/workflows/validate-architecture.yml`.
+- Fresh full CI evidence is available for candidate `60d5fb7801d10ec239a9a66b88265eaa1bb4f4d0`:
   - `Validate codingStandard` run `34814381117` completed `success`.
-  - The `validate` job completed successfully, including architecture contract, repository validation, environment contract, installer tests, and LLM/Vision CPU smoke tests.
-  - Windows installer validation run `34814381091` also completed successfully for the same candidate.
-- Public candidate audit baseline:
-  - `eaglesjo/AIEngineeringStandard/main` is currently `074512f8e844590cd4b4dda724fd9f320737d094`.
-  - Public code search found no `Luna` references and no `__pycache__` references in the indexed public source.
-  - The public repository still predates the current validated 2.0 candidate and therefore requires exact-source promotion before it can represent this candidate.
-- The CI-validated candidate is preserved as an exact source SHA for the promotion workflow. The subsequent state-documentation commit on `main` does not invalidate that candidate; the promotion workflow explicitly accepts an exact ancestor SHA and re-runs its release gate.
+  - Windows installer validation run `34814381091` completed successfully for the same candidate.
+- That evidence predates the later public-boundary validator fix and the second locale/documentation review, so it is not sufficient for the current release candidate.
+- The latest documentation/localization commits are on `main`; the latest recorded commit in this handoff sequence is the locale-quality state update itself. No fresh workflow evidence is currently associated with that final state yet.
 
 ## Next bounded actions
 
-1. Promote exact validated source `60d5fb7801d10ec239a9a66b88265eaa1bb4f4d0` through `.github/workflows/promote-release.yml` using its `source_sha` input.
-2. Verify the resulting public `AIEngineeringStandard/main` content and promotion commit identify source `60d5fb7801d10ec239a9a66b88265eaa1bb4f4d0`.
-3. Record promotion evidence and prepare 2.0 release notes; public tag/release creation remains a separate explicit authorization boundary.
+1. Run fresh `Validate codingStandard` and the Windows installer validation against the post-review `main` candidate.
+2. If CI exposes any localization, validation-boundary, or documentation-path defect, fix it at the smallest owning file and repeat only the necessary validation.
+3. Freeze the first fully green post-review candidate SHA.
+4. Manually dispatch `.github/workflows/promote-release.yml` with that exact SHA; the GitHub connector does not provide workflow-dispatch capability.
+5. Verify public `AIEngineeringStandard/main` content and re-run the public audit: no retired/internal references, no generated artifacts, no secrets, correct `VERSION=2.0.0`, 20-locale consistency, and working documented validation paths.
+6. Record promotion evidence before any separate public tag/release authorization.
 
 ## Deferred to next version
 

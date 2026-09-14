@@ -5,10 +5,10 @@ This file records durable development tasks so a fresh AI Developer session can 
 ## Active
 
 - [ ] `2.0-FINAL` — AI Engineering Standard 2.0 final quality and reproducibility hardening
-  - [ ] Gap analysis: AI Code Quality & Verification
-  - [ ] Gap analysis: AI/LLM Evaluation
-  - [ ] Gap analysis: Observability & Provenance
-  - [ ] Gap analysis: Data/Model Reproducibility
+  - [x] Gap analysis: AI Code Quality & Verification
+  - [x] Gap analysis: AI/LLM Evaluation
+  - [x] Gap analysis: Observability & Provenance
+  - [x] Gap analysis: Data/Model Reproducibility
   - [ ] Define normative rules and machine-readable contracts where justified
   - [ ] Add executable validation for the accepted 2.0 additions
   - [ ] Integrate accepted validation into CI
@@ -16,6 +16,8 @@ This file records durable development tasks so a fresh AI Developer session can 
   - [ ] Promote exact validated source to `eaglesjo/AIEngineeringStandard`
   - [ ] Prepare release notes
   - [ ] Obtain explicit authorization before creating the v2.0.0 tag/release
+
+Gap analysis evidence and classification: `docs/development/2.0-FINAL-GAP-MATRIX.md`.
 
 ## Deferred to next version
 

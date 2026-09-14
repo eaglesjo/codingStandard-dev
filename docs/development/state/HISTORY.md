@@ -2,6 +2,13 @@
 
 This file records material development state transitions that are useful when a future session resumes work.
 
+## 2026-09-14
+
+- PR #18 candidate `23efd3a60bd51a8e00d354291ddfaffc36d75a90` passed the architecture workflow run `34790623343`.
+- Architecture job `103814028876` executed and passed multi-agent contract validation, multi-agent fixture validation, and contract-driven multi-agent E2E simulation.
+- Fresh-session recovery was validated from durable repository state: exact PR head, `CURRENT.md`, `TASKS.md`, `HISTORY.md`, Development Continuity Skill, recovery procedure, PR metadata, and CI evidence were sufficient to reconstruct MA-001 without chat history.
+- Updated durable state to leave PR #18 as the only remaining MA-001 merge gate.
+
 ## 2026-09-13
 
 - PR #16 established the vendor-neutral `ai-developer` and `development-continuity` namespaces and was merged into `main`.

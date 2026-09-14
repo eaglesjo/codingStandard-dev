@@ -40,3 +40,12 @@ jobs:
 
       - name: Validate AI code quality contract
         run: python3 scripts/validation/validate_ai_code_quality.py
+
+      - name: Test AI code quality contract
+        run: python3 -m unittest tests.validation.test_ai_code_quality
+
+      - name: Validate AI evaluation contract
+        run: python3 scripts/validation/validate_ai_evaluation.py
+
+      - name: Test AI evaluation contract
+        run: python3 -m unittest tests.validation.test_ai_evaluation

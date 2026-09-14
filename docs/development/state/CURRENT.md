@@ -45,16 +45,19 @@ A new AI Developer session MUST treat repository state as authoritative and use 
 - Existing `core/common/experiment.py` already records standard version, experiment ID, variant, seed, config hash/config, model revision, dataset revision, environment profile, runtime config, and Git state.
 - The new reproducibility contract turns that metadata foundation into an explicit evidence/acceptance boundary rather than treating metadata emission alone as proof.
 - The new AI evaluation contract deliberately does not introduce a provider/model-specific judge or runtime dependency.
-- CI now includes quality, evaluation, reproducibility, and cross-area acceptance validators/tests in `.github/workflows/validate-architecture.yml`. fileciteturn544file0
-- Fresh CI execution still needs independent evidence for the latest main revision; do not claim the 2.0 gate passes until a workflow run proves it.
+- CI now includes quality, evaluation, reproducibility, and cross-area acceptance validators/tests in `.github/workflows/validate-architecture.yml`.
+- Fresh full CI evidence is now available for candidate `60d5fb7801d10ec239a9a66b88265eaa1bb4f4d0`:
+  - `Validate codingStandard` run `34814381117` completed `success`.
+  - The `validate` job completed successfully, including architecture contract, repository validation, environment contract, installer tests, and LLM/Vision CPU smoke tests.
+  - Windows installer validation run `34814381091` also completed successfully for the same candidate.
+- The latest candidate therefore has fresh CI validation evidence. Do not treat this alone as public release promotion; the public candidate still requires independent audit and exact-source promotion.
 
 ## Next bounded actions
 
-1. Obtain fresh CI evidence for the latest main revision and diagnose before retrying if any job fails.
-2. If CI exposes contract/integration defects, repair the smallest owning validator/fixture and rerun the affected gate.
-3. Run the full 2.0 validation and freeze the validated candidate.
-4. Independently audit the public candidate and promote the exact validated source.
-5. Prepare release notes; public tag/release creation remains a separate explicit authorization boundary.
+1. Freeze candidate `60d5fb7801d10ec239a9a66b88265eaa1bb4f4d0` as the current CI-validated 2.0 candidate and preserve its evidence.
+2. Independently audit `eaglesjo/AIEngineeringStandard` against the validated development candidate, including stale/generated artifacts and release-source integrity.
+3. Promote the exact validated source through the existing development-to-public promotion workflow and verify the resulting public HEAD matches the candidate source identity.
+4. Prepare 2.0 release notes and promotion evidence; public tag/release creation remains a separate explicit authorization boundary.
 
 ## Deferred to next version
 

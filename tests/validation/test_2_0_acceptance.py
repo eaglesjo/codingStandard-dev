@@ -15,10 +15,12 @@ FIXTURES = ROOT / "tests/validation/fixtures/2.0-acceptance"
 
 def run_fixture(name: str) -> subprocess.CompletedProcess[str]:
     document = json.loads((FIXTURES / name).read_text(encoding="utf-8"))
-    code = f"import json; exec(open({str(VALIDATOR)!r}, encoding='utf-8').read()); validate(json.loads({json.dumps(json.dumps(document))}))"
-    # Keep the fixture payload out of the validator's CLI surface while exercising the same contract.
-    code = f"import json; exec(open({str(VALIDATOR)!r}, encoding='utf-8').read()); validate({json.dumps(document)})"
-    return subprocess.run([sys.executable, "-c", code], cwd=ROOT, text=True, capture_output=True)
+    runner = (
+        "import runpy; "
+        f"ns = runpy.run_path({str(VALIDATOR)!r}); "
+        f"ns['validate']({json.dumps(document)})"
+    )
+    return subprocess.run([sys.executable, "-c", runner], cwd=ROOT, text=True, capture_output=True)
 
 
 def test_valid_candidate_is_accepted() -> None:

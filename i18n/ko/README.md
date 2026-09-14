@@ -1,64 +1,33 @@
-# codingStandard 한국어 안내
+# AI Engineering Standard — 한국어
 
-> **Language:** [English](../../README.md) · 한국어 · [Français](../fr/README.md) · [Español](../es/README.md) · [简体中文](../zh-CN/README.md) · [日本語](../ja/README.md) · [Русский](../ru/README.md) · [Türkçe](../tr/README.md)
->
-> **Runtime resource languages:** English, Korean, French, Spanish, Simplified Chinese, Japanese, Russian, Turkish, German, Italian, Portuguese, Arabic, Hindi, Indonesian, Vietnamese, Thai, Dutch, Polish, Swedish, Ukrainian. 모든 20개 runtime locale은 동일한 i18n 품질 및 semantic parity 검증을 거칩니다.
+<p align="center"><strong>AI 개발·학습·에이전트 엔지니어링 표준</strong></p>
 
-`codingStandard`의 한국어 문서와 설치 리소스를 제공합니다.
+> 이 페이지는 codingStandard의 한국어 문서 진입점입니다. 한국어는 20개 runtime locale 중 하나이며, 리소스 완전성, 의미적 일치성, runtime/문서 일관성 검증을 동일하게 적용합니다.
 
-## 설치
+`codingStandard`는 AI 보조 개발, 모델 학습, 실험, LLM/Vision 워크플로, 일반적인 ML/DL 작업, AI 코딩 에이전트를 위한 재사용 가능한 엔지니어링 표준입니다.
 
-영문/한국어 설치기는 저장소의 `scripts/installers/`에 있습니다.
-
-### Windows / PowerShell
-
-```powershell
-powershell -ExecutionPolicy Bypass -File .\codingStandard\scripts\installers\install-domains.ps1 -Target . -Language ko -Domain all
-```
-
-### Linux / macOS
+## 빠른 시작
 
 ```bash
-bash ./codingStandard/scripts/installers/install-domains.sh . ko all overwrite false
+git clone https://github.com/eaglesjo/AIEngineeringStandard.git
+bash ./AIEngineeringStandard/scripts/installers/install-domains.sh .
 ```
 
-인자 순서는 `TARGET LANGUAGE DOMAIN CONFLICT_POLICY DRY_RUN`입니다.
+Windows / PowerShell:
 
-## 설치 도메인
-
-```text
-common = Common만
-ml     = Common + 일반 ML/DL lifecycle
-llm    = Common + LLM
-vision = Common + Vision
-colab  = Common + Colab runtime 정책
-all    = Common + ML + LLM + Vision + Colab
+```powershell
+git clone https://github.com/eaglesjo/AIEngineeringStandard.git
+powershell -ExecutionPolicy Bypass -File .\AIEngineeringStandard\scripts\installers\install-domains.ps1 -Target .
 ```
 
-기존 파일은 `Ask`, `Merge`, `Overwrite`, `Skip` 정책으로 처리할 수 있습니다.
-
-## 한국어 리소스 구조
-
-`i18n/ko/`는 영문 저장소 구조를 미러링하는 실제 runtime 번역 리소스 트리입니다.
-
-## 주요 문서
-
-- `INSTALL.md` — 한국어 설치 가이드
-- `AGENT.md` / `AGENTS.md` — AI Agent 규칙
-- `core/common/` — 공통 실행환경 및 재현성 규칙
-- `domains/ml/` — 일반 ML/DL lifecycle과 공통 Skills
-- `domains/llm/` — LLM/ML 규칙과 Skills
-- `domains/vision/` — Computer Vision 규칙과 Skills
-- `platform/colab/` — Colab ephemeral runtime 정책
-- `docs/development/CONVENTIONS.md` — 개발 규칙
+사용 가능한 도메인은 `common`, `ml`, `llm`, `vision`, `colab`, `all`입니다. 설치 전에 dry-run으로 변경 내용을 확인할 수 있으며, 기존 파일은 설치기의 충돌 정책에 따라 처리됩니다.
 
 ## Google Colab
 
-공개 배포 저장소에서는 GitHub README에서 Colab Notebook을 직접 열어 검증할 수 있습니다. Private repository 자격증명 없이 공개 `eaglesjo/codingStandard`에서 테스트하는 것을 기본 시나리오로 합니다.
+공개 저장소에는 전체 표준, clean runtime, LLM QLoRA, RAG 경로를 검증할 수 있는 Google Colab 노트북이 포함되어 있습니다.
 
-### 원클릭 검증
+## 다국어 품질
 
-- 종합 검증: [Open in Colab](https://colab.research.google.com/github/eaglesjo/codingStandard/blob/main/tests/colab/codingstandard_colab_test.ipynb)
-- Clean runtime: [Open in Colab](https://colab.research.google.com/github/eaglesjo/codingStandard/blob/main/examples/colab/clean_runtime_validation.ipynb)
-- LLM QLoRA: [Open in Colab](https://colab.research.google.com/github/eaglesjo/codingStandard/blob/main/examples/colab/llm_qlora_validation.ipynb)
-- RAG: [Open in Colab](https://colab.research.google.com/github/eaglesjo/codingStandard/blob/main/examples/colab/rag_validation.ipynb)
+문서와 runtime 리소스는 별도로 관리되지만, 20개 runtime locale에는 동일한 품질 기준을 적용합니다. 리소스 완전성, 의미적 정책 일치성, runtime과 문서 간 일관성을 검증합니다.
+
+자세한 설치 및 검증 절차는 [English README](../../README.md)와 [INSTALL.md](../../INSTALL.md)를 참고하세요.

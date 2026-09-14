@@ -1,35 +1,33 @@
-# AI Engineering Standard
+# AI Engineering Standard — Русский
 
-<p align="center"><strong>Стандарты инженерии для AI-разработки, обучения и агентов</strong></p>
+<p align="center"><strong>Инженерные стандарты для разработки, обучения моделей и AI-агентов</strong></p>
 
-> **Language:** [English](../../README.md) · [한국어](../ko/README.md) · [Français](../fr/README.md) · [Español](../es/README.md) · [简体中文](../zh-CN/README.md) · [日本語](../ja/README.md) · Русский · [Türkçe](../tr/README.md)
->
-> Эта страница является русской точкой входа в документацию codingStandard. Русский входит в 20 runtime locale и проходит одинаковые проверки полноты ресурсов, семантического соответствия и согласованности runtime/документации.
+> Эта страница является русской точкой входа в документацию codingStandard. Русский входит в число 20 локалей среды выполнения и проходит те же проверки полноты ресурсов, семантической согласованности и согласованности между runtime и документацией.
 
-`codingStandard` — это переиспользуемый инженерный стандарт для разработки с помощью AI, обучения моделей, экспериментов, LLM/Vision workflows, общего ML/DL lifecycle и AI coding agents.
-
-Он предоставляет единые проектные инструкции, правила жизненного цикла ML/DL, доменные правила LLM/Vision, task-specific Skills, обнаружение окружения, политику запуска и восстановления Colab, кроссплатформенный installer и наборы проверок для воспроизводимых экспериментов.
+`codingStandard` — это переиспользуемый инженерный стандарт для разработки с помощью ИИ, обучения моделей, экспериментов, рабочих процессов LLM/Vision, общих проектов ML/DL и AI-агентов для программирования.
 
 ## Быстрый старт
 
 ```bash
-git clone https://github.com/eaglesjo/codingStandard.git
-bash ./codingStandard/scripts/installers/install-domains.sh .
+git clone https://github.com/eaglesjo/AIEngineeringStandard.git
+bash ./AIEngineeringStandard/scripts/installers/install-domains.sh .
 ```
 
 Windows / PowerShell:
 
 ```powershell
-git clone https://github.com/eaglesjo/codingStandard.git
-powershell -ExecutionPolicy Bypass -File .\codingStandard\scripts\installers\install-domains.ps1 -Target .
+git clone https://github.com/eaglesjo/AIEngineeringStandard.git
+powershell -ExecutionPolicy Bypass -File .\AIEngineeringStandard\scripts\installers\install-domains.ps1 -Target .
 ```
 
-Подробные параметры установки доступны в [English README](../../README.md).
+Доступны домены `common`, `ml`, `llm`, `vision`, `colab` и `all`. Режим dry-run позволяет предварительно просмотреть изменения, а политики конфликтов — определить, как обрабатывать существующие файлы.
 
-## Colab
+## Google Colab
 
-Публичный репозиторий предоставляет быстрые Google Colab entrypoints для проверки полного стандарта, clean runtime, LLM QLoRA и RAG workflow.
+Публичный репозиторий предоставляет ноутбуки Google Colab для проверки всего стандарта, clean runtime, а также рабочих процессов LLM QLoRA и RAG.
 
-## Многоязычность
+## Качество локализации
 
-Точки входа документации и runtime-ресурсы управляются отдельно, но все 20 runtime locale проходят одинаковые проверки качества и семантической паритетности.
+Документация и ресурсы runtime управляются отдельно, но для всех 20 локалей применяются единые критерии качества: полнота ресурсов, семантическая эквивалентность политик и согласованность между runtime и документацией.
+
+Подробные инструкции по установке и валидации см. в [README на английском](../../README.md) и [INSTALL.md](../../INSTALL.md).

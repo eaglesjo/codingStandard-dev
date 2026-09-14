@@ -14,43 +14,55 @@ A new AI Developer session MUST treat repository state as authoritative and use 
 
 ## Active task
 
-- ID: `DSR-001`
-- Title: Development State Recovery v1
+- ID: `MA-001`
+- Title: Multi-Agent AI Developer 2.0 Architecture
 - Status: `IN_PROGRESS`
-- Goal: allow a fresh chat/session to resume development from durable repository state without depending on prior chat history.
+- Goal: define and implement a bounded, vendor-neutral multi-agent development architecture for AI Engineering Standard 2.0.
 
 ## Current work branch
 
-- Branch: `feat/development-state-recovery-v1`
-- Integration PR: `#17`
-- Parent integration: PR #16 (`refactor: make AI developer system vendor-neutral`)
-- Parent integration commit: `f78292566c69925cbd1ac9e32853cc8c9b95a5f6`
+- Branch: `feat/multi-agent-ai-developer-v2`
+- Base commit: `5ee47990419419a351afd3a92a5c538320660319`
+- Validated candidate before state update: `23efd3a60bd51a8e00d354291ddfaffc36d75a90`
+- Integration PR: `#18`
+- Previous integration: PR #17 — Development State Recovery v1
 
-## Completed in this task
+## Completed in the current task
 
-- Defined `CURRENT.md` as the immediate recovery state.
-- Defined `TASKS.md` as the durable task queue.
-- Defined `HISTORY.md` as the durable development record.
-- Added session recovery rules to the `ai-developer` Skill.
-- Updated the project agent entrypoint and continuity guidance to use durable state during resume.
-- Opened PR #17 for integration into `main`.
+- Expanded the 2.0 architecture to nine bounded specialist agents and the AI Developer orchestrator.
+- Defined the three-stage relay: Analysis & Planning, Coding & Execution, Validation & Visualization.
+- Added the normative Agent Contract and machine-readable schema.
+- Added the Skill-to-Agent mapping with conservative capability boundaries.
+- Implemented all nine bounded specialist agent surfaces.
+- Defined the concrete Orchestrator control surface.
+- Defined role permission ceilings, dispatch/acceptance gates, retry discipline, and lifecycle state authority.
+- Added `scripts/validation/validate_agent_contract.py` for automated contract/orchestrator policy validation.
+- Added representative valid, invalid, and failure-recovery Agent Contract fixtures.
+- Added `scripts/validation/validate_agent_contract_fixtures.py` and wired both multi-agent validators into the architecture CI workflow.
+- Added and validated the contract-driven multi-agent E2E simulation.
 
-## Next actions
+## Validation evidence
 
-1. Wait for PR #17 CI and inspect every required check.
-2. Fix any validation failures before merge.
-3. Record final validation evidence here.
-4. Merge PR #17 only after required checks pass.
-5. Verify the resulting `main` state and mark `DSR-001` complete.
+- Architecture workflow run `34790623343` completed successfully on candidate `23efd3a60bd51a8e00d354291ddfaffc36d75a90`.
+- Job `103814028876` passed all steps, including `Validate multi-agent contract`, `Validate multi-agent fixtures`, and `Validate multi-agent E2E simulation`.
+- PR #18 remains open and mergeable; it has not been merged.
+- Fresh-session recovery validation was performed against the durable state surfaces and exact PR head: `CURRENT.md`, `TASKS.md`, `HISTORY.md`, Development Continuity Skill, recovery procedure, PR #18 metadata, and CI evidence were sufficient to reconstruct the active task boundary without relying on chat history.
 
-## Evidence
+## Next bounded actions
 
-- Parent vendor-neutral PR #16 was merged into `main` as `f78292566c69925cbd1ac9e32853cc8c9b95a5f6`.
-- PR #17 head before this state update: `b98655bf9f4b86737db7d940986887a55e019c95`.
-- PR #17 CI evidence is pending and must be checked before completion is claimed.
+1. Refresh CI after the durable-state documentation update and confirm the candidate remains green.
+2. Merge PR #18 after the updated validation evidence is green.
+3. Validate `main` after merge, then promote the exact validated source to `AIEngineeringStandard`.
+4. Prepare release notes; public release/tagging remains a separate explicit authorization boundary.
 
 ## Rules
 
 - Never use chat history as the sole source of truth.
 - Do not mark a task complete without repository or CI evidence.
 - Do not overwrite historical decisions to make the current state look cleaner; record corrections explicitly.
+- Keep agent boundaries role-based and vendor-neutral.
+- Do not add agents merely to increase agent count; each agent needs a clear responsibility or permission boundary.
+- Do not force all nine agents into every task; route only the agents required by acceptance criteria.
+- Prefer parallel read-only work and single-owner overlapping writes.
+- Freeze the candidate revision before independent parallel validation.
+- On failure, preserve evidence and repair the smallest responsible boundary instead of restarting the full pipeline.

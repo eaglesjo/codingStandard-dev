@@ -25,36 +25,33 @@ A new AI Developer session MUST treat repository state as authoritative and use 
 - AI Code Quality & Verification implementation added:
   - `core/validation/ai-code-quality.schema.json`
   - `scripts/validation/validate_ai_code_quality.py`
-  - `tests/validation/fixtures/ai-code-quality/valid.json`
-  - `tests/validation/fixtures/ai-code-quality/invalid_not_all_pass.json`
-  - `tests/validation/test_ai_code_quality.py`
-  - architecture CI executes the AI code quality validator and focused tests.
-- The quality contract requires evidence for scope, focused test, quality check, broader validation, and review before acceptance; accepted candidates must be clean revisions.
-- This is intentionally a minimal vendor-neutral acceptance contract, not a new language-specific static-analysis framework.
+  - positive/negative fixtures and focused tests
+  - architecture CI executes the validator and focused tests.
 - AI/LLM Evaluation minimal implementation added:
   - `core/validation/ai-evaluation.schema.json`
   - `scripts/validation/validate_ai_evaluation.py`
-  - `tests/validation/fixtures/ai-evaluation/valid.json`
-  - `tests/validation/fixtures/ai-evaluation/invalid_score.json`
-  - `tests/validation/test_ai_evaluation.py`
-  - architecture CI executes the evaluation validator and focused tests.
+  - positive/negative fixtures and focused tests
+  - architecture CI executes the validator and focused tests.
 - The evaluation contract is deterministic and vendor-neutral: each case records input, expected criteria, criterion evidence, a derived 0..1 case score, and an acceptance threshold. The validator rejects score/evidence mismatches and acceptance below threshold.
+- Observability/Provenance hardening added:
+  - `core/validation/conformance-evidence.schema.json` now requires trace identity (`action_id`) and supports `parent_action_id` plus unique `evidence_id`.
+  - `core/validation/evidence-provenance-policy.md` now defines cross-action traceability and forbids silent reuse of unrelated action/revision evidence.
 
 ## Evidence notes
 
-- Existing `core/validation/conformance-evidence.schema.json` already provides runtime conformance evidence with repository/runtime identity, observations, checks, and evidence levels.
-- Existing `core/common/experiment.py` already records experiment seed, config hash, model revision, dataset revision, environment profile, runtime config, and Git state.
+- Existing conformance evidence already carries repository/runtime identity, observations, checks, and evidence levels; the hardening extends that same system rather than introducing a second provenance system. fileciteturn510file0
+- Existing `core/common/experiment.py` already records standard version, experiment ID, variant, seed, config hash/config, model revision, dataset revision, environment profile, runtime config, and Git state. fileciteturn523file0
 - The new AI evaluation contract deliberately does not introduce a provider/model-specific judge or runtime dependency.
-- Commit `4e93789f2e25fcfdd8fb88ac71ea87abc785b9d1` contains the latest CI integration; combined commit status currently reports no status entries, so CI execution has not yet been independently evidenced from that commit.
+- Commit `4e93789f2e25fcfdd8fb88ac71ea87abc785b9d1` contains the CI integration for the quality/evaluation validators and focused tests; combined status at that point had no status entries, so CI execution was not independently evidenced then.
+- Provenance hardening commits: `6054259ac3be61881ea16209d8a1f0cec56cf881`, `b9ed1b980f5e2af853cc4be5ed7e0e5097475cdf`.
 
 ## Next bounded actions
 
-1. Obtain CI evidence for the current AI Code Quality and AI/LLM Evaluation validators/tests; diagnose before retrying if any job fails.
-2. Harden existing observability/provenance around cross-action traceability and acceptance.
-3. Harden data/model reproducibility from metadata capture into enforceable integrity and acceptance checks.
-4. Integrate accepted validation into CI and run the full 2.0 gate.
-5. Freeze the validated candidate, independently audit the public candidate, and promote the exact validated source.
-6. Prepare release notes; public tag/release creation remains a separate explicit authorization boundary.
+1. Obtain fresh CI evidence for the latest main revision and diagnose before retrying if any job fails.
+2. Harden data/model reproducibility from metadata capture into enforceable artifact identity and deterministic acceptance checks.
+3. Add cross-area acceptance validation and integrate the final 2.0 gate.
+4. Freeze the validated candidate, independently audit the public candidate, and promote the exact validated source.
+5. Prepare release notes; public tag/release creation remains a separate explicit authorization boundary.
 
 ## Deferred to next version
 

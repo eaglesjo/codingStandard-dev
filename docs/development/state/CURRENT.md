@@ -22,29 +22,12 @@ A new AI Developer session MUST treat repository state as authoritative and use 
 
 ## Latest CI evidence
 
-Candidate `48be3dea5b1bfb20602d053178287ff5d1926c7d` was validated by fresh `Validate codingStandard` run `34933418917`.
+Candidate `aae30039148117346bb80719ea0fa76821c9c925` passed fresh validation:
 
-Result:
-- architecture validation: PASS
-- repository validation: PASS
-- environment contract: PASS
-- installer test: FAIL
+- architecture validation run `34952712797`: PASS
+- Windows installer validation run `34952712854`: PASS
 
-Failure boundary was the PowerShell wrapper locale contract, not the v1.7 upgrade regression. The installer integration test reached the PowerShell all-lifecycle section and failed on locale `fr` because `scripts/installers/install-domains.ps1` still had a stale five-locale `ValidateSet` (`en`, `ko`, `zh-CN`, `ja`, `ru`). The underlying Python installer already accepts all 20 locales.
-
-This is a real installer parity defect exposed by the expanded 20-locale regression coverage. It is unrelated to the upgrade fixture itself.
-
-Windows installer validation also ran for the same candidate and must be rechecked against the corrected wrapper candidate.
-
-## Current correction
-
-Fixed `scripts/installers/install-domains.ps1` in:
-
-`c0c1734e76d0eab4d8ca5a1ec497e539d130dad8` — `fix(installer): align PowerShell locale contract with 20 locales`
-
-The PowerShell `ValidateSet` now matches the canonical 20-locale runtime catalog:
-
-`en`, `ko`, `fr`, `es`, `zh-CN`, `ja`, `ru`, `tr`, `de`, `it`, `pt`, `ar`, `hi`, `id`, `vi`, `th`, `nl`, `pl`, `sv`, `uk`.
+The PowerShell wrapper locale parity defect is therefore closed for the current candidate.
 
 ## UPGRADE-001 evidence
 
@@ -53,6 +36,27 @@ The released public repository contains an actual `v1.7.0` tag. Its installer su
 A broader v1.7-shaped upgrade regression covers representative installed files from the common, ML, LLM, Vision, and Colab surfaces. The fixture also contains a legacy-only unmanaged artifact. The v2 installer is run directly with `merge` without uninstalling first. The test verifies v2 installation state, preservation/replacement behavior, unmanaged artifact preservation, manifest ownership uniqueness, owned-file existence, and post-upgrade state reporting.
 
 The fixture is representative compatibility coverage, not a complete byte-for-byte historical v1.7 installation snapshot. Do not claim full historical parity until the remaining migration surfaces are evidenced.
+
+## Ownership reconciliation added
+
+Commit `42aecdf1f60bc82be189243ada5ea453da977069` adds `scripts/installers/reconcile_upgrade.py`.
+
+Commit `4363109565f17e8926dffbd6b26b314639d3e052` extends the installer integration test to require reconciliation before direct upgrade.
+
+Commit `3cea88ab37ec471472a34c71222450dc56c46561` adds the normative UPGRADE-001 contract at `docs/development/upgrade/UPGRADE-001.md`.
+
+The reconciliation report classifies pre-v2 files as:
+
+- `known-v2-managed`
+- `legacy-managed-candidate`
+- `project-owned`
+- `unknown-legacy`
+
+The report explicitly records `deletion_policy: never-delete-unknown`.
+
+Important safety boundary: `legacy-managed-candidate` is only evidence that a desired v2 path contains a codingStandard managed-block marker. It is not treated as proof of complete historical ownership. Unknown legacy files are preserved and are never silently deleted during direct upgrade.
+
+The reconciliation report is written to `.codingstandard/upgrade-reconciliation.json` before the v2 installation establishes its normal installation manifest.
 
 ## Release-quality finding already corrected in canonical main
 
@@ -65,12 +69,12 @@ Original fix commits:
 
 ## Next bounded actions
 
-1. Validate corrected candidate `c0c1734e76d0eab4d8ca5a1ec497e539d130dad8` in fresh `Validate codingStandard` and Windows installer CI.
-2. If green, capture exact green evidence and freeze the candidate.
-3. Add stale/obsolete v1.7 artifact classification coverage; do not silently delete unmanaged files.
-4. Complete installation-state and ownership reconciliation evidence after direct upgrade.
-5. Run post-upgrade validation and record exact evidence.
-6. Document the supported upgrade contract and its boundaries.
+1. Run fresh CI on the ownership-reconciliation candidate.
+2. If green, capture exact green evidence and freeze the upgrade candidate.
+3. Expand reconciliation coverage for stale/obsolete legacy artifacts and prove that unknown files remain untouched.
+4. Run post-upgrade `state` and repository validation on the reconciled fixture.
+5. Record exact acceptance evidence and document the supported upgrade contract boundaries.
+6. Only then close UPGRADE-001.
 
 ## Next after UPGRADE-001
 

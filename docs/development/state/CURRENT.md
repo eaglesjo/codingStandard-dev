@@ -15,79 +15,38 @@ A new AI Developer session MUST treat repository state as authoritative and use 
 
 ## Active task
 
-- ID: `REAL-002`
-- Title: Validate the complete 2.0 lifecycle on the real project `eaglesjo/codingStandard-dev`
+- ID: `EVAL-003`
+- Title: Build an AI Developer evaluation suite
+- Status: `IN_PROGRESS`
+- Execution plan: `docs/development/EVAL-003-EXECUTION-PLAN.md`
+
+## Completed task: REAL-002
+
 - Status: `PASS`
-- Acceptance contract: `docs/development/REAL-002.md`
-- Execution plan: `docs/development/REAL-002-EXECUTION-PLAN.md`
+- Target: `eaglesjo/codingStandard-dev` itself
+- No unrelated repository was modified.
+- Final validated candidate: `28434d9d75c337438465934d12359a162aa54f69`
+- Architecture validation run `34976603912` / job `104405785663`: PASS
+- codingStandard validation run `34976603907` / job `104405786815`: PASS
+- Windows installer validation run `34976603809` / jobs `104405785762`, `104405785963`: PASS
+- Fresh-session recovery was demonstrated from repository state without chat history.
+- Durable completion record is in `docs/development/state/HISTORY.md`.
 
-## REAL-002 target boundary
+## EVAL-003 next bounded action
 
-The real-project target was explicitly `eaglesjo/codingStandard-dev` itself. This was a self-hosting validation of the AI Engineering Standard development system.
+Build the first deterministic case/fixture set for AI Developer behavior, starting with repository recovery and scope-control cases. Use the existing `ai-evaluation` schema and validator; do not introduce provider/model-specific judging.
 
-PetLM and every other unrelated repository were outside REAL-002 and were not modified as part of this task.
+Initial case dimensions:
 
-## REAL-002 completion evidence
-
-Bounded task completed: resolve the REAL-002 acceptance-boundary ambiguity, make the boundary and execution contract durable, validate the resulting candidate, capture exact evidence, and verify fresh-session recovery from repository state alone.
-
-Validated candidate:
-
-`8bf6df7c9322fabd08e39c1bd36a6d18f74d83a8`
-
-Candidate commit:
-
-- `docs: define REAL-002 bounded execution plan`
-
-Focused validation:
-
-- repository target is explicitly `eaglesjo/codingStandard-dev`;
-- `REAL-002.md` and `REAL-002-EXECUTION-PLAN.md` define the same target and acceptance boundary;
-- `CURRENT.md` and `TASKS.md` identify the same active task and target;
-- `AGENTS.md`, AI Developer Skill, and Development Continuity Skill require repository-state recovery, bounded execution, validation, provenance, and durable recording;
-- non-goals explicitly exclude PetLM, other repositories, public `v2.0.0` tag rewriting, provider/model routing, and mandatory execution of all nine specialist agents;
-- no unrelated repository was modified.
-
-Broader validation against the exact candidate `8bf6df7c9322fabd08e39c1bd36a6d18f74d83a8`:
-
-- architecture validation run `34972844488`: PASS
-- architecture job `104393094798`: PASS
-  - profiles
-  - profile contract
-  - multi-agent contract
-  - multi-agent fixtures
-  - multi-agent E2E simulation
-  - AI code quality contract/test
-  - AI evaluation contract/test
-  - reproducibility contract/test
-  - cross-area 2.0 acceptance/test
-- codingStandard validation run `34972844585`: PASS
-- validation job `104393095466`: PASS
-  - architecture contract
-  - repository validation
-  - environment contract
-  - installer tests
-  - LLM CPU memory smoke test
-  - Vision CPU memory smoke test
-- Windows installer validation run `34972844593`: PASS
-- installer jobs `104393095165` and `104393095696`: PASS
-
-Fresh-session recovery check:
-
-A recovery pass was performed using repository state only. The repository identity/current revision, `AGENTS.md`, AI Developer Skill, Development Continuity Skill, `CURRENT.md`, `TASKS.md`, REAL-002 acceptance contract, and execution plan were sufficient to reconstruct the completed task, its exact candidate SHA, validation evidence, and next bounded action without chat history.
-
-## Next bounded actions
-
-1. Build the AI Developer evaluation suite (`EVAL-003`).
-2. Validate Multi-Agent Runtime execution (`MA-002`) when justified by lifecycle acceptance criteria.
-3. After those, design the deferred `MODEL-ROUTING` capability for the next version.
-
-## Deferred to next version
-
-- Provider/model adapters.
-- Per-agent AI model assignment.
-- Model routing policies and fallback selection.
-- Provider/model-specific runtime coupling.
+1. repository recovery;
+2. scope control;
+3. planning quality;
+4. implementation discipline;
+5. validation/evidence completeness;
+6. failure diagnosis;
+7. bounded retry;
+8. unnecessary-change detection;
+9. development continuity.
 
 ## Rules
 

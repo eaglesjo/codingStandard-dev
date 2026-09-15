@@ -15,53 +15,40 @@ A new AI Developer session MUST treat repository state as authoritative and use 
 
 ## Active task
 
-- ID: `UPGRADE-001`
-- Title: Validate 1.7 → 2.0 no-delete upgrade compatibility
-- Status: `IN_PROGRESS`
-- Goal: establish evidence-backed upgrade behavior from the released v1.7.0 installation to the v2.x installation without requiring a pre-upgrade uninstall.
+- ID: `REAL-002`
+- Title: Validate the complete 2.0 lifecycle on a real project
+- Status: `NEXT`
 
-## Latest CI evidence
+## Latest completed task
 
-Ownership-reconciliation candidate `45d3b9a05eab8ace5c48b46bb094bb22502f30ae` passed both workflows:
+`UPGRADE-001` — Validate 1.7 → 2.0 no-delete upgrade compatibility — is complete for its defined representative compatibility boundary.
 
-- architecture validation run `34961720902`: PASS
-- Windows installer validation run `34961720941`: PASS
-- Windows PowerShell integration jobs: PASS
+Final validated candidate before durable-state documentation:
 
-The ownership reconciliation regression is therefore validated by CI on the candidate.
+`93f97ea92960bd8565d59f8b096207584d21ac2f`
 
-## UPGRADE-001 evidence
+Fresh CI evidence:
 
-The released public repository contains an actual `v1.7.0` tag. Its installer supports `en`/`ko`, the `common`/`ml`/`llm`/`vision`/`colab`/`all` domains, and `ask`/`merge`/`overwrite`/`skip` conflict policies. Its merge implementation uses coding-standard managed blocks for existing files.
+- architecture validation run `34964212287`: PASS
+- architecture job `104364722988`: PASS
+- codingStandard validation run `34964212295`: PASS
+- validation job `104364723251`: PASS
 
-A broader v1.7-shaped upgrade regression covers representative installed files from the common, ML, LLM, Vision, and Colab surfaces. The fixture also contains both a legacy-only unmanaged artifact and an obsolete v1.7 artifact containing a legacy managed block. The v2 installer is run directly with `merge` without uninstalling first. The test verifies v2 installation state, preservation/replacement behavior, preservation of both legacy artifacts, manifest ownership uniqueness, owned-file existence, reconciliation evidence preservation, and post-upgrade state reporting.
+The validation job passed repository validation, environment contract tests, installer lifecycle tests, LLM CPU memory smoke tests, and Vision CPU memory smoke tests. The installer lifecycle test includes the direct v1.7-shaped upgrade regression, reconciliation, stale/obsolete legacy artifact preservation, manifest/state validation, all 20 Bash locales, and PowerShell integration on supported runners. fileciteturn1046file0
 
-The fixture is representative compatibility coverage, not a complete byte-for-byte historical v1.7 installation snapshot. Do not claim full historical parity until the remaining migration surfaces are evidenced.
+## UPGRADE-001 acceptance boundary
 
-## Ownership reconciliation
+The accepted contract is:
 
-Commit `42aecdf1f60bc82be189243ada5ea453da977069` adds `scripts/installers/reconcile_upgrade.py`.
+- direct v1.7-shaped → v2 installation is allowed without mandatory uninstall
+- project-owned content is preserved under explicit `merge`
+- legacy managed blocks on desired v2 paths are replaced under explicit `merge`
+- unknown legacy files are never silently deleted
+- obsolete legacy artifacts outside the desired v2 surface remain `unknown-legacy` and survive the upgrade
+- v2 manifest ownership is unique and every owned file exists
+- post-upgrade state reports `installed: true`, `modified: 0`, `missing: 0`
 
-Commit `4363109565f17e8926dffbd6b26b314639d3e052` extends the installer integration test to require reconciliation before direct upgrade.
-
-Commit `3cea88ab37ec471472a34c71222450dc56c46561` adds the normative UPGRADE-001 contract at `docs/development/upgrade/UPGRADE-001.md`.
-
-Commit `22683047a26065548c8f5abb4472fc1f0e735aad` adds an explicit stale/obsolete v1.7 artifact regression. A managed-looking file outside the desired v2 surface must remain `unknown-legacy` and must survive the direct upgrade.
-
-Commit `5225ff23a9dff631fa2394d057e222872e7ce532` documents this safety boundary in the upgrade contract.
-
-The reconciliation report classifies pre-v2 files as:
-
-- `known-v2-managed`
-- `legacy-managed-candidate`
-- `project-owned`
-- `unknown-legacy`
-
-The report explicitly records `deletion_policy: never-delete-unknown`.
-
-Important safety boundary: `legacy-managed-candidate` is only evidence that a desired v2 path contains a codingStandard managed-block marker. It is not treated as proof of complete historical ownership. Unknown legacy files are preserved and are never silently deleted during direct upgrade.
-
-The reconciliation report is written to `.codingstandard/upgrade-reconciliation.json` before the v2 installation establishes its normal installation manifest.
+The regression fixture is representative, not a byte-for-byte snapshot of every historical v1.7 installation. Historical ownership is never guessed when evidence is absent. The full acceptance evidence and boundary are frozen in `docs/development/upgrade/UPGRADE-001.md`.
 
 ## Release-quality finding already corrected in canonical main
 
@@ -74,18 +61,10 @@ Original fix commits:
 
 ## Next bounded actions
 
-1. Run fresh CI on the stale-artifact regression candidate.
-2. If green, capture exact acceptance evidence.
-3. Run post-upgrade `state` and repository validation on the reconciled fixture.
-4. Document the supported upgrade contract boundaries and freeze the evidence.
-5. Only then close UPGRADE-001.
-
-## Next after UPGRADE-001
-
-- Validate the complete 2.0 lifecycle on a real project.
-- Build an AI Developer evaluation suite.
-- Multi-Agent Runtime is a selectable execution layer with default `ON`; users can disable it, and the orchestrator may route only required agents.
-- Then design the deferred `MODEL-ROUTING` capability for the next version.
+1. Validate the complete 2.0 lifecycle on a real project (`REAL-002`).
+2. Build the AI Developer evaluation suite (`EVAL-003`).
+3. Validate Multi-Agent Runtime execution (`MA-002`) when justified by the lifecycle acceptance criteria.
+4. After those, design the deferred `MODEL-ROUTING` capability for the next version.
 
 ## Deferred to next version
 

@@ -92,14 +92,21 @@ def legacy_v17_upgrade(target: Path) -> None:
 
     legacy_only = target / "legacy-v1.7-only.md"
     legacy_only.write_text("legacy artifact that v2 does not manage\n", encoding="utf-8")
+    stale_managed = target / "obsolete-v1.7-managed.md"
+    stale_managed.write_text(
+        f"# Obsolete v1.7 artifact\n\n{start}\nlegacy-v1.7-managed-content\n{end}\n",
+        encoding="utf-8",
+    )
     manifest = target / ".codingstandard" / "installation.json"
     assert not manifest.exists(), "v1.7 fixture must start without a v2 manifest"
 
     reconcile = run(["python3", str(RECONCILE), str(target), "--domain", "all"])
-    report = json.loads((target / ".codingstandard" / "upgrade-reconciliation.json").read_text(encoding="utf-8"))
+    reconciliation_path = target / ".codingstandard" / "upgrade-reconciliation.json"
+    report = json.loads(reconciliation_path.read_text(encoding="utf-8"))
     assert "AGENTS.md" in report["categories"]["legacy-managed-candidate"]
     assert "domains/ml/AGENT.md" in report["categories"]["legacy-managed-candidate"]
     assert "legacy-v1.7-only.md" in report["categories"]["unknown-legacy"]
+    assert "obsolete-v1.7-managed.md" in report["categories"]["unknown-legacy"]
     assert report["deletion_policy"] == "never-delete-unknown"
     assert "legacy-managed-candidate" in reconcile.stdout
 
@@ -114,6 +121,8 @@ def legacy_v17_upgrade(target: Path) -> None:
         assert "legacy-v1.7-managed-content" not in text, f"legacy managed block was not replaced: {rel}"
         assert "BEGIN CODINGSTANDARD MANAGED BLOCK" in text, f"v2 managed block missing: {rel}"
     assert legacy_only.is_file(), "upgrade deleted an unmanaged legacy file"
+    assert stale_managed.is_file(), "upgrade deleted an obsolete legacy artifact"
+    assert reconciliation_path.is_file(), "upgrade reconciliation evidence disappeared"
 
     data = json.loads(manifest.read_text(encoding="utf-8"))
     assert data["coding_standard_version"] == (ROOT / "VERSION").read_text(encoding="utf-8").strip()

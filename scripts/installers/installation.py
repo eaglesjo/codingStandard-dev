@@ -10,7 +10,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-SUPPORTED_LANGUAGES = ("en", "ko", "zh-CN", "ja", "ru")
+SUPPORTED_LANGUAGES = (
+    "en", "ko", "fr", "es", "zh-CN", "ja", "ru", "tr", "de", "it",
+    "pt", "ar", "hi", "id", "vi", "th", "nl", "pl", "sv", "uk",
+)
 SUPPORTED_DOMAINS = ("common", "ml", "llm", "vision", "colab", "all")
 SUPPORTED_POLICIES = ("ask", "merge", "overwrite", "skip")
 MANIFEST_DIR = ".codingstandard"
@@ -83,9 +86,14 @@ def resolve_source(root: Path, language: str, rel: str) -> Path:
 
 
 def prompt_language() -> str:
-    print("Language: 1) English  2) Korean  3) Simplified Chinese  4) Japanese  5) Russian")
+    choices = "  ".join(f"{index + 1}) {locale}" for index, locale in enumerate(SUPPORTED_LANGUAGES))
+    print(f"Language: {choices}")
     choice = input("Language [1]: ").strip()
-    return {"2": "ko", "3": "zh-CN", "4": "ja", "5": "ru"}.get(choice, "en")
+    try:
+        index = int(choice) - 1
+    except ValueError:
+        index = 0
+    return SUPPORTED_LANGUAGES[index] if 0 <= index < len(SUPPORTED_LANGUAGES) else "en"
 
 
 def prompt_domain() -> str:

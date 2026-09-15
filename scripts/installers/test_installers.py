@@ -100,7 +100,8 @@ def legacy_v17_upgrade(target: Path) -> None:
 
     for rel in legacy_files:
         text = (target / rel).read_text(encoding="utf-8")
-        assert "Local" in text, f"local project content was lost: {rel}"
+        expected_local = "Project Agent Instructions" if rel == "AGENTS.md" else "Local"
+        assert expected_local in text, f"local project content was lost: {rel}"
         assert "legacy-v1.7-managed-content" not in text, f"legacy managed block was not replaced: {rel}"
         assert "BEGIN CODINGSTANDARD MANAGED BLOCK" in text, f"v2 managed block missing: {rel}"
     assert legacy_only.is_file(), "upgrade deleted an unmanaged legacy file"
@@ -109,7 +110,14 @@ def legacy_v17_upgrade(target: Path) -> None:
     assert data["coding_standard_version"] == (ROOT / "VERSION").read_text(encoding="utf-8").strip()
     assert data["language"] == "en"
     assert data["domain"] == "all"
-    assert {item["path"] for item in data["files"]} >= set(COMMON + ML + COLAB)
+    paths = [item["path"] for item in data["files"]]
+    assert len(paths) == len(set(paths)), "installation manifest contains duplicate ownership entries"
+    assert set(paths) >= set(COMMON + ML + COLAB)
+    assert all((target / rel).is_file() for rel in paths), "manifest owns a missing file"
+    post_state = run(["python3", str(ENGINE), "state", str(target)])
+    assert "installed: true" in post_state.stdout
+    assert "modified: 0" in post_state.stdout
+    assert "missing: 0" in post_state.stdout
 
 
 def test_upgrade_v17_to_v2() -> None:

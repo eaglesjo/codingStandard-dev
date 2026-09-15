@@ -72,6 +72,43 @@ def lifecycle(target: Path) -> None:
     assert not tracked.exists()
 
 
+def legacy_v17_upgrade(target: Path) -> None:
+    """Verify a representative v1.7 installation upgrades without uninstalling."""
+    legacy = target / "AGENTS.md"
+    legacy.write_text(
+        "# AGENTS.md\n\n# Project Agent Instructions\n\n"
+        "This file is the top-level entrypoint for AI coding agents.\n\n"
+        "## Environment Contract\n\n"
+        "- Inspect the real OS, Python/runtime, CPU, GPU/accelerator, VRAM, RAM, disk, and framework capabilities before resource-sensitive work.\n\n"
+        "## Local Project Rule\n\n"
+        "Keep the project's existing local rules.\n",
+        encoding="utf-8",
+    )
+    legacy_only = target / "legacy-v1.7-only.md"
+    legacy_only.write_text("legacy artifact that v2 does not manage\n", encoding="utf-8")
+    manifest = target / ".codingstandard" / "installation.json"
+    assert not manifest.exists(), "v1.7 fixture must start without a v2 manifest"
+
+    result = run(["python3", str(ENGINE), "install", str(target), "en", "common", "merge", "false"])
+    assert result.returncode == 0
+    assert manifest.is_file(), "v2 install did not establish installation state"
+    assert "Local Project Rule" in legacy.read_text(encoding="utf-8")
+    assert "Keep the project's existing local rules." in legacy.read_text(encoding="utf-8")
+    assert "BEGIN CODINGSTANDARD MANAGED BLOCK" in legacy.read_text(encoding="utf-8")
+    assert legacy_only.is_file(), "upgrade deleted an unmanaged legacy file"
+
+    data = json.loads(manifest.read_text(encoding="utf-8"))
+    assert data["coding_standard_version"] == (ROOT / "VERSION").read_text(encoding="utf-8").strip()
+    assert data["language"] == "en"
+    assert data["domain"] == "common"
+
+
+def test_upgrade_v17_to_v2() -> None:
+    with tempfile.TemporaryDirectory() as tmp:
+        target = Path(tmp) / "v1.7-project"
+        legacy_v17_upgrade(target)
+
+
 def test_bash() -> None:
     with tempfile.TemporaryDirectory() as tmp:
         target = Path(tmp) / "new-project"
@@ -107,6 +144,7 @@ def test_powershell() -> None:
 
 
 def main() -> int:
+    test_upgrade_v17_to_v2()
     test_bash()
     test_powershell()
     print("installer lifecycle tests passed")

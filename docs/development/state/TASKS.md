@@ -4,14 +4,16 @@ This file records durable development tasks so a fresh AI Developer session can 
 
 ## Active
 
-- [ ] `REAL-002` — Validate the complete 2.0 lifecycle on a real project
+- [ ] `REAL-002` — Validate the complete 2.0 lifecycle on the real project `eaglesjo/codingStandard-dev`
+  - explicit self-hosting target
   - AI Developer routing
   - specialist Skill selection
-  - implementation
+  - bounded real maintenance task
   - execution
-  - validation
+  - focused + broader validation
   - provenance/evidence
-  - recovery after bounded failure
+  - fresh-session recovery
+  - no unrelated repository changes
 
 - [ ] `EVAL-003` — Build an AI Developer evaluation suite
   - representative development tasks

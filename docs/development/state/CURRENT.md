@@ -20,15 +20,31 @@ A new AI Developer session MUST treat repository state as authoritative and use 
 - Status: `IN_PROGRESS`
 - Goal: establish evidence-backed upgrade behavior from the released v1.7.0 installation to the v2.x installation without requiring a pre-upgrade uninstall.
 
-## 2.0 release state
+## Latest CI evidence
 
-AI Engineering Standard 2.0 final quality/reproducibility hardening is complete and the public v2.0.0 release is already published.
+Candidate `48be3dea5b1bfb20602d053178287ff5d1926c7d` was validated by fresh `Validate codingStandard` run `34933418917`.
 
-Validated 2.0 source revision:
+Result:
+- architecture validation: PASS
+- repository validation: PASS
+- environment contract: PASS
+- installer test: FAIL
 
-`6fed7b85f162611e6f5aa16dc857905b597b56ea`
+Failure boundary was the PowerShell wrapper locale contract, not the v1.7 upgrade regression. The installer integration test reached the PowerShell all-lifecycle section and failed on locale `fr` because `scripts/installers/install-domains.ps1` still had a stale five-locale `ValidateSet` (`en`, `ko`, `zh-CN`, `ja`, `ru`). The underlying Python installer already accepts all 20 locales.
 
-The public distribution was promoted from that exact validated source and released as `v2.0.0`.
+This is a real installer parity defect exposed by the expanded 20-locale regression coverage. It is unrelated to the upgrade fixture itself.
+
+Windows installer validation also ran for the same candidate and must be rechecked against the corrected wrapper candidate.
+
+## Current correction
+
+Fixed `scripts/installers/install-domains.ps1` in:
+
+`c0c1734e76d0eab4d8ca5a1ec497e539d130dad8` — `fix(installer): align PowerShell locale contract with 20 locales`
+
+The PowerShell `ValidateSet` now matches the canonical 20-locale runtime catalog:
+
+`en`, `ko`, `fr`, `es`, `zh-CN`, `ja`, `ru`, `tr`, `de`, `it`, `pt`, `ar`, `hi`, `id`, `vi`, `th`, `nl`, `pl`, `sv`, `uk`.
 
 ## UPGRADE-001 evidence
 
@@ -36,27 +52,7 @@ The released public repository contains an actual `v1.7.0` tag. Its installer su
 
 A broader v1.7-shaped upgrade regression covers representative installed files from the common, ML, LLM, Vision, and Colab surfaces. The fixture also contains a legacy-only unmanaged artifact. The v2 installer is run directly with `merge` without uninstalling first. The test verifies v2 installation state, preservation/replacement behavior, unmanaged artifact preservation, manifest ownership uniqueness, owned-file existence, and post-upgrade state reporting.
 
-The first fresh CI run for candidate `9b114d9a2143975a39393c86e86ff425611b2d4f` failed only in the installer test. Architecture, repository, environment, and Windows installer validation passed. Failure evidence showed the fixture assertion incorrectly expected the literal word `Local` in `AGENTS.md`; the fixture content used `Project Agent Instructions` there, so this was a test-fixture assertion defect rather than an observed installer failure.
-
-The regression test was strengthened and corrected in:
-
-`48be3dea5b1bfb20602d053178287ff5d1926c7d` — `test(upgrade): strengthen v1.7 ownership and post-upgrade validation`
-
-The updated test now uses an explicit expected local marker per representative file and additionally verifies:
-
-- manifest paths are unique;
-- every manifest-owned file exists;
-- post-upgrade `state` reports `installed: true`, `modified: 0`, `missing: 0`.
-
-Upgrade regression commits:
-
-- `0187e360466d003186e9002655e7c49c4d09de53` — initial v1.7 → v2 regression test
-- `de0a036e6057458f87ff6b326a1e610f5c75d42b` — remove obsolete `_probe_v13` installer artifact
-- `aca6807f9b62f5055bfdc9706bee941d6bbfadf7` — fix regression fixture target creation
-- `9b114d9a2143975a39393c86e86ff425611b2d4f` — broaden v1.7 migration regression coverage
-- `48be3dea5b1bfb20602d053178287ff5d1926c7d` — strengthen v1.7 ownership and post-upgrade validation
-
-The current fixture is still a representative compatibility test, not a complete byte-for-byte historical v1.7 installation snapshot. Do not claim full historical parity until the remaining migration surfaces are evidenced.
+The fixture is representative compatibility coverage, not a complete byte-for-byte historical v1.7 installation snapshot. Do not claim full historical parity until the remaining migration surfaces are evidenced.
 
 ## Release-quality finding already corrected in canonical main
 
@@ -69,7 +65,7 @@ Original fix commits:
 
 ## Next bounded actions
 
-1. Validate the corrected candidate `48be3dea5b1bfb20602d053178287ff5d1926c7d` in fresh CI.
+1. Validate corrected candidate `c0c1734e76d0eab4d8ca5a1ec497e539d130dad8` in fresh `Validate codingStandard` and Windows installer CI.
 2. If green, capture exact green evidence and freeze the candidate.
 3. Add stale/obsolete v1.7 artifact classification coverage; do not silently delete unmanaged files.
 4. Complete installation-state and ownership reconciliation evidence after direct upgrade.

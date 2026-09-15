@@ -12,6 +12,7 @@ ROOT = Path(__file__).resolve().parents[2]
 PS1 = ROOT / "scripts" / "installers" / "install-domains.ps1"
 SH = ROOT / "scripts" / "installers" / "install-domains.sh"
 ENGINE = ROOT / "scripts" / "installers" / "installation.py"
+RECONCILE = ROOT / "scripts" / "installers" / "reconcile_upgrade.py"
 COMMON = [
     "AGENTS.md", "CLAUDE.md", "GEMINI.md", ".github/copilot-instructions.md",
     ".cursor/rules/coding-standard.mdc", ".windsurf/rules/coding-standard.md",
@@ -93,6 +94,14 @@ def legacy_v17_upgrade(target: Path) -> None:
     legacy_only.write_text("legacy artifact that v2 does not manage\n", encoding="utf-8")
     manifest = target / ".codingstandard" / "installation.json"
     assert not manifest.exists(), "v1.7 fixture must start without a v2 manifest"
+
+    reconcile = run(["python3", str(RECONCILE), str(target), "--domain", "all"])
+    report = json.loads((target / ".codingstandard" / "upgrade-reconciliation.json").read_text(encoding="utf-8"))
+    assert "AGENTS.md" in report["categories"]["legacy-managed-candidate"]
+    assert "domains/ml/AGENT.md" in report["categories"]["legacy-managed-candidate"]
+    assert "legacy-v1.7-only.md" in report["categories"]["unknown-legacy"]
+    assert report["deletion_policy"] == "never-delete-unknown"
+    assert "legacy-managed-candidate" in reconcile.stdout
 
     result = run(["python3", str(ENGINE), "install", str(target), "en", "all", "merge", "false"])
     assert result.returncode == 0

@@ -4,6 +4,17 @@ This file records material development state transitions that are useful when a 
 
 ## 2026-09-15
 
+- Completed `REAL-002` — validate the complete AI Engineering Standard 2.0 lifecycle on the real project `eaglesjo/codingStandard-dev` using self-hosting validation.
+- Resolved the acceptance-boundary ambiguity that had previously allowed an unrelated repository to be selected as the real-project target.
+- Frozen target boundary: `eaglesjo/codingStandard-dev`; PetLM and every other unrelated repository are excluded from REAL-002.
+- Defined the bounded execution contract in `docs/development/REAL-002.md` and `docs/development/REAL-002-EXECUTION-PLAN.md`.
+- Validated candidate `8bf6df7c9322fabd08e39c1bd36a6d18f74d83a8` with focused repository-state/contract checks and the broader validation gates below.
+- Architecture validation run `34972844488` passed with job `104393094798`, including profile validation, multi-agent contract/fixtures/E2E, AI code quality, AI evaluation, reproducibility, and cross-area 2.0 acceptance checks.
+- codingStandard validation run `34972844585` passed with job `104393095466`, including repository validation, environment contract, installer tests, LLM CPU smoke, and Vision CPU smoke.
+- Windows installer validation run `34972844593` passed with jobs `104393095165` and `104393095696`.
+- Fresh-session recovery was validated from repository state only: repository identity/current revision, project instructions, AI Developer Skill, Development Continuity Skill, `CURRENT.md`, `TASKS.md`, REAL-002 acceptance contract, execution plan, exact candidate SHA, and validation evidence were sufficient without chat history.
+- Advanced durable state to `EVAL-003` after REAL-002 acceptance.
+
 - Completed `UPGRADE-001` — validate `v1.7.0` → `v2.x` no-delete upgrade compatibility for the defined representative compatibility boundary.
 - Added and validated ownership reconciliation with conservative classes: `known-v2-managed`, `legacy-managed-candidate`, `project-owned`, and `unknown-legacy`.
 - Enforced `deletion_policy: never-delete-unknown` for direct upgrade reconciliation.

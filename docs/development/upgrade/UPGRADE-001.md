@@ -26,6 +26,7 @@ Before the first v2 installation, the upgrade reconciliation step classifies exi
 5. Post-upgrade state must report `installed: true`, `modified: 0`, and `missing: 0` for the newly established v2 ownership set.
 6. Unknown legacy files remain outside the v2 manifest unless a later explicit installation operation claims them.
 7. Obsolete-file deletion is permitted only when prior v2 ownership evidence exists. The normal `update` lifecycle can therefore remove an obsolete file only when the v2 manifest proves that codingStandard previously owned it and the installed content is unchanged.
+8. A stale legacy artifact that looks managed but is outside the desired v2 surface is still `unknown-legacy`; the presence of a managed-block marker does not authorize deletion.
 
 ## Evidence
 
@@ -34,6 +35,8 @@ Before the first v2 installation, the upgrade reconciliation step classifies exi
 `<target>/.codingstandard/upgrade-reconciliation.json`
 
 The report records the classification and the explicit deletion policy `never-delete-unknown`.
+
+The regression fixture explicitly includes both an unmanaged legacy artifact and an obsolete v1.7 artifact containing a legacy managed block. Both must survive the direct upgrade.
 
 ## Current validation boundary
 

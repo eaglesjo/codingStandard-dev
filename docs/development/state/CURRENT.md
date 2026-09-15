@@ -16,8 +16,19 @@ A new AI Developer session MUST treat repository state as authoritative and use 
 ## Active task
 
 - ID: `REAL-002`
-- Title: Validate the complete 2.0 lifecycle on a real project
-- Status: `NEXT`
+- Title: Validate the complete 2.0 lifecycle on the real project `eaglesjo/codingStandard-dev`
+- Status: `IN_PROGRESS`
+- Acceptance contract: `docs/development/REAL-002.md`
+
+## REAL-002 target boundary
+
+The real-project target is explicitly `eaglesjo/codingStandard-dev` itself. This is a self-hosting validation of the AI Engineering Standard development system.
+
+PetLM and every other unrelated repository are outside REAL-002 and MUST NOT be modified as part of this task.
+
+## First bounded action
+
+Execute the bounded maintenance task defined in `docs/development/REAL-002.md`: validate the repository's actual instructions and durable state, resolve the REAL-002 acceptance-boundary ambiguity, validate the resulting candidate, and record exact evidence for recovery.
 
 ## Latest completed task
 
@@ -61,7 +72,7 @@ Original fix commits:
 
 ## Next bounded actions
 
-1. Validate the complete 2.0 lifecycle on a real project (`REAL-002`).
+1. Complete the REAL-002 bounded maintenance task and its acceptance evidence.
 2. Build the AI Developer evaluation suite (`EVAL-003`).
 3. Validate Multi-Agent Runtime execution (`MA-002`) when justified by the lifecycle acceptance criteria.
 4. After those, design the deferred `MODEL-ROUTING` capability for the next version.

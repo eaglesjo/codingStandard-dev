@@ -34,7 +34,7 @@ Fresh CI evidence:
 - codingStandard validation run `34964212295`: PASS
 - validation job `104364723251`: PASS
 
-The validation job passed repository validation, environment contract tests, installer lifecycle tests, LLM CPU memory smoke tests, and Vision CPU memory smoke tests. The installer lifecycle test includes the direct v1.7-shaped upgrade regression, reconciliation, stale/obsolete legacy artifact preservation, manifest/state validation, all 20 Bash locales, and PowerShell integration on supported runners. fileciteturn1046file0
+The validation job passed repository validation, environment contract tests, installer lifecycle tests, LLM CPU memory smoke tests, and Vision CPU memory smoke tests. The installer lifecycle test includes the direct v1.7-shaped upgrade regression, reconciliation, stale/obsolete legacy artifact preservation, manifest/state validation, all 20 Bash locales, and PowerShell integration on supported runners.
 
 ## UPGRADE-001 acceptance boundary
 

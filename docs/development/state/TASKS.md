@@ -4,18 +4,6 @@ This file records durable development tasks so a fresh AI Developer session can 
 
 ## Active
 
-- [ ] `UPGRADE-001` — Validate 1.7 → 2.0 no-delete upgrade compatibility
-  - [ ] Capture the released `v1.7.0` installation surface as a reproducible fixture
-  - [ ] Run the v2.0 installer against the v1.7 fixture without uninstalling first
-  - [ ] Validate conflict/merge behavior and preservation of project-owned content
-  - [ ] Detect and classify stale/obsolete 1.7 artifacts
-  - [ ] Validate installation state / ownership reconciliation
-  - [ ] Run the full post-upgrade validation suite
-  - [ ] Document the supported upgrade contract and limitations
-  - [ ] Add executable regression coverage to prevent upgrade regressions
-
-## Next
-
 - [ ] `REAL-002` — Validate the complete 2.0 lifecycle on a real project
   - AI Developer routing
   - specialist Skill selection
@@ -48,6 +36,18 @@ This file records durable development tasks so a fresh AI Developer session can 
   - Model/provider provenance
 
 ## Completed
+
+- [x] `UPGRADE-001` — Validate 1.7 → 2.0 no-delete upgrade compatibility
+  - Verified the released `v1.7.0` installer surface and its managed-block/conflict-policy behavior
+  - Added representative direct-upgrade regression coverage without pre-upgrade uninstall
+  - Added ownership reconciliation with conservative `unknown-legacy` classification
+  - Enforced `never-delete-unknown` safety policy
+  - Added stale/obsolete legacy artifact regression
+  - Verified project-owned content preservation and managed-block replacement under explicit `merge`
+  - Verified v2 manifest ownership uniqueness and owned-file existence
+  - Verified post-upgrade `state`: `installed: true`, `modified: 0`, `missing: 0`
+  - Fresh architecture and repository/installer validation passed on candidate `93f97ea92960bd8565d59f8b096207584d21ac2f`
+  - Acceptance boundary: representative v1.7 compatibility surface, not byte-for-byte parity with every historical installation
 
 - [x] `2.0-FINAL` — AI Engineering Standard 2.0 final quality and reproducibility hardening
   - AI Code Quality & Verification contract and executable validation

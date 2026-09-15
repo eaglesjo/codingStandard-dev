@@ -34,13 +34,19 @@ The public distribution was promoted from that exact validated source and releas
 
 The released public repository contains an actual `v1.7.0` tag. Its installer supports `en`/`ko`, the `common`/`ml`/`llm`/`vision`/`colab`/`all` domains, and `ask`/`merge`/`overwrite`/`skip` conflict policies. Its merge implementation uses coding-standard managed blocks for existing files.
 
-A broader v1.7-shaped upgrade regression now covers representative installed files from the common, ML, LLM, Vision, and Colab surfaces. The fixture also contains a legacy-only unmanaged artifact. The v2 installer is run directly with `merge` without uninstalling first. The test verifies:
+A broader v1.7-shaped upgrade regression covers representative installed files from the common, ML, LLM, Vision, and Colab surfaces. The fixture also contains a legacy-only unmanaged artifact. The v2 installer is run directly with `merge` without uninstalling first. The test verifies v2 installation state, preservation/replacement behavior, unmanaged artifact preservation, manifest ownership uniqueness, owned-file existence, and post-upgrade state reporting.
 
-- v2 establishes `.codingstandard/installation.json`;
-- local project-specific content survives in each representative legacy file;
-- the prior managed block is replaced by the v2 managed block rather than duplicated;
-- the unmanaged legacy artifact is preserved;
-- the manifest records the v2 version, `en`, `all`, and the expected common/domain file surface.
+The first fresh CI run for candidate `9b114d9a2143975a39393c86e86ff425611b2d4f` failed only in the installer test. Architecture, repository, environment, and Windows installer validation passed. Failure evidence showed the fixture assertion incorrectly expected the literal word `Local` in `AGENTS.md`; the fixture content used `Project Agent Instructions` there, so this was a test-fixture assertion defect rather than an observed installer failure.
+
+The regression test was strengthened and corrected in:
+
+`48be3dea5b1bfb20602d053178287ff5d1926c7d` — `test(upgrade): strengthen v1.7 ownership and post-upgrade validation`
+
+The updated test now uses an explicit expected local marker per representative file and additionally verifies:
+
+- manifest paths are unique;
+- every manifest-owned file exists;
+- post-upgrade `state` reports `installed: true`, `modified: 0`, `missing: 0`.
 
 Upgrade regression commits:
 
@@ -48,8 +54,9 @@ Upgrade regression commits:
 - `de0a036e6057458f87ff6b326a1e610f5c75d42b` — remove obsolete `_probe_v13` installer artifact
 - `aca6807f9b62f5055bfdc9706bee941d6bbfadf7` — fix regression fixture target creation
 - `9b114d9a2143975a39393c86e86ff425611b2d4f` — broaden v1.7 migration regression coverage
+- `48be3dea5b1bfb20602d053178287ff5d1926c7d` — strengthen v1.7 ownership and post-upgrade validation
 
-The current broader fixture is still a representative compatibility test, not a complete byte-for-byte historical v1.7 installation snapshot. Do not claim full historical parity until the remaining migration surfaces are evidenced.
+The current fixture is still a representative compatibility test, not a complete byte-for-byte historical v1.7 installation snapshot. Do not claim full historical parity until the remaining migration surfaces are evidenced.
 
 ## Release-quality finding already corrected in canonical main
 
@@ -62,10 +69,10 @@ Original fix commits:
 
 ## Next bounded actions
 
-1. Validate the broader regression candidate `9b114d9a2143975a39393c86e86ff425611b2d4f` in fresh CI.
+1. Validate the corrected candidate `48be3dea5b1bfb20602d053178287ff5d1926c7d` in fresh CI.
 2. If green, capture exact green evidence and freeze the candidate.
 3. Add stale/obsolete v1.7 artifact classification coverage; do not silently delete unmanaged files.
-4. Validate installation-state and ownership reconciliation after direct upgrade.
+4. Complete installation-state and ownership reconciliation evidence after direct upgrade.
 5. Run post-upgrade validation and record exact evidence.
 6. Document the supported upgrade contract and its boundaries.
 

@@ -18,7 +18,7 @@ A new AI Developer session MUST treat repository state as authoritative and use 
 - ID: `UPGRADE-001`
 - Title: Validate 1.7 → 2.0 no-delete upgrade compatibility
 - Status: `IN_PROGRESS`
-- Goal: establish evidence-backed upgrade behavior from the released v1.7.0 installation to the released v2.0.0 installation without requiring a pre-upgrade uninstall.
+- Goal: establish evidence-backed upgrade behavior from the released v1.7.0 installation to the v2.x installation without requiring a pre-upgrade uninstall.
 
 ## 2.0 release state
 
@@ -42,7 +42,7 @@ The completed 2.0 scope includes:
 - Fresh coding-standard and Windows installer validation for the final candidate.
 - Exact-source public promotion and v2.0.0 release.
 
-## UPGRADE-001 initial evidence
+## UPGRADE-001 evidence
 
 The released public repository contains an actual `v1.7.0` tag.
 
@@ -58,31 +58,37 @@ Observed v1.7 behavior includes:
 - managed-block merge behavior for existing files;
 - no v2 installation-state/ownership reconciliation contract in the inspected installer.
 
-## New release-quality finding
+A regression test was added to exercise a representative v1.7-shaped project with no v2 manifest, local project-owned rules, and an unmanaged legacy artifact. The v2 installer is then run directly with `merge` without uninstalling first and the test verifies that local content and unmanaged legacy content survive while a v2 installation manifest is established.
 
-While preparing the upgrade validation, the v2.0.0 public installer was compared against the canonical 20-locale catalog.
+Upgrade regression commits:
 
-The v2.0.0 installer engine exposed only five languages (`en`, `ko`, `zh-CN`, `ja`, `ru`) even though the public documentation and `i18n/languages.json` define 20 runtime/documentation locales. This was a real implementation/documentation mismatch.
+- `0187e360466d003186e9002655e7c49c4d09de53` — initial v1.7 → v2 regression test
+- `de0a036e6057458f87ff6b326a1e610f5c75d42b` — remove obsolete `_probe_v13` installer artifact
+- `aca6807f9b62f5055bfdc9706bee941d6bbfadf7` — fix regression fixture target creation
 
-The canonical `main` branch has now been corrected to use the full 20-locale catalog and installer integration tests have been expanded to exercise all 20 locales. This fix is intentionally being validated in development before any public promotion; the already-published `v2.0.0` tag is not being rewritten.
+The first CI attempt exposed only a test-fixture defect (`FileNotFoundError` because the temporary legacy target directory was not created). That defect was corrected in `aca6807f...` and a fresh validation run is currently in progress for that exact SHA.
 
-Current fix commits:
+## Release-quality finding already corrected in canonical main
+
+The v2.0.0 public installer had exposed only five languages (`en`, `ko`, `zh-CN`, `ja`, `ru`) even though the public documentation and `i18n/languages.json` define 20 runtime/documentation locales.
+
+Canonical `main` was corrected to the full 20-locale catalog and installer integration tests were expanded to exercise all 20 locales. The already-published `v2.0.0` tag is not being rewritten.
+
+Original fix commits:
 
 - `89de08e16f4d2fc2ef475bd902d1adac8b5ea425` — installer locale alignment
 - `7869f1db2771bec479e71be6bd6d485eefc2b577` — installer test coverage for all 20 locales
 
 ## Next bounded actions
 
-1. Obtain fresh CI evidence for the locale-alignment and installer-test commits.
-2. If CI exposes any locale, installer, validation, or platform defect, fix the smallest owning boundary and repeat the necessary validation.
-3. Freeze the first fully green post-fix candidate SHA.
-4. Resume `UPGRADE-001` by capturing the v1.7.0 installed file set as a reproducible fixture.
-5. Execute v2.x installation against the v1.7 fixture without uninstalling first.
-6. Verify preservation of project-owned content and expected merge/overwrite behavior.
-7. Detect and classify stale/obsolete v1.7 artifacts instead of silently deleting them.
-8. Validate installation state/ownership reconciliation after the upgrade.
-9. Run post-upgrade validation and record exact evidence.
-10. Add executable regression coverage and document the supported upgrade contract.
+1. Finish fresh CI validation for `aca6807f9b62f5055bfdc9706bee941d6bbfadf7`.
+2. If green, capture the exact green evidence and freeze that candidate.
+3. Strengthen the v1.7 fixture toward a broader installed-file snapshot where practical; do not claim full historical parity from the current representative fixture alone.
+4. Validate upgrade preservation/merge behavior across representative common and domain files.
+5. Detect and classify stale/obsolete v1.7 artifacts instead of silently deleting them.
+6. Validate installation state/ownership reconciliation after the upgrade.
+7. Run post-upgrade validation and record exact evidence.
+8. Document the supported upgrade contract.
 
 ## Next after UPGRADE-001
 

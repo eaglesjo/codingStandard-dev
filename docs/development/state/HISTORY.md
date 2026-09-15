@@ -2,6 +2,15 @@
 
 This file records material development state transitions that are useful when a future session resumes work.
 
+## 2026-09-15
+
+- Reconciled durable development state with the actual released repository state.
+- Completed `2.0-FINAL` in the durable task queue because the validated source `6fed7b85f162611e6f5aa16dc857905b597b56ea` was promoted to `eaglesjo/AIEngineeringStandard` and released as `v2.0.0`.
+- Started `UPGRADE-001` — validate `v1.7.0` → `v2.0.0` no-delete upgrade compatibility.
+- Verified that the public distribution contains a real `v1.7.0` release and inspected its legacy installer surface before designing the upgrade fixture.
+- The v1.7.0 Bash installer supports `en|ko`, domains `common|ml|llm|vision|colab|all`, conflict policies `ask|merge|overwrite|skip`, and managed-block merging, but does not expose the v2 installation-state/ownership reconciliation contract seen in the v2 public installer documentation.
+- Durable next action is to capture the v1.7.0 installed file set, execute a v2.0.0 install over that fixture without uninstalling first, classify stale artifacts, validate state reconciliation, and add regression coverage.
+
 ## 2026-09-14
 
 - PR #18 candidate `23efd3a60bd51a8e00d354291ddfaffc36d75a90` passed the architecture workflow run `34790623343`.
@@ -22,3 +31,5 @@ This file records material development state transitions that are useful when a 
 - Started `MA-001` — Multi-Agent AI Developer 2.0 Architecture.
 - Established AI Developer as orchestrator with File Picker, Planner, Editor, Validator, Reviewer, and Research & Browser specialist boundaries.
 - Added `docs/development/MULTI-AGENT-AI-DEVELOPER-2.0.md` defining the initial contract, permissions, lifecycle, orchestration, evidence, recovery, and implementation order.
+
+Completed tasks remain in history even after their active queue entry is closed.

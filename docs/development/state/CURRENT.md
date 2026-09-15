@@ -22,12 +22,13 @@ A new AI Developer session MUST treat repository state as authoritative and use 
 
 ## Latest CI evidence
 
-Candidate `aae30039148117346bb80719ea0fa76821c9c925` passed fresh validation:
+Ownership-reconciliation candidate `45d3b9a05eab8ace5c48b46bb094bb22502f30ae` passed both workflows:
 
-- architecture validation run `34952712797`: PASS
-- Windows installer validation run `34952712854`: PASS
+- architecture validation run `34961720902`: PASS
+- Windows installer validation run `34961720941`: PASS
+- Windows PowerShell integration jobs: PASS
 
-The PowerShell wrapper locale parity defect is therefore closed for the current candidate.
+The ownership reconciliation regression is therefore validated by CI on the candidate.
 
 ## UPGRADE-001 evidence
 
@@ -69,12 +70,11 @@ Original fix commits:
 
 ## Next bounded actions
 
-1. Run fresh CI on the ownership-reconciliation candidate.
-2. If green, capture exact green evidence and freeze the upgrade candidate.
-3. Expand reconciliation coverage for stale/obsolete legacy artifacts and prove that unknown files remain untouched.
-4. Run post-upgrade `state` and repository validation on the reconciled fixture.
-5. Record exact acceptance evidence and document the supported upgrade contract boundaries.
-6. Only then close UPGRADE-001.
+1. Freeze the ownership-reconciliation candidate after its green CI evidence.
+2. Expand reconciliation coverage for stale/obsolete legacy artifacts and prove that unknown files remain untouched.
+3. Run post-upgrade `state` and repository validation on the reconciled fixture.
+4. Record exact acceptance evidence and document the supported upgrade contract boundaries.
+5. Only then close UPGRADE-001.
 
 ## Next after UPGRADE-001
 

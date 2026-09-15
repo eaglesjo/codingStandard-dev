@@ -4,17 +4,6 @@ This file records durable development tasks so a fresh AI Developer session can 
 
 ## Active
 
-- [ ] `REAL-002` — Validate the complete 2.0 lifecycle on the real project `eaglesjo/codingStandard-dev`
-  - explicit self-hosting target
-  - AI Developer routing
-  - specialist Skill selection
-  - bounded real maintenance task
-  - execution
-  - focused + broader validation
-  - provenance/evidence
-  - fresh-session recovery
-  - no unrelated repository changes
-
 - [ ] `EVAL-003` — Build an AI Developer evaluation suite
   - representative development tasks
   - failure-mode coverage
@@ -38,6 +27,18 @@ This file records durable development tasks so a fresh AI Developer session can 
   - Model/provider provenance
 
 ## Completed
+
+- [x] `REAL-002` — Validate the complete 2.0 lifecycle on the real project `eaglesjo/codingStandard-dev`
+  - Explicit self-hosting target; no unrelated repository changes
+  - Resolved the missing acceptance-boundary ambiguity
+  - Recorded the bounded execution contract and durable recovery requirements
+  - Validated candidate `8bf6df7c9322fabd08e39c1bd36a6d18f74d83a8`
+  - Focused contract/recovery checks passed
+  - Architecture validation run `34972844488` / job `104393094798` passed
+  - codingStandard validation run `34972844585` / job `104393095466` passed
+  - Windows installer validation run `34972844593` / jobs `104393095165`, `104393095696` passed
+  - Fresh-session recovery reconstructed the task from repository state without chat history
+  - Acceptance evidence is recorded in `docs/development/state/CURRENT.md`
 
 - [x] `UPGRADE-001` — Validate 1.7 → 2.0 no-delete upgrade compatibility
   - Verified the released `v1.7.0` installer surface and its managed-block/conflict-policy behavior

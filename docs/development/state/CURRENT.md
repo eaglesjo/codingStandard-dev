@@ -30,49 +30,30 @@ Validated 2.0 source revision:
 
 The public distribution was promoted from that exact validated source and released as `v2.0.0`.
 
-The completed 2.0 scope includes:
-
-- AI Code Quality & Verification contract and executable validation.
-- AI/LLM Evaluation contract and executable validation.
-- Observability/Provenance hardening with trace identity and evidence provenance.
-- Data/Model Reproducibility contract and executable validation.
-- Cross-area 2.0 acceptance binding the four areas to one clean candidate revision.
-- 20-locale documentation/runtime quality validation and README re-review.
-- Public-boundary validation hardening.
-- Fresh coding-standard and Windows installer validation for the final candidate.
-- Exact-source public promotion and v2.0.0 release.
-
 ## UPGRADE-001 evidence
 
-The released public repository contains an actual `v1.7.0` tag.
+The released public repository contains an actual `v1.7.0` tag. Its installer supports `en`/`ko`, the `common`/`ml`/`llm`/`vision`/`colab`/`all` domains, and `ask`/`merge`/`overwrite`/`skip` conflict policies. Its merge implementation uses coding-standard managed blocks for existing files.
 
-The v1.7.0 installer surface was inspected from:
+A broader v1.7-shaped upgrade regression now covers representative installed files from the common, ML, LLM, Vision, and Colab surfaces. The fixture also contains a legacy-only unmanaged artifact. The v2 installer is run directly with `merge` without uninstalling first. The test verifies:
 
-`eaglesjo/AIEngineeringStandard:v1.7.0/scripts/installers/install-domains.sh`
-
-Observed v1.7 behavior includes:
-
-- supported languages: `en`, `ko`;
-- domains: `common`, `ml`, `llm`, `vision`, `colab`, `all`;
-- conflict policies: `ask`, `merge`, `overwrite`, `skip`;
-- managed-block merge behavior for existing files;
-- no v2 installation-state/ownership reconciliation contract in the inspected installer.
-
-A regression test was added to exercise a representative v1.7-shaped project with no v2 manifest, local project-owned rules, and an unmanaged legacy artifact. The v2 installer is then run directly with `merge` without uninstalling first and the test verifies that local content and unmanaged legacy content survive while a v2 installation manifest is established.
+- v2 establishes `.codingstandard/installation.json`;
+- local project-specific content survives in each representative legacy file;
+- the prior managed block is replaced by the v2 managed block rather than duplicated;
+- the unmanaged legacy artifact is preserved;
+- the manifest records the v2 version, `en`, `all`, and the expected common/domain file surface.
 
 Upgrade regression commits:
 
 - `0187e360466d003186e9002655e7c49c4d09de53` — initial v1.7 → v2 regression test
 - `de0a036e6057458f87ff6b326a1e610f5c75d42b` — remove obsolete `_probe_v13` installer artifact
 - `aca6807f9b62f5055bfdc9706bee941d6bbfadf7` — fix regression fixture target creation
+- `9b114d9a2143975a39393c86e86ff425611b2d4f` — broaden v1.7 migration regression coverage
 
-The first CI attempt exposed only a test-fixture defect (`FileNotFoundError` because the temporary legacy target directory was not created). That defect was corrected in `aca6807f...` and a fresh validation run is currently in progress for that exact SHA.
+The current broader fixture is still a representative compatibility test, not a complete byte-for-byte historical v1.7 installation snapshot. Do not claim full historical parity until the remaining migration surfaces are evidenced.
 
 ## Release-quality finding already corrected in canonical main
 
-The v2.0.0 public installer had exposed only five languages (`en`, `ko`, `zh-CN`, `ja`, `ru`) even though the public documentation and `i18n/languages.json` define 20 runtime/documentation locales.
-
-Canonical `main` was corrected to the full 20-locale catalog and installer integration tests were expanded to exercise all 20 locales. The already-published `v2.0.0` tag is not being rewritten.
+The v2.0.0 public installer had exposed only five languages even though the public documentation and `i18n/languages.json` define 20 runtime/documentation locales. Canonical `main` was corrected to the full 20-locale catalog and installer integration tests were expanded to exercise all 20 locales. The already-published `v2.0.0` tag is not being rewritten.
 
 Original fix commits:
 
@@ -81,20 +62,18 @@ Original fix commits:
 
 ## Next bounded actions
 
-1. Finish fresh CI validation for `aca6807f9b62f5055bfdc9706bee941d6bbfadf7`.
-2. If green, capture the exact green evidence and freeze that candidate.
-3. Strengthen the v1.7 fixture toward a broader installed-file snapshot where practical; do not claim full historical parity from the current representative fixture alone.
-4. Validate upgrade preservation/merge behavior across representative common and domain files.
-5. Detect and classify stale/obsolete v1.7 artifacts instead of silently deleting them.
-6. Validate installation state/ownership reconciliation after the upgrade.
-7. Run post-upgrade validation and record exact evidence.
-8. Document the supported upgrade contract.
+1. Validate the broader regression candidate `9b114d9a2143975a39393c86e86ff425611b2d4f` in fresh CI.
+2. If green, capture exact green evidence and freeze the candidate.
+3. Add stale/obsolete v1.7 artifact classification coverage; do not silently delete unmanaged files.
+4. Validate installation-state and ownership reconciliation after direct upgrade.
+5. Run post-upgrade validation and record exact evidence.
+6. Document the supported upgrade contract and its boundaries.
 
 ## Next after UPGRADE-001
 
 - Validate the complete 2.0 lifecycle on a real project.
 - Build an AI Developer evaluation suite.
-- Validate multi-agent runtime execution.
+- Multi-Agent Runtime is a selectable execution layer with default `ON`; users can disable it, and the orchestrator may route only required agents.
 - Then design the deferred `MODEL-ROUTING` capability for the next version.
 
 ## Deferred to next version

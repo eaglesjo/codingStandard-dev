@@ -4,12 +4,20 @@ This file records material development state transitions that are useful when a 
 
 ## 2026-09-15
 
+- Completed `UPGRADE-001` — validate `v1.7.0` → `v2.x` no-delete upgrade compatibility for the defined representative compatibility boundary.
+- Added and validated ownership reconciliation with conservative classes: `known-v2-managed`, `legacy-managed-candidate`, `project-owned`, and `unknown-legacy`.
+- Enforced `deletion_policy: never-delete-unknown` for direct upgrade reconciliation.
+- Added executable regression coverage proving direct upgrade without uninstall, preservation of project-owned content, managed-block replacement under explicit `merge`, preservation of unmanaged legacy artifacts, preservation of obsolete legacy managed-looking artifacts outside the desired v2 surface, unique v2 manifest ownership, owned-file existence, and post-upgrade `state` of `installed: true`, `modified: 0`, `missing: 0`.
+- Fresh architecture validation run `34964212287` passed with job `104364722988`.
+- Fresh codingStandard validation run `34964212295` passed with job `104364723251`, including repository validation, environment contract, installer lifecycle tests, LLM CPU smoke test, and Vision CPU smoke test.
+- The accepted boundary is explicitly representative rather than byte-for-byte compatibility with every historical v1.7 installation; historical ownership is never guessed where evidence is absent.
+- Froze the acceptance evidence in `docs/development/upgrade/UPGRADE-001.md` and advanced the durable state to `REAL-002`.
+
 - Reconciled durable development state with the actual released repository state.
 - Completed `2.0-FINAL` in the durable task queue because the validated source `6fed7b85f162611e6f5aa16dc857905b597b56ea` was promoted to `eaglesjo/AIEngineeringStandard` and released as `v2.0.0`.
 - Started `UPGRADE-001` — validate `v1.7.0` → `v2.0.0` no-delete upgrade compatibility.
 - Verified that the public distribution contains a real `v1.7.0` release and inspected its legacy installer surface before designing the upgrade fixture.
 - The v1.7.0 Bash installer supports `en|ko`, domains `common|ml|llm|vision|colab|all`, conflict policies `ask|merge|overwrite|skip`, and managed-block merging, but does not expose the v2 installation-state/ownership reconciliation contract seen in the v2 public installer documentation.
-- Durable next action is to capture the v1.7.0 installed file set, execute a v2.0.0 install over that fixture without uninstalling first, classify stale artifacts, validate state reconciliation, and add regression coverage.
 
 ## 2026-09-14
 

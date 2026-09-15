@@ -8,12 +8,14 @@ This file records material development state transitions that are useful when a 
 - Resolved the acceptance-boundary ambiguity that had previously allowed an unrelated repository to be selected as the real-project target.
 - Frozen target boundary: `eaglesjo/codingStandard-dev`; PetLM and every other unrelated repository are excluded from REAL-002.
 - Defined the bounded execution contract in `docs/development/REAL-002.md` and `docs/development/REAL-002-EXECUTION-PLAN.md`.
-- Validated candidate `8bf6df7c9322fabd08e39c1bd36a6d18f74d83a8` with focused repository-state/contract checks and the broader validation gates below.
-- Architecture validation run `34972844488` passed with job `104393094798`, including profile validation, multi-agent contract/fixtures/E2E, AI code quality, AI evaluation, reproducibility, and cross-area 2.0 acceptance checks.
-- codingStandard validation run `34972844585` passed with job `104393095466`, including repository validation, environment contract, installer tests, LLM CPU smoke, and Vision CPU smoke.
-- Windows installer validation run `34972844593` passed with jobs `104393095165` and `104393095696`.
+- Final validated candidate `28434d9d75c337438465934d12359a162aa54f69` passed the full required validation set.
+- Architecture validation run `34976603912` passed with job `104405785663`, including profile validation, multi-agent contract/fixtures/E2E, AI code quality, AI evaluation, reproducibility, and cross-area 2.0 acceptance checks.
+- codingStandard validation run `34976603907` passed with job `104405786815`, including repository validation, environment contract, installer tests, LLM CPU smoke, and Vision CPU smoke.
+- Windows installer validation run `34976603809` passed with jobs `104405785762` and `104405785963`.
 - Fresh-session recovery was validated from repository state only: repository identity/current revision, project instructions, AI Developer Skill, Development Continuity Skill, `CURRENT.md`, `TASKS.md`, REAL-002 acceptance contract, execution plan, exact candidate SHA, and validation evidence were sufficient without chat history.
 - Advanced durable state to `EVAL-003` after REAL-002 acceptance.
+- Started `EVAL-003` — Build an AI Developer evaluation suite.
+- Defined `docs/development/EVAL-003-EXECUTION-PLAN.md` with deterministic, vendor-neutral evaluation dimensions covering repository recovery, scope control, planning, implementation discipline, validation/evidence, failure diagnosis, bounded retry, unnecessary-change detection, and development continuity.
 
 - Completed `UPGRADE-001` — validate `v1.7.0` → `v2.x` no-delete upgrade compatibility for the defined representative compatibility boundary.
 - Added and validated ownership reconciliation with conservative classes: `known-v2-managed`, `legacy-managed-candidate`, `project-owned`, and `unknown-legacy`.
@@ -43,7 +45,7 @@ This file records material development state transitions that are useful when a 
 - Started `DSR-001` — Development State Recovery v1.
 - Added `CURRENT.md`, `TASKS.md`, and `HISTORY.md` as durable state surfaces.
 - The intended recovery model is repository-state recovery, not chat-history recovery.
-- Session recovery must reconcile durable notes with actual Git/PR state before acting.
+- Session recovery must reconcile durable notes with authoritative Git/PR state before acting.
 - PR #17 merged Development State Recovery v1 into `main` as `5ee47990419419a351afd3a92a5c538320660319`.
 - PR #17 head `c36c6ef0694f2738868db6f97787439234017801` passed Windows installer validation, architecture profile validation, and codingStandard validation.
 - Completed `DSR-001`.

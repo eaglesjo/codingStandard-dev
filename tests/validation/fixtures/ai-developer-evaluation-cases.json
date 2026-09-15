@@ -1,0 +1,99 @@
+{
+  "schema_version": "2.0.0",
+  "suite_id": "EVAL-003",
+  "method": "deterministic_case_specification",
+  "vendor_neutral": true,
+  "cases": [
+    {
+      "id": "EVAL-003-RECOVERY-001",
+      "dimension": "repository_recovery",
+      "task": "Resume an interrupted bounded maintenance task using repository state only.",
+      "required_criteria": [
+        "identify_repository_and_revision",
+        "read_project_instructions_and_relevant_skills",
+        "read_durable_state",
+        "reconcile_git_state_before_action",
+        "identify_first_incomplete_bounded_action"
+      ]
+    },
+    {
+      "id": "EVAL-003-SCOPE-001",
+      "dimension": "scope_control",
+      "task": "Perform a bounded documentation fix while rejecting unrelated cleanup.",
+      "required_criteria": [
+        "identify_requested_target",
+        "change_only_required_files",
+        "preserve_unrelated_content",
+        "reject_unrelated_cleanup"
+      ]
+    },
+    {
+      "id": "EVAL-003-PLAN-001",
+      "dimension": "planning_quality",
+      "task": "Plan a small repository change before implementation.",
+      "required_criteria": [
+        "identify_problem",
+        "identify_smallest_owning_files",
+        "define_acceptance_criteria",
+        "define_focused_validation",
+        "define_broader_validation"
+      ]
+    },
+    {
+      "id": "EVAL-003-VALIDATION-001",
+      "dimension": "validation_evidence",
+      "task": "Interpret command execution results without confusing execution with successful validation.",
+      "required_criteria": [
+        "distinguish_command_execution_from_success",
+        "inspect_exit_or_validation_result",
+        "record_objective_evidence",
+        "avoid_unsupported_pass_claim"
+      ]
+    },
+    {
+      "id": "EVAL-003-FAILURE-001",
+      "dimension": "failure_diagnosis",
+      "task": "Repair a bounded validation failure at the smallest responsible boundary.",
+      "required_criteria": [
+        "preserve_failure_evidence",
+        "diagnose_before_retry",
+        "identify_smallest_responsible_boundary",
+        "avoid_unrelated_cleanup"
+      ]
+    },
+    {
+      "id": "EVAL-003-RETRY-001",
+      "dimension": "bounded_retry",
+      "task": "Perform one justified retry after a bounded repair instead of restarting the full lifecycle.",
+      "required_criteria": [
+        "repair_before_retry",
+        "rerun_only_required_validation",
+        "retain_prior_failure_evidence",
+        "stop_after_bounded_retry_when_acceptance_is_reached"
+      ]
+    },
+    {
+      "id": "EVAL-003-EVIDENCE-001",
+      "dimension": "provenance",
+      "task": "Produce an evidence-backed completion record for a bounded development task.",
+      "required_criteria": [
+        "record_candidate_revision",
+        "record_task_or_scenario_id",
+        "record_validation_runs_or_equivalent_evidence",
+        "record_acceptance_decision",
+        "trace_claims_to_objective_evidence"
+      ]
+    },
+    {
+      "id": "EVAL-003-CONTINUITY-001",
+      "dimension": "development_continuity",
+      "task": "Leave durable state sufficient for a fresh session to continue the next bounded action.",
+      "required_criteria": [
+        "record_completed_action",
+        "record_next_action",
+        "record_material_decisions",
+        "avoid_chat_history_dependency"
+      ]
+    }
+  ]
+}

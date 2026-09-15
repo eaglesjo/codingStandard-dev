@@ -17,65 +17,70 @@ A new AI Developer session MUST treat repository state as authoritative and use 
 
 - ID: `REAL-002`
 - Title: Validate the complete 2.0 lifecycle on the real project `eaglesjo/codingStandard-dev`
-- Status: `IN_PROGRESS`
+- Status: `PASS`
 - Acceptance contract: `docs/development/REAL-002.md`
+- Execution plan: `docs/development/REAL-002-EXECUTION-PLAN.md`
 
 ## REAL-002 target boundary
 
-The real-project target is explicitly `eaglesjo/codingStandard-dev` itself. This is a self-hosting validation of the AI Engineering Standard development system.
+The real-project target was explicitly `eaglesjo/codingStandard-dev` itself. This was a self-hosting validation of the AI Engineering Standard development system.
 
-PetLM and every other unrelated repository are outside REAL-002 and MUST NOT be modified as part of this task.
+PetLM and every other unrelated repository were outside REAL-002 and were not modified as part of this task.
 
-## First bounded action
+## REAL-002 completion evidence
 
-Execute the bounded maintenance task defined in `docs/development/REAL-002.md`: validate the repository's actual instructions and durable state, resolve the REAL-002 acceptance-boundary ambiguity, validate the resulting candidate, and record exact evidence for recovery.
+Bounded task completed: resolve the REAL-002 acceptance-boundary ambiguity, make the boundary and execution contract durable, validate the resulting candidate, capture exact evidence, and verify fresh-session recovery from repository state alone.
 
-## Latest completed task
+Validated candidate:
 
-`UPGRADE-001` — Validate 1.7 → 2.0 no-delete upgrade compatibility — is complete for its defined representative compatibility boundary.
+`8bf6df7c9322fabd08e39c1bd36a6d18f74d83a8`
 
-Final validated candidate before durable-state documentation:
+Candidate commit:
 
-`93f97ea92960bd8565d59f8b096207584d21ac2f`
+- `docs: define REAL-002 bounded execution plan`
 
-Fresh CI evidence:
+Focused validation:
 
-- architecture validation run `34964212287`: PASS
-- architecture job `104364722988`: PASS
-- codingStandard validation run `34964212295`: PASS
-- validation job `104364723251`: PASS
+- repository target is explicitly `eaglesjo/codingStandard-dev`;
+- `REAL-002.md` and `REAL-002-EXECUTION-PLAN.md` define the same target and acceptance boundary;
+- `CURRENT.md` and `TASKS.md` identify the same active task and target;
+- `AGENTS.md`, AI Developer Skill, and Development Continuity Skill require repository-state recovery, bounded execution, validation, provenance, and durable recording;
+- non-goals explicitly exclude PetLM, other repositories, public `v2.0.0` tag rewriting, provider/model routing, and mandatory execution of all nine specialist agents;
+- no unrelated repository was modified.
 
-The validation job passed repository validation, environment contract tests, installer lifecycle tests, LLM CPU memory smoke tests, and Vision CPU memory smoke tests. The installer lifecycle test includes the direct v1.7-shaped upgrade regression, reconciliation, stale/obsolete legacy artifact preservation, manifest/state validation, all 20 Bash locales, and PowerShell integration on supported runners.
+Broader validation against the exact candidate `8bf6df7c9322fabd08e39c1bd36a6d18f74d83a8`:
 
-## UPGRADE-001 acceptance boundary
+- architecture validation run `34972844488`: PASS
+- architecture job `104393094798`: PASS
+  - profiles
+  - profile contract
+  - multi-agent contract
+  - multi-agent fixtures
+  - multi-agent E2E simulation
+  - AI code quality contract/test
+  - AI evaluation contract/test
+  - reproducibility contract/test
+  - cross-area 2.0 acceptance/test
+- codingStandard validation run `34972844585`: PASS
+- validation job `104393095466`: PASS
+  - architecture contract
+  - repository validation
+  - environment contract
+  - installer tests
+  - LLM CPU memory smoke test
+  - Vision CPU memory smoke test
+- Windows installer validation run `34972844593`: PASS
+- installer jobs `104393095165` and `104393095696`: PASS
 
-The accepted contract is:
+Fresh-session recovery check:
 
-- direct v1.7-shaped → v2 installation is allowed without mandatory uninstall
-- project-owned content is preserved under explicit `merge`
-- legacy managed blocks on desired v2 paths are replaced under explicit `merge`
-- unknown legacy files are never silently deleted
-- obsolete legacy artifacts outside the desired v2 surface remain `unknown-legacy` and survive the upgrade
-- v2 manifest ownership is unique and every owned file exists
-- post-upgrade state reports `installed: true`, `modified: 0`, `missing: 0`
-
-The regression fixture is representative, not a byte-for-byte snapshot of every historical v1.7 installation. Historical ownership is never guessed when evidence is absent. The full acceptance evidence and boundary are frozen in `docs/development/upgrade/UPGRADE-001.md`.
-
-## Release-quality finding already corrected in canonical main
-
-The v2.0.0 public installer had exposed only five languages even though the public documentation and `i18n/languages.json` define 20 runtime/documentation locales. Canonical `main` was corrected to the full 20-locale catalog and installer integration tests were expanded to exercise all 20 locales. The already-published `v2.0.0` tag is not being rewritten.
-
-Original fix commits:
-
-- `89de08e16f4d2fc2ef475bd902d1adac8b5ea425` — installer locale alignment
-- `7869f1db2771bec479e71be6bd6d485eefc2b577` — installer test coverage for all 20 locales
+A recovery pass was performed using repository state only. The repository identity/current revision, `AGENTS.md`, AI Developer Skill, Development Continuity Skill, `CURRENT.md`, `TASKS.md`, REAL-002 acceptance contract, and execution plan were sufficient to reconstruct the completed task, its exact candidate SHA, validation evidence, and next bounded action without chat history.
 
 ## Next bounded actions
 
-1. Complete the REAL-002 bounded maintenance task and its acceptance evidence.
-2. Build the AI Developer evaluation suite (`EVAL-003`).
-3. Validate Multi-Agent Runtime execution (`MA-002`) when justified by the lifecycle acceptance criteria.
-4. After those, design the deferred `MODEL-ROUTING` capability for the next version.
+1. Build the AI Developer evaluation suite (`EVAL-003`).
+2. Validate Multi-Agent Runtime execution (`MA-002`) when justified by lifecycle acceptance criteria.
+3. After those, design the deferred `MODEL-ROUTING` capability for the next version.
 
 ## Deferred to next version
 

@@ -21,7 +21,10 @@ COMMON = [
 ]
 ML = [".github/instructions/ml.instructions.md", "domains/ml/AGENT.md", "domains/ml/SKILL.md", "domains/ml/ENVIRONMENT.md", "domains/ml/README.md"]
 COLAB = ["platform/colab/AGENT.md", "platform/colab/SKILL.md"]
-LOCALES = {"ko": "한국어", "zh-CN": "简体中文", "ja": "日本語", "ru": "Русский"}
+LOCALES = (
+    "en", "ko", "fr", "es", "zh-CN", "ja", "ru", "tr", "de", "it",
+    "pt", "ar", "hi", "id", "vi", "th", "nl", "pl", "sv", "uk",
+)
 
 
 def run(cmd: list[str], check: bool = True) -> subprocess.CompletedProcess[str]:

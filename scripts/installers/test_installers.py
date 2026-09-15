@@ -74,6 +74,7 @@ def lifecycle(target: Path) -> None:
 
 def legacy_v17_upgrade(target: Path) -> None:
     """Verify a representative v1.7 installation upgrades without uninstalling."""
+    target.mkdir(parents=True, exist_ok=True)
     legacy = target / "AGENTS.md"
     legacy.write_text(
         "# AGENTS.md\n\n# Project Agent Instructions\n\n"

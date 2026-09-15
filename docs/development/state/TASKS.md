@@ -6,10 +6,12 @@ This file records durable development tasks so a fresh AI Developer session can 
 
 - [ ] `EVAL-003` — Build an AI Developer evaluation suite
   - representative development tasks
+  - deterministic case/fixture coverage
   - failure-mode coverage
   - validation/evidence completeness
   - unnecessary-change detection
   - bounded-retry behavior
+  - fresh-session continuity
 
 - [ ] `MA-002` — Validate multi-agent runtime execution
   - preserve vendor/model-neutral contracts
@@ -32,13 +34,12 @@ This file records durable development tasks so a fresh AI Developer session can 
   - Explicit self-hosting target; no unrelated repository changes
   - Resolved the missing acceptance-boundary ambiguity
   - Recorded the bounded execution contract and durable recovery requirements
-  - Validated candidate `8bf6df7c9322fabd08e39c1bd36a6d18f74d83a8`
-  - Focused contract/recovery checks passed
-  - Architecture validation run `34972844488` / job `104393094798` passed
-  - codingStandard validation run `34972844585` / job `104393095466` passed
-  - Windows installer validation run `34972844593` / jobs `104393095165`, `104393095696` passed
+  - Final validated candidate `28434d9d75c337438465934d12359a162aa54f69`
+  - Architecture validation run `34976603912` / job `104405785663` passed
+  - codingStandard validation run `34976603907` / job `104405786815` passed
+  - Windows installer validation run `34976603809` / jobs `104405785762`, `104405785963` passed
   - Fresh-session recovery reconstructed the task from repository state without chat history
-  - Acceptance evidence is recorded in `docs/development/state/CURRENT.md`
+  - Acceptance evidence is recorded in `docs/development/state/CURRENT.md` and `HISTORY.md`
 
 - [x] `UPGRADE-001` — Validate 1.7 → 2.0 no-delete upgrade compatibility
   - Verified the released `v1.7.0` installer surface and its managed-block/conflict-policy behavior

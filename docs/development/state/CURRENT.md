@@ -11,75 +11,72 @@ A new AI Developer session MUST treat repository state as authoritative and use 
 - Repository: `eaglesjo/codingStandard-dev`
 - Canonical development branch: `main`
 - Public release surface: `eaglesjo/AIEngineeringStandard`
+- Released version: `2.0.0`
 
 ## Active task
 
-- ID: `2.0-FINAL`
-- Title: AI Engineering Standard 2.0 final quality and reproducibility hardening
+- ID: `UPGRADE-001`
+- Title: Validate 1.7 → 2.0 no-delete upgrade compatibility
 - Status: `IN_PROGRESS`
-- Goal: complete the 2.0 quality, evaluation, observability/provenance, and data/model reproducibility foundations without coupling agents to specific AI providers or models.
+- Goal: establish evidence-backed upgrade behavior from the released v1.7.0 installation to the released v2.0.0 installation without requiring a pre-upgrade uninstall.
 
-## Current implementation
+## 2.0 release state
 
-- Repository-backed gap analysis completed and recorded in `docs/development/2.0-FINAL-GAP-MATRIX.md`.
-- AI Code Quality & Verification implementation added with contract, positive/negative fixtures, focused tests, and CI validation.
-- AI/LLM Evaluation implementation added with deterministic vendor-neutral contract, positive/negative fixtures, focused tests, and CI validation.
-- Observability/Provenance hardening added:
-  - conformance evidence requires trace identity (`action_id`) and supports `parent_action_id` plus unique `evidence_id`.
-  - provenance policy defines cross-action traceability and forbids silent reuse of unrelated action/revision evidence.
-- Data/Model Reproducibility implementation added:
-  - `core/validation/reproducibility.schema.json`
-  - `scripts/validation/validate_reproducibility.py`
-  - positive/negative fixtures and focused tests
-  - architecture CI validation.
-- Reproducibility acceptance requires experiment identity (experiment/variant/seed/config hash/Git revision/clean state) plus immutable SHA-256 identities for recorded artifacts. A `REPRODUCIBLE` result cannot be accepted from a dirty revision.
-- Cross-area 2.0 acceptance implementation added:
-  - `core/validation/2.0-acceptance.schema.json`
-  - `scripts/validation/validate_2_0_acceptance.py`
-  - positive/mismatch fixtures and focused tests
-  - architecture CI now executes the final cross-area acceptance gate.
-- The cross-area gate binds code quality, deterministic evaluation, provenance, and reproducibility evidence to one clean candidate revision before overall `ACCEPTED` status is possible.
+AI Engineering Standard 2.0 final quality/reproducibility hardening is complete and the public v2.0.0 release is already published.
 
-## Locale quality re-review
+Validated 2.0 source revision:
 
-A full second-pass review of all 20 documentation locales was completed on the canonical `main` branch.
+`6fed7b85f162611e6f5aa16dc857905b597b56ea`
 
-- English canonical README was reconciled with the public release boundary; retired internal repository references were removed.
-- All 19 non-English README locales were reworked for natural-language quality, terminology, grammar, consistency, and current public repository paths.
-- All locale READMEs now point to `https://github.com/eaglesjo/AIEngineeringStandard.git` in their installation examples.
-- Installation and validation examples were normalized to the public repository layout.
-- Locale-specific wording was corrected rather than merely reported, including runtime/localization terminology in German, Italian, Portuguese, Polish, Swedish, Ukrainian, and other locales.
-- `i18n/README.md` was reconciled with the 2.0 localization quality contract; stale `v1.16` references were removed.
-- `i18n/languages.json` remains the catalog source for the 20 documentation/runtime locales.
-- Repository searches after the review found no `codingStandard-private`, `codingStandard.git`, or `v1.16` references in the canonical repository.
-- Canonical README and INSTALL validation commands now use the explicit public path `./AIEngineeringStandard/...`, matching the documented clone layout.
+The public distribution was promoted from that exact validated source and released as `v2.0.0`.
 
-## Public-boundary validation
+The completed 2.0 scope includes:
 
-- `scripts/validation/validate.py` was made aware of the public export boundary in commit `394fbda51c0e71b12f294c73696a3f64770f754d` so public validation does not require development-only `AGENTS.md` or `.github/workflows/windows-install-test.yml`.
-- The validator explicitly reports that Windows workflow evidence is validated in `codingStandard-dev` CI when running against the public export.
-- This boundary fix and the locale/documentation changes require fresh CI before the next promotion.
+- AI Code Quality & Verification contract and executable validation.
+- AI/LLM Evaluation contract and executable validation.
+- Observability/Provenance hardening with trace identity and evidence provenance.
+- Data/Model Reproducibility contract and executable validation.
+- Cross-area 2.0 acceptance binding the four areas to one clean candidate revision.
+- 20-locale documentation/runtime quality validation and README re-review.
+- Public-boundary validation hardening.
+- Fresh coding-standard and Windows installer validation for the final candidate.
+- Exact-source public promotion and v2.0.0 release.
 
-## Evidence notes
+## UPGRADE-001 initial evidence
 
-- Existing `core/common/experiment.py` already records standard version, experiment ID, variant, seed, config hash/config, model revision, dataset revision, environment profile, runtime config, and Git state.
-- The new reproducibility contract turns that metadata foundation into an explicit evidence/acceptance boundary rather than treating metadata emission alone as proof.
-- The new AI evaluation contract deliberately does not introduce a provider/model-specific judge or runtime dependency.
-- CI includes quality, evaluation, reproducibility, and cross-area acceptance validators/tests in `.github/workflows/validate-architecture.yml`.
-- Fresh full CI evidence is available for candidate `60d5fb7801d10ec239a9a66b88265eaa1bb4f4d0`:
-  - `Validate codingStandard` run `34814381117` completed `success`.
-  - Windows installer validation run `34814381091` completed successfully for the same candidate.
-- That evidence predates the later public-boundary validator fix and the second locale/documentation review, so it is not sufficient for the current release candidate.
-- The latest documentation/localization commits are on `main`; the latest recorded commit in this handoff sequence is the locale-quality state update itself. No fresh workflow evidence is currently associated with that final state yet.
+The released public repository contains an actual `v1.7.0` tag.
+
+The v1.7.0 installer surface was inspected from:
+
+`eaglesjo/AIEngineeringStandard:v1.7.0/scripts/installers/install-domains.sh`
+
+Observed v1.7 behavior includes:
+
+- supported languages: `en`, `ko`;
+- domains: `common`, `ml`, `llm`, `vision`, `colab`, `all`;
+- conflict policies: `ask`, `merge`, `overwrite`, `skip`;
+- managed-block merge behavior for existing files;
+- no v2 installation-state/ownership reconciliation contract in the inspected installer.
+
+This establishes a concrete v1.7 fixture source rather than a guessed legacy state.
 
 ## Next bounded actions
 
-1. Run fresh `Validate codingStandard` and the Windows installer validation against the post-review `main` candidate.
-2. If CI exposes any localization, validation-boundary, or documentation-path defect, fix it at the smallest owning file and repeat only the necessary validation.
-3. Freeze the first fully green post-review candidate SHA.
-4. Manually dispatch `.github/workflows/promote-release.yml` with that exact SHA; the GitHub connector does not provide workflow-dispatch capability.
-5. Verify public `AIEngineeringStandard/main` content and re-run the public audit: no retired/internal references, no generated artifacts, no secrets, correct `VERSION=2.0.0`, 20-locale consistency, and working documented validation paths.
-6. Record promotion evidence before any separate public tag/release authorization.
+1. Capture the v1.7.0 installed file set for a reproducible upgrade fixture.
+2. Compare the v1.7.0 installer surface with the v2.0.0 installer/state model and classify migration boundaries.
+3. Execute v2.0.0 installation against the v1.7 fixture without uninstalling first.
+4. Verify preservation of project-owned content and expected merge/overwrite behavior.
+5. Detect and classify stale/obsolete v1.7 artifacts instead of silently deleting them.
+6. Validate v2 installation state/ownership reconciliation after the upgrade.
+7. Run post-upgrade validation and record exact evidence.
+8. Add executable regression coverage and document the supported upgrade contract.
+
+## Next after UPGRADE-001
+
+- Validate the complete 2.0 lifecycle on a real project.
+- Build an AI Developer evaluation suite.
+- Validate multi-agent runtime execution.
+- Then design the deferred `MODEL-ROUTING` capability for the next version.
 
 ## Deferred to next version
 
@@ -100,3 +97,4 @@ A full second-pass review of all 20 documentation locales was completed on the c
 - On failure, preserve evidence and repair the smallest responsible boundary instead of restarting the full pipeline.
 - Preserve exact source identity and validation evidence across the dev/release boundary.
 - 2.0 must remain vendor/model-neutral; AI provider/model mapping belongs to the next version.
+- Review task-created branches after completion and delete branches with no remaining development or recovery value.

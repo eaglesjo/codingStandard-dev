@@ -1,0 +1,79 @@
+{
+  "cases": [
+    {
+      "id": "EVAL-003-RECOVERY-001",
+      "criteria": {
+        "identify_repository_and_revision": {"status": "PASS", "evidence": "repository and candidate revision identified"},
+        "read_project_instructions_and_relevant_skills": {"status": "PASS", "evidence": "required instructions and skills read"},
+        "read_durable_state": {"status": "PASS", "evidence": "CURRENT TASKS HISTORY read"},
+        "reconcile_git_state_before_action": {"status": "PASS", "evidence": "Git state reconciled before action"},
+        "identify_first_incomplete_bounded_action": {"status": "PASS", "evidence": "first incomplete bounded action identified"}
+      }
+    },
+    {
+      "id": "EVAL-003-SCOPE-001",
+      "criteria": {
+        "identify_requested_target": {"status": "PASS", "evidence": "requested target identified"},
+        "change_only_required_files": {"status": "PASS", "evidence": "only owning files changed"},
+        "preserve_unrelated_content": {"status": "PASS", "evidence": "unrelated content preserved"},
+        "reject_unrelated_cleanup": {"status": "PASS", "evidence": "unrelated cleanup rejected"}
+      }
+    },
+    {
+      "id": "EVAL-003-PLAN-001",
+      "criteria": {
+        "identify_problem": {"status": "PASS", "evidence": "problem stated"},
+        "identify_smallest_owning_files": {"status": "PASS", "evidence": "smallest owning files identified"},
+        "define_acceptance_criteria": {"status": "PASS", "evidence": "acceptance criteria defined"},
+        "define_focused_validation": {"status": "PASS", "evidence": "focused validation defined"},
+        "define_broader_validation": {"status": "PASS", "evidence": "broader validation defined"}
+      }
+    },
+    {
+      "id": "EVAL-003-VALIDATION-001",
+      "criteria": {
+        "distinguish_command_execution_from_success": {"status": "PASS", "evidence": "execution distinguished from validation success"},
+        "inspect_exit_or_validation_result": {"status": "PASS", "evidence": "result inspected"},
+        "record_objective_evidence": {"status": "PASS", "evidence": "objective evidence recorded"},
+        "avoid_unsupported_pass_claim": {"status": "PASS", "evidence": "unsupported PASS claim avoided"}
+      }
+    },
+    {
+      "id": "EVAL-003-FAILURE-001",
+      "criteria": {
+        "preserve_failure_evidence": {"status": "PASS", "evidence": "failure evidence preserved"},
+        "diagnose_before_retry": {"status": "PASS", "evidence": "diagnosis preceded retry"},
+        "identify_smallest_responsible_boundary": {"status": "PASS", "evidence": "smallest responsible boundary identified"},
+        "avoid_unrelated_cleanup": {"status": "PASS", "evidence": "unrelated cleanup avoided"}
+      }
+    },
+    {
+      "id": "EVAL-003-RETRY-001",
+      "criteria": {
+        "repair_before_retry": {"status": "PASS", "evidence": "repair preceded retry"},
+        "rerun_only_required_validation": {"status": "PASS", "evidence": "only required validation rerun"},
+        "retain_prior_failure_evidence": {"status": "PASS", "evidence": "prior failure evidence retained"},
+        "stop_after_bounded_retry_when_acceptance_is_reached": {"status": "PASS", "evidence": "retry stopped after acceptance"}
+      }
+    },
+    {
+      "id": "EVAL-003-EVIDENCE-001",
+      "criteria": {
+        "record_candidate_revision": {"status": "PASS", "evidence": "candidate revision recorded"},
+        "record_task_or_scenario_id": {"status": "PASS", "evidence": "scenario id recorded"},
+        "record_validation_runs_or_equivalent_evidence": {"status": "PASS", "evidence": "validation evidence recorded"},
+        "record_acceptance_decision": {"status": "PASS", "evidence": "acceptance recorded"},
+        "trace_claims_to_objective_evidence": {"status": "PASS", "evidence": "claims traced to evidence"}
+      }
+    },
+    {
+      "id": "EVAL-003-CONTINUITY-001",
+      "criteria": {
+        "record_completed_action": {"status": "PASS", "evidence": "completed action recorded"},
+        "record_next_action": {"status": "PASS", "evidence": "next action recorded"},
+        "record_material_decisions": {"status": "PASS", "evidence": "material decisions recorded"},
+        "avoid_chat_history_dependency": {"status": "PASS", "evidence": "repository state is sufficient"}
+      }
+    }
+  ]
+}

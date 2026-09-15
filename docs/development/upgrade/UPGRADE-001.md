@@ -38,6 +38,36 @@ The report records the classification and the explicit deletion policy `never-de
 
 The regression fixture explicitly includes both an unmanaged legacy artifact and an obsolete v1.7 artifact containing a legacy managed block. Both must survive the direct upgrade.
 
+## Validation result
+
+UPGRADE-001 is accepted for the supported compatibility boundary represented by the executable regression fixture.
+
+Final candidate:
+
+`93f97ea92960bd8565d59f8b096207584d21ac2f`
+
+Fresh CI evidence:
+
+- Architecture validation run `34964212287` — PASS
+- `Validate architecture contract` job `104364722988` — PASS
+- CodingStandard validation run `34964212295` — PASS
+- `validate` job `104364723251` — PASS
+- Installer integration test — PASS, including the direct v1.7-shaped upgrade regression, all 20 Bash locales, and PowerShell integration on supported runners
+- Repository validation, environment contract, LLM CPU smoke test, and Vision CPU smoke test — PASS in the same validation job
+
+The installer regression verifies all of the following on the reconciled fixture:
+
+- v2 installation occurs directly without uninstalling first
+- project-owned content is preserved
+- legacy managed blocks on desired v2 paths are replaced under explicit `merge` policy
+- unmanaged legacy files survive
+- obsolete legacy files outside the desired v2 surface survive even when they contain a legacy managed-block marker
+- reconciliation evidence survives the upgrade
+- the v2 manifest has unique ownership entries and every owned file exists
+- post-upgrade `state` reports `installed: true`, `modified: 0`, `missing: 0`
+
 ## Current validation boundary
 
 The automated UPGRADE-001 regression uses a representative v1.7 installation fixture. It proves the ownership and safety contract for the represented legacy surface; it does not claim byte-for-byte compatibility with every historical v1.7 installation.
+
+This boundary is intentional: historical v1.7 ownership cannot be safely inferred where no v2 ownership evidence exists, so unknown legacy files are preserved rather than guessed or deleted.

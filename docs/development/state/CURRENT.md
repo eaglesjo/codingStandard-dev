@@ -11,83 +11,36 @@ A new AI Developer session MUST treat repository state as authoritative and use 
 - Repository: `eaglesjo/codingStandard-dev`
 - Canonical development branch: `main`
 - Public release surface: `eaglesjo/AIEngineeringStandard`
-- Released version: `2.0.0`
+- Baseline: AI Engineering Standard 2.0 release-era development state
+- Baseline commit: `28434d9d75c337438465934d12359a162aa54f69`
 
-## Active task
+## Current status
 
-- ID: `REAL-002`
-- Title: Validate the complete 2.0 lifecycle on the real project `eaglesjo/codingStandard-dev`
-- Status: `PASS`
-- Acceptance contract: `docs/development/REAL-002.md`
-- Execution plan: `docs/development/REAL-002-EXECUTION-PLAN.md`
+- ID: `V2-REBASE-STATUS`
+- Status: `RECORDED`
+- Scope: analyze the AI Engineering Standard 2.0 contract and record repository state only.
+- Implementation status: no post-2.0-release development work is active.
+- Discarded scope: all development work added after the 2.0 release-era baseline has been discarded from `main`.
 
-## REAL-002 target boundary
+## AI Engineering Standard 2.0 analysis
 
-The real-project target was explicitly `eaglesjo/codingStandard-dev` itself. This was a self-hosting validation of the AI Engineering Standard development system.
+The public `AIEngineeringStandard` repository defines v2.0.0 as the Public Release Candidate and currently records the public tag/release gate as `NOT AUTHORIZED YET`. Its v2.0 contract establishes the canonical repository architecture and policy profiles, project-level `AGENTS.md` routing, environment-aware runtime behavior, cross-platform installer lifecycle controls, multilingual runtime quality gates, executable agent-conformance outcomes, and dependency-compatibility alignment. The public repository also requires validation and exact-source provenance before promotion and treats release tagging as a separate authorization step.
 
-PetLM and every other unrelated repository were outside REAL-002 and were not modified as part of this task.
+For this development repository, the v2.0 release-era baseline is treated as the only valid starting point for future work. No post-baseline implementation is to be resumed automatically.
 
-## REAL-002 completion evidence
+## Discarded post-baseline work
 
-Bounded task completed: resolve the REAL-002 acceptance-boundary ambiguity, make the boundary and execution contract durable, validate the resulting candidate, capture exact evidence, and verify fresh-session recovery from repository state alone.
+The following post-baseline development line was discarded by resetting `main` to `28434d9d75c337438465934d12359a162aa54f69`:
 
-Validated candidate:
+- EVAL-003 implementation and related fixtures, validators, runner, and tests.
+- Subsequent MA-002 runtime-conformance implementation/changes made after the baseline.
+- Rebaseline/task-state edits that were introduced only to support the discarded development line.
 
-`8bf6df7c9322fabd08e39c1bd36a6d18f74d83a8`
+These changes are not part of the active development state and must not be resumed as-is.
 
-Candidate commit:
+## Next bounded action
 
-- `docs: define REAL-002 bounded execution plan`
-
-Focused validation:
-
-- repository target is explicitly `eaglesjo/codingStandard-dev`;
-- `REAL-002.md` and `REAL-002-EXECUTION-PLAN.md` define the same target and acceptance boundary;
-- `CURRENT.md` and `TASKS.md` identify the same active task and target;
-- `AGENTS.md`, AI Developer Skill, and Development Continuity Skill require repository-state recovery, bounded execution, validation, provenance, and durable recording;
-- non-goals explicitly exclude PetLM, other repositories, public `v2.0.0` tag rewriting, provider/model routing, and mandatory execution of all nine specialist agents;
-- no unrelated repository was modified.
-
-Broader validation against the exact candidate `8bf6df7c9322fabd08e39c1bd36a6d18f74d83a8`:
-
-- architecture validation run `34972844488`: PASS
-- architecture job `104393094798`: PASS
-  - profiles
-  - profile contract
-  - multi-agent contract
-  - multi-agent fixtures
-  - multi-agent E2E simulation
-  - AI code quality contract/test
-  - AI evaluation contract/test
-  - reproducibility contract/test
-  - cross-area 2.0 acceptance/test
-- codingStandard validation run `34972844585`: PASS
-- validation job `104393095466`: PASS
-  - architecture contract
-  - repository validation
-  - environment contract
-  - installer tests
-  - LLM CPU memory smoke test
-  - Vision CPU memory smoke test
-- Windows installer validation run `34972844593`: PASS
-- installer jobs `104393095165` and `104393095696`: PASS
-
-Fresh-session recovery check:
-
-A recovery pass was performed using repository state only. The repository identity/current revision, `AGENTS.md`, AI Developer Skill, Development Continuity Skill, `CURRENT.md`, `TASKS.md`, REAL-002 acceptance contract, and execution plan were sufficient to reconstruct the completed task, its exact candidate SHA, validation evidence, and next bounded action without chat history.
-
-## Next bounded actions
-
-1. Build the AI Developer evaluation suite (`EVAL-003`).
-2. Validate Multi-Agent Runtime execution (`MA-002`) when justified by lifecycle acceptance criteria.
-3. After those, design the deferred `MODEL-ROUTING` capability for the next version.
-
-## Deferred to next version
-
-- Provider/model adapters.
-- Per-agent AI model assignment.
-- Model routing policies and fallback selection.
-- Provider/model-specific runtime coupling.
+None. This record is intentionally a status-only checkpoint. Do not implement, extend, or resume a new task until a new development instruction is given against the AI Engineering Standard 2.0 baseline.
 
 ## Rules
 
@@ -101,4 +54,3 @@ A recovery pass was performed using repository state only. The repository identi
 - On failure, preserve evidence and repair the smallest responsible boundary instead of restarting the full pipeline.
 - Preserve exact source identity and validation evidence across the dev/release boundary.
 - 2.0 must remain vendor/model-neutral; AI provider/model mapping belongs to the next version.
-- Review task-created branches after completion and delete branches with no remaining development or recovery value.

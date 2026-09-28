@@ -74,6 +74,37 @@ def run_2_0_validation() -> None:
     run_checker(ROOT / "scripts" / "validation" / "run_runtime_conformance.py", "AIEngineeringStandard 2.0 recovery harness dry run", "--agent", "codex", "--scenario", "tests/validation/fixtures/conformance/codex-runtime-failure-recovery.scenario.json", "--output", "/tmp/codex-runtime-recovery.json")
 
 
+def check_jupyter_plugin() -> None:
+    plugin_root = ROOT / "plugins" / "jupyter-notebook"
+    manifest_path = plugin_root / "plugin.json"
+    skill_path = plugin_root / "skills" / "jupyter-engineering" / "SKILL.md"
+    runtime_path = plugin_root / "aies_jupyter.py"
+    pyproject_path = plugin_root / "pyproject.toml"
+    missing = [str(p.relative_to(ROOT)) for p in (manifest_path, skill_path, runtime_path, pyproject_path) if not p.is_file()]
+    if missing:
+        fail("Missing Jupyter plugin files: " + ", ".join(missing))
+    try:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        fail(f"Invalid Jupyter plugin manifest: {exc}")
+    allowed = {"$schema", "name", "version", "description", "author", "homepage", "repository", "license", "keywords", "extensions"}
+    unknown = sorted(set(manifest) - allowed)
+    if unknown:
+        fail("Jupyter plugin manifest has unsupported top-level fields: " + ", ".join(unknown))
+    if manifest.get("$schema") != "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json":
+        fail("Jupyter plugin must target Agent Plugins 1.0.0")
+    if manifest.get("name") != "ai-engineering-standard-jupyter":
+        fail("Unexpected Jupyter plugin name")
+    skill_text = skill_path.read_text(encoding="utf-8")
+    if not skill_text.startswith("---\n") or "\n---\n" not in skill_text:
+        fail("Jupyter plugin Skill must use YAML frontmatter")
+    pyproject = pyproject_path.read_text(encoding="utf-8")
+    if 'name = "ai-engineering-standard-jupyter"' not in pyproject:
+        fail("Jupyter plugin package name mismatch")
+    if "load_ipython_extension" not in runtime_path.read_text(encoding="utf-8"):
+        fail("Jupyter runtime adapter must expose load_ipython_extension")
+
+
 def check_notebook() -> None:
     for path in (ROOT / "tests" / "colab" / "codingstandard_colab_test.ipynb", ROOT / "examples" / "colab" / "clean_runtime_validation.ipynb", ROOT / "examples" / "colab" / "llm_qlora_validation.ipynb"):
         try:
@@ -150,7 +181,7 @@ def run_i18n_check() -> None:
 
 
 def main() -> None:
-    check_required_files(); run_structure_check(); run_profile_check(); check_python(); run_2_0_validation(); run_environment_tests(); check_notebook(); check_routing_paths(); check_hardware_neutrality(); check_no_legacy_installer(); check_windows_workflow(); check_version_consistency(); run_i18n_check(); print("codingStandard validation passed")
+    check_required_files(); run_structure_check(); run_profile_check(); check_jupyter_plugin(); check_python(); run_2_0_validation(); run_environment_tests(); check_notebook(); check_routing_paths(); check_hardware_neutrality(); check_no_legacy_installer(); check_windows_workflow(); check_version_consistency(); run_i18n_check(); print("codingStandard validation passed")
 
 
 if __name__ == "__main__":

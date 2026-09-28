@@ -1,0 +1,10 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "ai-engineering-standard-jupyter",
+  "version": "0.1.0",
+  "description": "Jupyter Notebook runtime adapter for AIEngineeringStandard 2.0.",
+  "author": {"name": "eaglesjo"},
+  "repository": "https://github.com/eaglesjo/codingStandard-dev",
+  "license": "MIT",
+  "keywords": ["ai-engineering", "jupyter", "notebook", "ipython", "validation", "ml", "llm"]
+}

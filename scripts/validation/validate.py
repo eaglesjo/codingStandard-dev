@@ -96,7 +96,7 @@ def check_jupyter_plugin() -> None:
     if manifest.get("name") != "ai-engineering-standard-jupyter":
         fail("Unexpected Jupyter plugin name")
     skill_text = skill_path.read_text(encoding="utf-8")
-    if not skill_text.startswith("---\\n") or "\\n---\\n" not in skill_text:
+    if not skill_text.startswith("---\n") or "\n---\n" not in skill_text:
         fail("Jupyter plugin Skill must use YAML frontmatter")
     pyproject = pyproject_path.read_text(encoding="utf-8")
     if 'name = "ai-engineering-standard-jupyter"' not in pyproject:
